@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 33% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 32% 91.4%;
+    --input: 214.3 32% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --shadow-card: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.04), 0 12px 24px rgba(0,0,0,0.06);
+    --shadow-card-hover: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.06), 0 24px 48px rgba(0,0,0,0.1);
+    --shadow-button: 0 4px 14px rgba(37, 99, 235, 0.3);
+    --shadow-button-hover: 0 6px 20px rgba(37, 99, 235, 0.45);
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24;
+  }
+  .container-max {
+    @apply max-w-7xl mx-auto;
+  }
+  .card-premium {
+    @apply bg-card rounded-3xl overflow-hidden transition-all duration-300;
+    box-shadow: var(--shadow-card);
+  }
+  .card-premium:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .glass {
+    @apply bg-background/80 backdrop-blur-xl border border-white/20;
+  }
+  .btn-premium {
+    @apply relative overflow-hidden bg-primary text-white px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-500 flex items-center gap-2;
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+  }
+  .btn-premium:hover {
+    @apply -translate-y-1 shadow-2xl shadow-primary/40;
+  }
+  .btn-premium::before {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-[2px] bg-white/40 transform -translate-x-full transition-transform duration-500 ease-in-out;
+  }
+  .btn-premium:hover::before {
+    @apply translate-x-0;
+  }
+
+  .card-animate {
+    @apply relative overflow-hidden transition-all duration-500 hover:-translate-y-2;
+  }
+  .card-animate::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[3px] bg-primary transition-all duration-500 ease-out;
+  }
+  .card-animate:hover::after {
+    @apply w-full;
+  }
+
+  .nav-link-hover {
+    @apply relative py-1 overflow-hidden;
+  }
+  .nav-link-hover::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-300;
+  }
+  .nav-link-hover:hover::after {
+    @apply w-full;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+}
