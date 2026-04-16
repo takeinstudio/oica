@@ -6,7 +6,9 @@ export const STORAGE_KEYS = {
   BRANCHES: "oica_branches",
   RESULTS: "oica_results",
   SESSION: "oica_session",
-  GALLERY: "oica_gallery"
+  GALLERY: "oica_gallery",
+  JOBS: "oica_jobs",
+  CAREER_APPS: "oica_career_apps"
 };
 
 export const getStorageData = (key: string) => {
@@ -124,5 +126,39 @@ export const initStorage = () => {
       { id: 5, title: "Differentiation Mastery", desc: "Understanding change and logic optimization.", url: "https://www.youtube.com/embed/k9oW9T6M-T4", thumbnail: "https://img.youtube.com/vi/k9oW9T6M-T4/maxresdefault.jpg" }
     ];
     setStorageData(STORAGE_KEYS.LECTURES, mahaTandavVideos);
+  }
+
+  // 5. Initialize Career Data (Jobs & Applications)
+  const existingJobs = getStorageData(STORAGE_KEYS.JOBS);
+  if (existingJobs.length === 0) {
+    const defaultJobs = [
+      { id: "j1", title: "Junior Software Developer", company: "TechNova Solutions", location: "Bhubaneswar", type: "Full-time", salary: "₹4.5 - 6.0 LPA", experience: "0-1 Years", requirements: "Knowledge of React, Node.js, and SQL. Good problem-solving skills.", postedAt: "2026-04-10" },
+      { id: "j2", title: "Graphic Designer", company: "Pixel Perfect Agency", location: "Cuttack", type: "Full-time", salary: "₹3.0 - 4.2 LPA", experience: "0-2 Years", requirements: "Proficiency in Photoshop, Illustrator, and Canva. Portfolio required.", postedAt: "2026-04-12" },
+      { id: "j3", title: "Tally & Accounts Expert", company: "OICA Corporate Office", location: "Bhubaneswar HQ", type: "Full-time", salary: "₹2.4 - 3.6 LPA", experience: "0-1 Years", requirements: "Advanced Tally Prime knowledge, GST filing, and basic bookkeeping.", postedAt: "2026-04-15" },
+      { id: "j4", title: "Web Development Intern", company: "CloudSphere IT", location: "Remote", type: "Internship", salary: "₹10,000 / month", experience: "Fresher", requirements: "Basic HTML, CSS, and JS knowledge. Eager to learn modern frameworks.", postedAt: "2026-04-16" },
+      { id: "j5", title: "Digital Marketing Specialist", company: "GrowthHacker Odisha", location: "Puri", type: "Full-time", salary: "₹3.5 - 5.0 LPA", experience: "1-2 Years", requirements: "SEO, SEM, Social Media Management, and Google Analytics.", postedAt: "2026-04-08" },
+      { id: "j6", title: "Office Assistant", company: "Odisha Govt. Vendor", location: "Sambalpur", type: "Part-time", salary: "₹1.8 - 2.4 LPA", experience: "Fresher", requirements: "Basic computer knowledge (MS Office), good typing speed.", postedAt: "2026-04-14" },
+      { id: "j7", title: "IT Faculty / Trainer", company: "OICA Kendrapara", location: "Kendrapara", type: "Full-time", salary: "₹3.0 - 4.5 LPA", experience: "1+ Years", requirements: "Excellent communication, deep knowledge of DCA/PGDCA syllabus.", postedAt: "2026-04-11" },
+      { id: "j8", title: "Android App Developer", company: "AppVantage Studio", location: "Berhampur", type: "Contract", salary: "₹5.0 - 7.5 LPA", experience: "2+ Years", requirements: "Java/Kotlin, Firebase integration, and API handling.", postedAt: "2026-04-13" },
+      { id: "j9", title: "Data Entry Operator", company: "Global Servicing", location: "Balasore", type: "Full-time", salary: "₹1.5 - 2.0 LPA", experience: "Fresher", requirements: "Fast typing, attention to detail, MS Excel proficiency.", postedAt: "2026-04-09" },
+      { id: "j10", title: "System Administrator", company: "OICA Main Branch", location: "Bhubaneswar", type: "Full-time", salary: "₹4.0 - 5.5 LPA", experience: "2+ Years", requirements: "Networking, Hardware maintenance, and Server management.", postedAt: "2026-04-15" }
+    ];
+    setStorageData(STORAGE_KEYS.JOBS, defaultJobs);
+  }
+
+  const existingApps = getStorageData(STORAGE_KEYS.CAREER_APPS);
+  if (existingApps.length === 0) {
+    const studentUsers = getStorageData(STORAGE_KEYS.USERS).filter((u: any) => u.role === 'student');
+    const defaultApps = studentUsers.slice(0, 15).map((student: any, index: number) => ({
+      id: `app_${index}`,
+      studentId: student.id,
+      studentName: student.name,
+      studentPhoto: student.photo,
+      jobTitle: ["Software Dev", "Web Intern", "Graphic Designer", "Accounts Expert"][index % 4],
+      status: ["Pending", "Reviewed", "Shortlisted"][index % 3],
+      resumeUrl: "#", // Placeholder
+      appliedAt: "2026-04-16"
+    }));
+    setStorageData(STORAGE_KEYS.CAREER_APPS, defaultApps);
   }
 };

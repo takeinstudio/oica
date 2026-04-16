@@ -16,7 +16,8 @@ import {
   ArrowUpRight,
   Filter,
   Download,
-  Upload
+  Upload,
+  Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,8 @@ const AdminDashboard = () => {
   const [branches, setBranches] = useState<any[]>([]);
   const [lectures, setLectures] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
+  const [careerJobs, setCareerJobs] = useState<any[]>([]);
+  const [careerApps, setCareerApps] = useState<any[]>([]);
 
   useEffect(() => {
     const session = localStorage.getItem(STORAGE_KEYS.SESSION);
@@ -51,6 +54,8 @@ const AdminDashboard = () => {
     setBranches(getStorageData(STORAGE_KEYS.BRANCHES));
     setLectures(getStorageData(STORAGE_KEYS.LECTURES));
     setGallery(getStorageData(STORAGE_KEYS.GALLERY));
+    setCareerJobs(getStorageData(STORAGE_KEYS.JOBS));
+    setCareerApps(getStorageData(STORAGE_KEYS.CAREER_APPS));
   }, [navigate]);
 
   const handleLogout = () => {
@@ -66,6 +71,20 @@ const AdminDashboard = () => {
     setStorageData(STORAGE_KEYS.USERS, filteredUsers);
     setStudents(updated);
     toast.success("Student removed successfully");
+  };
+
+  const deleteJob = (id: string) => {
+    const updated = careerJobs.filter(j => j.id !== id);
+    setStorageData(STORAGE_KEYS.JOBS, updated);
+    setCareerJobs(updated);
+    toast.success("Job posting removed");
+  };
+
+  const deleteApplication = (id: string) => {
+    const updated = careerApps.filter(a => a.id !== id);
+    setStorageData(STORAGE_KEYS.CAREER_APPS, updated);
+    setCareerApps(updated);
+    toast.success("Application record removed");
   };
 
   const analyticsData = [
@@ -101,6 +120,7 @@ const AdminDashboard = () => {
             { id: "branches", label: "Branches", Icon: Building2 },
             { id: "lectures", label: "Lectures", Icon: Video },
             { id: "gallery", label: "Gallery", Icon: ImageIcon },
+            { id: "careers", label: "Careers", Icon: Briefcase },
             { id: "reports", label: "Analytics", Icon: BarChart3 },
           ].map(item => (
             <button
@@ -163,8 +183,8 @@ const AdminDashboard = () => {
                   {[
                     { label: "Total Students", value: students.length, trend: "+12.5%", icon: Users, color: "blue" },
                     { label: "Partner Branches", value: branches.length, trend: "+2 new", icon: Building2, color: "emerald" },
-                    { label: "Video Lectures", value: lectures.length, trend: "+5 this week", icon: Video, color: "indigo" },
-                    { label: "Live Storage", value: "1.2 TB", trend: "Balanced", icon: ShieldCheck, color: "amber" },
+                    { label: "Active Jobs", value: careerJobs.length, trend: "+3 today", icon: Briefcase, color: "indigo" },
+                    { label: "Applications", value: careerApps.length, trend: "45 New", icon: Users, color: "amber" },
                   ].map((stat, i) => (
                     <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
                        <div className={`absolute top-0 right-0 w-24 h-24 bg-${stat.color === 'blue' ? 'blue' : stat.color === 'emerald' ? 'emerald' : stat.color === 'indigo' ? 'indigo' : 'amber'}-500/5 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform`} />
@@ -388,6 +408,79 @@ const AdminDashboard = () => {
                   </div>
                </motion.div>
             )}
+            
+             {activeTab === "careers" && (
+                <motion.div key="careers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+                   <div className="grid lg:grid-cols-2 gap-10">
+                      {/* Jobs Management */}
+                      <div className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm">
+                         <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div>
+                               <h3 className="text-xl font-black text-slate-900">Job Postings</h3>
+                               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Manage active listings</p>
+                            </div>
+                            <Button className="h-10 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-4">
+                               <Plus size={14} className="mr-2" /> ADD JOB
+                            </Button>
+                         </div>
+                         <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
+                            {careerJobs.length > 0 ? careerJobs.map(job => (
+                               <div key={job.id} className="p-6 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                  <div className="flex items-center gap-4">
+                                     <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                        <Briefcase size={18} />
+                                     </div>
+                                     <div>
+                                        <p className="font-bold text-sm text-slate-900 leading-none">{job.title}</p>
+                                        <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tight">{job.company} • {job.location}</p>
+                                     </div>
+                                  </div>
+                                  <button onClick={() => deleteJob(job.id)} className="p-2 text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all">
+                                     <Trash2 size={16} />
+                                  </button>
+                               </div>
+                            )) : (
+                              <div className="p-10 text-center text-slate-400 font-bold text-xs uppercase tracking-widest">No jobs posted yet</div>
+                            )}
+                         </div>
+                      </div>
+
+                      {/* Applications Management */}
+                      <div className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm">
+                         <div className="p-8 border-b border-slate-100 bg-slate-50/50">
+                            <h3 className="text-xl font-black text-slate-900">Job Applications</h3>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Review student submissions</p>
+                         </div>
+                         <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
+                            {careerApps.length > 0 ? careerApps.map(app => (
+                               <div key={app.id} className="p-6 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                  <div className="flex items-center gap-4">
+                                     <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200">
+                                        <img src={app.studentPhoto} className="w-full h-full object-cover" alt="" />
+                                     </div>
+                                     <div>
+                                        <p className="font-bold text-sm text-slate-900 leading-none">{app.studentName}</p>
+                                        <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tight">Applied for: {app.jobTitle}</p>
+                                     </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                     <span className={`px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest ${
+                                        app.status === 'Shortlisted' ? 'bg-emerald-50 text-emerald-600' : 
+                                        app.status === 'Reviewed' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'
+                                     }`}>{app.status}</span>
+                                     <button onClick={() => deleteApplication(app.id)} className="p-2 text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all">
+                                        <Trash2 size={16} />
+                                     </button>
+                                  </div>
+                               </div>
+                            )) : (
+                              <div className="p-10 text-center text-slate-400 font-bold text-xs uppercase tracking-widest">No applications received yet</div>
+                            )}
+                         </div>
+                      </div>
+                   </div>
+                </motion.div>
+             )}
             
           </AnimatePresence>
         </div>

@@ -19,6 +19,7 @@ import Preloader from './components/Preloader';
 import Gallery from './pages/Gallery';
 import Testimonials from './pages/Testimonials';
 import Results from './pages/Results';
+import Career from './pages/Career';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -67,6 +68,7 @@ const App = () => {
                 <Route path="/results" element={<Results />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/gallery" element={<Gallery />} />
+                <Route path="/career" element={<Career />} />
                 <Route path="/testimonials" element={<Testimonials />} />
               </Routes>
             </Layout>

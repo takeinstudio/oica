@@ -14,6 +14,7 @@ const navLinks = [
   { label: "Gallery", path: "/gallery" },
   { label: "Branches", path: "/branches" },
   { label: "Verification", path: "/verify" },
+  { label: "Career", path: "/career" },
   { label: "Contact Us", path: "/contact" },
 ];
 
@@ -168,7 +169,13 @@ const Header = () => {
               })}
               
               <div className="pt-6 mt-4 border-t border-slate-100 px-2 space-y-3">
-                {/* 'Apply Now' button removed from mobile menu as requested */}
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-wider bg-slate-100 text-slate-900 border border-slate-200 shadow-sm"
+                >
+                  Login
+                </Link>
               </div>
             </div>
           </motion.div>

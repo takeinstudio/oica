@@ -93,7 +93,7 @@ const Home = () => {
   return (
     <div className="min-h-screen" ref={containerRef}>
       {/* Cinematic Hero Section */}
-      <section className="relative h-[92vh] flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
+      <section className="relative h-screen flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
         {/* Full-Screen Video Background */}
         <div className="absolute inset-0 z-0 bg-slate-950">
           <motion.div
@@ -220,7 +220,7 @@ const Home = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30">
           <span className="text-[8px] font-black uppercase tracking-[0.3em] font-sans">Scroll</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
@@ -228,19 +228,20 @@ const Home = () => {
             className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent"
           />
         </div>
-      </section>
 
-      {/* Notice Board */}
-      <section className="bg-primary py-3 relative z-30 overflow-hidden">
-        <div className="flex items-center gap-6 whitespace-nowrap animate-marquee">
-          {notices.concat(notices).map((notice, i) => (
-            <div key={i} className="flex items-center gap-3 text-white font-bold text-[10px] uppercase tracking-wider">
-              <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-              {notice}
-            </div>
-          ))}
+        {/* Integrated Notice Board at bottom of Hero */}
+        <div className="absolute bottom-0 left-0 right-0 bg-primary py-3 z-30 overflow-hidden border-t border-white/10">
+          <div className="flex items-center gap-6 whitespace-nowrap animate-marquee">
+            {notices.concat(notices).map((notice, i) => (
+              <div key={i} className="flex items-center gap-3 text-white font-bold text-[10px] uppercase tracking-wider">
+                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                {notice}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
 
       {/* Stats Bar */}
       <section className="relative z-40">
