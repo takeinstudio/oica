@@ -18,10 +18,9 @@ const Gallery = () => {
   return (
     <div className="pb-24">
       <PageHeader 
-        title="Our Gallery"
-        subtitle="Visual Journey"
+        title="Institutional Showcase"
+        subtitle="Visual Gallery"
         breadcrumb="Gallery"
-        description="Explore our campus, labs, and student life through these snapshots of Odisha Institute of Computer Application."
         backgroundImage="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop"
         bottomPills={["Modern Labs", "Vibrant Campus", "Student Life"]}
       />

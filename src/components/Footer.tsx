@@ -1,65 +1,49 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-foreground text-background pt-20 pb-10">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+    <footer className="bg-slate-950 text-slate-300 pt-12 pb-6 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
         {/* Info */}
-        <div className="flex flex-col gap-6">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative transition-transform group-hover:scale-105">
-              <img
-                src="/logo.jpg"
-                alt="Odisha Institute of Computer Application Logo"
-                className="h-24 w-auto object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement?.classList.add('bg-primary', 'w-10', 'h-10', 'rounded-lg', 'flex', 'items-center', 'justify-center', 'text-white');
-                }}
-              />
-            </div>
+        <div className="flex flex-col gap-4">
+          <Link to="/" className="flex items-center gap-2 group">
+             <img
+               src="/logo.jpg"
+               alt="OICA Logo"
+               className="h-12 w-auto object-contain brightness-110"
+             />
           </Link>
-          <p className="text-neutral-400 text-sm leading-relaxed text-left">
-            Odisha Institute of Computer Application provides professional computer education, practical training, and career opportunities to students across Odisha. High-quality training with ISO 9001:2008 certification.
+          <p className="text-slate-500 text-[11px] leading-relaxed font-medium">
+            Odisha Institute of Computer Application provides ISO 9001:2008 certified professional education with a focus on practical excellence.
           </p>
-          <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors text-white">
-              <Facebook size={18} />
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors text-white">
-              <Twitter size={18} />
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors text-white">
-              <Instagram size={18} />
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors text-white">
-              <Youtube size={18} />
-            </a>
+          <div className="flex gap-3">
+            {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
+              <a key={i} href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-primary transition-all text-white/50 hover:text-white border border-white/5">
+                <Icon size={14} />
+              </a>
+            ))}
           </div>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h4 className="text-white font-bold mb-6">Quick Links</h4>
-          <ul className="flex flex-col gap-4 text-sm text-neutral-400">
+          <h4 className="text-white font-black text-xs uppercase tracking-widest mb-6">Explore</h4>
+          <ul className="grid grid-cols-1 gap-2.5 text-[11px] font-bold">
             {[
               { name: "About Us", path: "/about" },
               { name: "Our Courses", path: "/courses" },
-              { name: "Photo Gallery", path: "/gallery" },
               { name: "Success Stories", path: "/testimonials" },
-              { name: "Key Features", path: "/features" },
-              { name: "Franchise Opportunities", path: "/franchise" },
+              { name: "Franchise", path: "/franchise" },
               { name: "Verify Certificate", path: "/verify" },
-              { name: "Our Branches", path: "/branches" },
-              { name: "Contact Us", path: "/contact" }
+              { name: "Contact", path: "/contact" }
             ].map((link) => (
               <li key={link.path}>
-                <Link to={link.path} className="flex items-center gap-0 hover:gap-2 hover:text-primary transition-all duration-300 group/link">
-                  <ArrowRight size={14} className="w-0 opacity-0 group-hover/link:w-4 group-hover/link:opacity-100 transition-all duration-300 text-primary" />
-                  {link.name}
+                <Link to={link.path} className="hover:text-primary transition-colors flex items-center gap-2">
+                   <div className="w-1 h-1 rounded-full bg-slate-700" />
+                   {link.name}
                 </Link>
               </li>
             ))}
@@ -68,51 +52,48 @@ const Footer = () => {
 
         {/* Popular Courses */}
         <div>
-          <h4 className="text-white font-bold mb-6">Popular Courses</h4>
-          <ul className="flex flex-col gap-4 text-sm text-neutral-400">
+          <h4 className="text-white font-black text-xs uppercase tracking-widest mb-6">Popular</h4>
+          <ul className="grid grid-cols-1 gap-2.5 text-[11px] font-bold">
             {[
-              "PGDCA", "Tally ERP", "Web Design", "Digital Marketing", "Advanced Office", "Python Programming"
+              "PGDCA", "Tally ERP", "Web Design", "Digital Marketing", "Advanced Office"
             ].map((course) => (
               <li key={course}>
-                <Link to="/courses" className="flex items-center gap-0 hover:gap-2 hover:text-primary transition-all duration-300 group/link">
-                  <ArrowRight size={14} className="w-0 opacity-0 group-hover/link:w-4 group-hover/link:opacity-100 transition-all duration-300 text-primary" />
-                  {course}
+                <Link to="/courses" className="hover:text-primary transition-colors flex items-center gap-2">
+                   <div className="w-1 h-1 rounded-full bg-slate-700" />
+                   {course}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
+
         {/* Contact Info */}
         <div>
-          <h4 className="text-white font-bold mb-6">Contact Info</h4>
-          <ul className="flex flex-col gap-4 text-sm text-neutral-400">
-            <li className="flex gap-3 group/item cursor-pointer">
-              <MapPin size={18} className="text-primary shrink-0 group-hover/item:scale-110 transition-transform" />
-              <span className="group-hover/item:text-white transition-colors">Plot No-790/1339, Near SUM Hospital, Bhubaneswar, Odisha</span>
+          <h4 className="text-white font-black text-xs uppercase tracking-widest mb-6">Contact</h4>
+          <ul className="flex flex-col gap-4 text-[11px] font-bold">
+            <li className="flex gap-3 items-start">
+              <MapPin size={14} className="text-primary mt-0.5" />
+              <span className="text-slate-400">SUM Hospital Road, BBSR, Odisha</span>
             </li>
-            <li>
-              <a href="tel:+91 9853227488" className="flex gap-3 group/item">
-                <Phone size={18} className="text-primary shrink-0 group-hover/item:scale-110 transition-transform" />
-                <span className="group-hover/item:text-white transition-colors">9853227488</span>
-              </a>
+            <li className="flex gap-3 items-center">
+              <Phone size={14} className="text-primary" />
+              <a href="tel:+91 9853227488" className="text-slate-400 hover:text-white transition-colors">9853227488</a>
             </li>
-            <li>
-              <a href="mailto:info@oica.in" className="flex gap-3 group/item">
-                <Mail size={18} className="text-primary shrink-0 group-hover/item:scale-110 transition-transform" />
-                <span className="group-hover/item:text-white transition-colors">info@oica.in</span>
-              </a>
+            <li className="flex gap-3 items-center">
+              <Mail size={14} className="text-primary" />
+              <a href="mailto:info@oica.in" className="text-slate-400 hover:text-white transition-colors">info@oica.in</a>
             </li>
           </ul>
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-neutral-500 font-medium">
-        <p>© {currentYear} ODISHA INSTITUTE OF COMPUTER APPLICATION. All Rights Reserved.</p>
-        <div className="flex gap-8">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+      <div className="max-w-7xl mx-auto px-4 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-600 font-bold uppercase tracking-wider">
+        <p>© 2013-{currentYear} OICA INSTITUTE</p>
+        <div className="flex gap-6">
+          <a href="#" className="hover:text-slate-300 transition-colors">Privacy</a>
+          <a href="#" className="hover:text-slate-300 transition-colors">Terms</a>
+          <a href="#" className="hover:text-slate-300 transition-colors">Sitemap</a>
         </div>
       </div>
     </footer>

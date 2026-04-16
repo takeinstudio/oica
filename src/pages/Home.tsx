@@ -1,347 +1,516 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, Award, Users, GraduationCap, Bell } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import AnimatedSection from "@/components/shared/AnimatedSection";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  Users,
+  ArrowRight, Star, Shield, Camera,
+  GraduationCap, Mail
+} from "lucide-react";
+import { useRef } from "react";
+
+const stats = [
+  { value: "12+", label: "YEARS EXP." },
+  { value: "5000+", label: "STUDENTS" },
+  { value: "20+", label: "BRANCHES" },
+  { value: "ISO", label: "CERTIFIED" },
+];
+
+const features = [
+  {
+    icon: Users,
+    title: "High Trade Interface",
+    desc: "Maintaining high trade and industry interface to keep students updated with market trends."
+  },
+  {
+    icon: Shield,
+    title: "Self-Confidence",
+    desc: "Strong focus on developing self-confidence, self-reliance, and reasoning abilities."
+  },
+  {
+    icon: Camera,
+    title: "AV Presentations",
+    desc: "Modern teaching methodology using Audio, Video, and Slide presentations for better learning."
+  },
+  {
+    icon: GraduationCap,
+    title: "1-to-1 Sessions",
+    desc: "Dedicated practical sessions with one-to-one computer access for every student."
+  },
+  {
+    icon: Star,
+    title: "Workshops",
+    desc: "Regular workshops and seminars to bridge the gap between academia and industry."
+  },
+];
+
+const popularCourses = [
+  { title: "Advanced Office", icon: "AO", color: "from-blue-600 to-cyan-500", desc: "Master MS Office suite with advanced features including Excel, Word and Powerpoint." },
+  { title: "Tally ERP.9", icon: "T9", color: "from-emerald-600 to-teal-500", desc: "Complete accounting with Tally ERP software including GST and inventory management." },
+  { title: "PGDCA", icon: "P", color: "from-violet-600 to-purple-500", desc: "Post Graduate Diploma in Computer Application - Advanced level software development." },
+  { title: "DFA", icon: "DFA", color: "from-rose-600 to-pink-500", desc: "Diploma in Financial Accounting - Foundation of modern accounting systems." },
+  { title: "Photoshop", icon: "Ps", color: "from-orange-600 to-amber-500", desc: "Professional graphic design and image editing with Adobe Photoshop." },
+];
+
+const achievers = [
+  { name: "Rahul Mohanty", role: "Software Engineer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374" },
+  { name: "Priya Das", role: "Data Analyst", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374" },
+  { name: "Sanjay Kumar", role: "UI Designer", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470" },
+];
+
+const homeGallery = [
+  "https://images.unsplash.com/photo-1523050337456-5d55f21af557?q=80&w=1471",
+  "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1470",
+  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1470",
+  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471",
+  "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1470",
+  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1470",
+];
+
+const notices = [
+  "New Admissions Started for 2026 Batch",
+  "Free Computer Courses Started on April 2025",
+  "Summer Courses Started - Register Now",
+  "Central and State Government Free Courses Available",
+];
 
 const Home = () => {
-  const features = [
-    { title: "Quality Education", desc: "High quality computer education with strong theory and practical training.", icon: GraduationCap },
-    { title: "Career Building", desc: "Build strong professional careers and placement opportunities.", icon: Award },
-    { title: "Social Commitment", desc: "FREE computer training for economically weaker sections of society.", icon: Users },
-  ];
+  const containerRef = useRef(null);
+  const { scrollYProgress: _scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
 
-  const notices = [
-    "New Admissions Started for 2026 Batch",
-    "Free Computer Courses Started on April 2025",
-    "Summer Courses Started - Register Now",
-    "Central and State Government Free Courses Available",
-  ];
 
-  const courses = [
-    { title: "Advanced Office", desc: "Master MS Office suite with advanced features", icon: "MS" },
-    { title: "Tally ERP", desc: "Complete accounting with Tally ERP software", icon: "T" },
-    { title: "PGDCA", desc: "Post Graduate Diploma in Computer Application", icon: "P" },
-    { title: "DCA", desc: "Diploma in Computer Application", icon: "D" },
-  ];
+  const galleryRef = useRef(null);
+  const { scrollYProgress: galleryScroll } = useScroll({
+    target: galleryRef,
+    offset: ["start end", "end start"]
+  });
+  const yGallery1 = useTransform(galleryScroll, [0, 1], ["10%", "-10%"]);
+  const yGallery2 = useTransform(galleryScroll, [0, 1], ["-10%", "10%"]);
 
   return (
-    <div className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center pt-20">
-        <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary to-accent opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+    <div className="min-h-screen" ref={containerRef}>
+      {/* Cinematic Hero Section */}
+      <section className="relative h-[92vh] flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
+        {/* Full-Screen Video Background */}
+        <div className="absolute inset-0 z-0 bg-slate-950">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
+            className="w-full h-full"
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover opacity-60"
+              poster="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072"
+            >
+              <source src="/hero.mp4" type="video/mp4" />
+            </video>
+          </motion.div>
+
+          {/* Multi-Stage Cinematic Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
         </div>
-        
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
-              <Award size={14} />
-              ISO 9001:2008 Certified Institute
-            </div>
-            <h1 className="text-5xl lg:text-7xl font-bold leading-[1.1] mb-6">
-              Build Your Future <br />
-              <span className="text-primary italic">With Computer</span> <br />
-              Education
-            </h1>
-            <p className="text-lg text-muted-foreground mb-10 max-w-xl leading-relaxed">
-              Odisha Institute of Computer Application provides professional computer education, practical training, and career opportunities to students across Odisha.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/courses" className="btn-primary flex items-center gap-2 group">
-                View Courses
-                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link to="/apply" className="px-8 py-3.5 rounded-full border-2 border-border font-bold hover:bg-secondary transition-all">
-                Apply for Admission
-              </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            <div className="relative z-10 rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/20 aspect-[4/3] bg-muted">
-              <img 
-                src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1470&auto=format&fit=crop" 
-                alt="Students learning" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
-                <div className="text-white">
-                  <p className="text-sm font-medium opacity-80 mb-1">Join 5000+ Students</p>
-                  <h3 className="text-2xl font-bold">Empowering Odisha through IT</h3>
+
+        <div className="relative z-10 w-full px-6 lg:px-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left Content Column */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-3xl"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/20 border border-secondary/30 rounded-full mb-8 backdrop-blur-md shadow-lg shadow-secondary/10"
+              >
+                <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+                <span className="text-[11px] font-black text-secondary uppercase tracking-[0.2em]">Excellence in Computer Education</span>
+              </motion.div>
+
+              <h1 className="text-4xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter mb-6 filter drop-shadow-2xl">
+                <br />
+                <span className="text-white">Odisha Institute </span> <br />
+                <span className="text-secondary text-5xl md:text-7xl">of Computer Application</span>
+              </h1>
+
+              <p className="text-base md:text-lg text-white/80 font-medium max-w-xl leading-relaxed mb-10 tracking-tight">
+                Excellence in education for comprehensive skill development. Join our premier institution with proven results and dedicated mentorship across Odisha.
+              </p>
+
+              <div className="flex flex-wrap gap-5">
+                <Link to="/courses">
+                  <Button size="lg" className="rounded-2xl px-10 py-7 font-black text-xs tracking-widest uppercase h-auto shadow-2xl shadow-secondary/20 hover:shadow-secondary/40 transition-all hover:scale-105 active:scale-95 bg-secondary text-slate-900 border-none">
+                    Explore Programs
+                    <ArrowRight className="ml-3 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button size="lg" className="rounded-2xl px-10 py-7 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95">
+                    Contact Us
+                    <Mail className="ml-3 w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Right Column (Floating Cards Layout) */}
+            <div className="relative hidden lg:block h-[600px]">
+              {/* Expert Faculty Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4, type: "spring" }}
+                className="absolute top-20 right-20 w-64 p-6 bg-secondary rounded-[2.5rem] shadow-2xl shadow-secondary/20 z-20 group"
+              >
+                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-slate-900 mb-4 group-hover:scale-110 transition-transform">
+                  <GraduationCap size={24} />
                 </div>
-              </div>
+                <h3 className="text-lg font-heading font-black text-slate-900 mb-2">Expert Faculty</h3>
+                <p className="text-slate-800 text-xs font-bold leading-relaxed opacity-80">
+                  Master computer science with industry-experienced professionals guiding your career journey.
+                </p>
+              </motion.div>
+
+              {/* Trusted Community Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, x: -50 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ delay: 0.6, type: "spring" }}
+                className="absolute top-52 left-0 w-64 p-6 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] shadow-2xl z-30 group"
+              >
+                <div className="w-14 h-14 bg-secondary/80 rounded-2xl flex items-center justify-center text-slate-900 mb-6 group-hover:scale-110 transition-transform">
+                  <Users size={28} />
+                </div>
+                <h3 className="text-xl font-heading font-black text-white mb-2">Trusted Community</h3>
+                <p className="text-white/60 text-xs font-bold leading-relaxed">
+                  Trusted by 5000+ students across Odisha since 2014. A legacy of excellence in training.
+                </p>
+              </motion.div>
+
+              {/* Results Excellence Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.8 }}
+                className="absolute bottom-0 right-0 left-20 p-10 bg-rose-600 rounded-[3rem] shadow-2xl shadow-rose-900/40 z-10 overflow-hidden group"
+              >
+                <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform">
+                  <Star size={100} />
+                </div>
+                <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-4 block">Results Excellence</span>
+                <h3 className="text-4xl font-heading font-black text-white mb-2 leading-tight">100+ Success <br /> Stories</h3>
+                <p className="text-white/70 text-[11px] font-bold uppercase tracking-widest mt-4 flex items-center gap-2">
+                  In Top Educational Institutions <ArrowRight size={14} />
+                </p>
+              </motion.div>
             </div>
-            
-            {/* Floating Stats */}
-            <div className="absolute -bottom-10 -left-10 z-20 bg-white p-6 rounded-3xl shadow-xl flex items-center gap-4 animate-float">
-              <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-                <CheckCircle2 size={24} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">100%</p>
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Practical Training</p>
-              </div>
-            </div>
-          </motion.div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30">
+          <span className="text-[8px] font-black uppercase tracking-[0.3em] font-sans">Scroll</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent"
+          />
         </div>
       </section>
 
       {/* Notice Board */}
-      <section className="bg-primary/5 py-10 border-y border-primary/10 overflow-hidden">
-        <div className="flex items-center gap-8 whitespace-nowrap animate-marquee">
-          <div className="flex items-center gap-4 text-primary font-bold uppercase tracking-[0.2em] text-sm">
-            <Bell size={18} />
-            Notice Board:
-          </div>
+      <section className="bg-primary py-3 relative z-30 overflow-hidden">
+        <div className="flex items-center gap-6 whitespace-nowrap animate-marquee">
           {notices.concat(notices).map((notice, i) => (
-            <div key={i} className="flex items-center gap-4 text-foreground/80 font-medium">
-              <div className="w-2 h-2 rounded-full bg-primary" />
+            <div key={i} className="flex items-center gap-3 text-white font-bold text-[10px] uppercase tracking-wider">
+              <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
               {notice}
-              <span className="bg-primary text-white text-[10px] px-2 py-0.5 rounded ml-2">NEW</span>
             </div>
           ))}
         </div>
       </section>
 
+      {/* Stats Bar */}
+      <section className="relative z-40">
+        <div className="section-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl shadow-2xl border border-slate-100 grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 overflow-hidden -translate-y-1/2"
+          >
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center py-6 px-4 hover:bg-slate-50 transition-colors group">
+                <div className="text-2xl md:text-3xl font-heading font-black text-slate-900 mb-0.5 tracking-tight group-hover:text-primary transition-colors">{stat.value}</div>
+                <div className="text-[9px] font-black text-slate-400 tracking-widest uppercase">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* Welcome Section */}
-      <section className="section-padding">
-        <div className="container-max">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 inline-block">Welcome To OICA</span>
-            <h2 className="text-4xl font-bold mb-6">Pioneering Computer Education in Odisha</h2>
-            <p className="text-muted-foreground text-lg italic">
-              "Technology is changing rapidly and our mission is to make technology easy to learn."
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((item, i) => (
+      <section className="section-padding relative">
+        <div className="section-container">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            <AnimatedSection>
               <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ 
-                y: -10,
-                rotateX: 4,
-                rotateY: -4,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)"
-              }}
-              transition={{ delay: i * 0.1 }}
-              style={{ perspective: "1000px" }}
-              className="card-premium card-animate p-8 flex flex-col items-center text-center group"
-            >
-                <div className="w-16 h-16 rounded-2xl bg-primary/5 text-primary flex items-center justify-center mb-6 transition-transform group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
-                  <item.icon size={32} />
-                </div>
-                <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Director Message */}
-      <section className="bg-secondary/50 py-24">
-        <div className="container-max grid lg:grid-cols-5 gap-16 items-center">
-          <div className="lg:col-span-2">
-            <div className="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-[3/4] bg-muted/30 border-2 border-dashed border-border flex items-center justify-center p-12">
-              <div className="text-center opacity-20">
-                <GraduationCap size={80} className="mx-auto mb-4" />
-                <p className="text-xs uppercase tracking-[0.2em] font-bold">OICA Director</p>
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-3">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 inline-block">Director's Desk</span>
-            <h2 className="text-4xl font-bold mb-8">A Message From Our Director</h2>
-            <div className="space-y-6 text-muted-foreground leading-relaxed">
-              <p>
-                It is my pleasure to welcome you to the Odisha Institute of Computer Application. Technology is changing rapidly and our mission is to make technology easy to learn.
-              </p>
-              <p>
-                Our institute focuses on developing students with strong technical knowledge, professional attitude, and practical skills. Even students who are using a computer for the first time can easily learn through our unique training methodology.
-              </p>
-              <p className="font-semibold text-foreground italic">
-                "We guide every student personally and help them build a strong career in the IT industry."
-              </p>
-            </div>
-            <div className="mt-10 flex items-center gap-6">
-              <div className="w-16 h-[2px] bg-primary" />
-              <div>
-                <p className="font-bold text-xl">Director of OICA</p>
-                <p className="text-sm text-primary font-medium tracking-wide uppercase">Leading with Vision</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Courses */}
-      <section className="section-padding overflow-hidden">
-        <div className="container-max">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="max-w-xl"
-            >
-              <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 inline-block">Our Courses</span>
-              <h2 className="text-4xl font-bold">Industry-relevant programs for your career</h2>
-            </motion.div>
-            <Link to="/courses" className="text-primary font-bold flex items-center gap-2 group hover:underline translate-y-[-10px]">
-              View All Courses
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {courses.map((course, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="card-premium p-6 group cursor-pointer card-animate"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="relative group"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/5 text-primary flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-500">
-                  {course.icon}
-                </div>
-                <h3 className="font-bold text-lg mb-2">{course.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{course.desc}</p>
-                <div className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Learn More <ArrowRight size={14} />
+                <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-2xl" />
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1470" alt="About OICA" className="relative rounded-2xl shadow-xl border border-slate-100 object-cover aspect-video w-full" />
+                <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg border border-slate-100 max-w-[200px]">
+                  <p className="font-heading font-black text-sm mb-0.5">Empowering Odisha</p>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase">Digital Future</p>
                 </div>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </AnimatedSection>
 
-      {/* Gallery Section */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-max">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 inline-block">Campus Life</span>
-            <h2 className="text-4xl font-bold">Institute Gallery</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Moved galleryImages declaration outside the JSX map */}
-            {(() => {
-              const galleryImages = [
-                { url: "https://images.unsplash.com/photo-1523050337456-5d55f21af557?q=80&w=1471&auto=format&fit=crop", title: "Campus Entrance" },
-                { url: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1470&auto=format&fit=crop", title: "Main Lab" },
-                { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1470&auto=format&fit=crop", title: "Study Area" },
-                { url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471&auto=format&fit=crop", title: "Group Discussion" },
-                { url: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1470&auto=format&fit=crop", title: "Coding Session" },
-                { url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1470&auto=format&fit=crop", title: "IT Workshop" },
-              ];
-              return galleryImages.map((img, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer"
-                >
-                  <img 
-                    src={img.url} 
-                    alt={img.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-white text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-                      {img.title}
-                    </span>
-                  </div>
-                </motion.div>
-              ));
-            })()}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="section-padding overflow-hidden">
-        <div className="container-max">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 inline-block">Success Stories</span>
-            <h2 className="text-4xl font-bold">What Our Students Say</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: "Rahul Mohanty", role: "Software Engineer", content: "OICA provided me the foundation I needed. The practical training in Java and PGDCA was exceptional.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374&auto=format&fit=crop" },
-              { name: "Priya Das", role: "Data Analyst", content: "The Tally ERP course was very thorough. I got placed immediately after completing my certification.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374&auto=format&fit=crop" },
-              { name: "Sanjay Kumar", role: "UI Designer", content: "Learning at OICA was a great experience. The faculty is very supportive and knowledgeable.", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470&auto=format&fit=crop" }
-            ].map((testi, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="card-premium p-8 card-animate"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <img src={testi.img} alt={testi.name} className="w-14 h-14 rounded-full object-cover ring-4 ring-primary/10" />
-                  <div>
-                    <h4 className="font-bold text-lg leading-tight">{testi.name}</h4>
-                    <p className="text-xs text-primary font-bold uppercase tracking-widest mt-1">{testi.role}</p>
-                  </div>
-                </div>
-                <p className="text-muted-foreground italic leading-relaxed">"{testi.content}"</p>
-                <div className="flex gap-1 mt-6 text-yellow-500">
-                  {[...Array(5)].map((_, i) => <span key={i}>★</span>)}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="section-padding pt-0">
-        <div className="container-max">
-          <div className="bg-primary rounded-[3.5rem] p-12 lg:p-24 text-center relative overflow-hidden group shadow-2xl shadow-primary/20">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] group-hover:scale-110 transition-transform duration-1000" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px] group-hover:scale-110 transition-transform duration-1000" />
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative z-10 max-w-3xl mx-auto"
-            >
-              <h2 className="text-white text-5xl lg:text-7xl font-bold mb-10 leading-[1.1] tracking-tight">
-                Ready to transform your <span className="text-accent underline underline-offset-[12px] decoration-4">career</span>?
+            <AnimatedSection delay={0.2}>
+              <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Welcome to OICA</span>
+              <h2 className="text-2xl md:text-4xl font-heading font-black mb-4 leading-tight">
+                Pioneering <span className="text-primary">Computer Education</span>
               </h2>
-              <p className="text-white/80 text-xl mb-14 leading-relaxed max-w-2xl mx-auto">
-                Join OICA today and get the best practical computer training in Odisha. Your future starts here.
-              </p>
-              <div className="flex flex-wrap justify-center gap-6">
-                <Link to="/apply" className="bg-white text-primary px-12 py-5 rounded-full font-extrabold text-xl shadow-2xl shadow-black/10 hover:scale-105 active:scale-95 transition-all duration-500 group flex items-center gap-2">
-                  Apply for Admission
-                  <ArrowRight size={24} className="transition-transform group-hover:translate-x-1" />
-                </Link>
-                <Link to="/contact" className="px-12 py-5 rounded-full font-extrabold border-2 border-white/20 text-white hover:bg-white/10 transition-all duration-500 backdrop-blur-sm text-xl hover:border-white/40">
-                  Contact Us
-                </Link>
+              <div className="space-y-3 text-slate-600 text-sm leading-relaxed mb-6 font-medium">
+                <p>
+                  Odisha institution of Computer Application is an educational institution which is registered under Govt. of Odisha and it is also certified with an ISO 9001:2008 certified institute.
+                </p>
+                <p>
+                  It has its own and unique training program methodology, which imparts highest theory & practical timings in computer education. Discipline and quality of education is the backbone of the organization.
+                </p>
               </div>
+              <Link to="/about">
+                <Button size="default" className="rounded-xl px-6 h-11 text-xs font-black uppercase tracking-widest shadow-md">
+                  Learn More
+                </Button>
+              </Link>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Director's Message Section */}
+      <section className="section-padding bg-slate-50 relative overflow-hidden">
+        <div className="section-container relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <AnimatedSection className="text-center mb-10">
+              <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Leadership</span>
+              <h2 className="text-3xl font-heading font-black mb-4">Director's Message</h2>
+              <div className="w-12 h-1 bg-primary mx-auto rounded-full" />
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.2} className="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100 relative">
+              <div className="absolute top-6 left-6 text-primary shadow-sm h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center -rotate-12">
+                <GraduationCap size={20} />
+              </div>
+              <div className="space-y-4 text-slate-600 leading-relaxed italic font-medium text-sm">
+                <p>
+                  "It is my pleasure and pride to welcome you to the Odisha Institute of Computers Application (OICA). Our prime aim is to make technology easy to learn."
+                </p>
+                <p>
+                  "The major objective of establishing OICA is to completely develop professionals with a positive attitude. We guide students at every step."
+                </p>
+                <div className="pt-4 mt-4 border-t border-slate-50 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-slate-100" />
+                  <div>
+                    <p className="not-italic font-black text-slate-900 text-xs uppercase tracking-widest">Director OICA</p>
+                    <p className="text-[9px] text-slate-400 font-bold uppercase">Success Awaits</p>
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Training Methodology Section */}
+      <section className="section-padding">
+        <div className="section-container">
+          <AnimatedSection className="text-center mb-12">
+            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Success Mantra</span>
+            <h2 className="text-3xl font-heading font-black">Training Methodology</h2>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {[
+              { id: "01", title: "Theory", color: "bg-blue-500" },
+              { id: "02", title: "Practical", color: "bg-emerald-500" },
+              { id: "03", title: "Doubt", color: "bg-violet-500" },
+              { id: "04", title: "Assign", color: "bg-orange-500" },
+              { id: "05", title: "Exam", color: "bg-rose-500" },
+            ].map((m, i) => (
+              <AnimatedSection key={m.title} delay={i * 0.1}>
+                <div className="group relative bg-white p-6 rounded-2xl border border-slate-100 shadow-sm text-center hover:shadow-md transition-all">
+                  <div className={`w-10 h-10 mx-auto rounded-xl ${m.color} text-white flex items-center justify-center font-black mb-3 shadow-md text-xs`}>
+                    {m.id}
+                  </div>
+                  <h3 className="font-heading font-black text-[9px] uppercase tracking-widest">{m.title}</h3>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="section-padding bg-slate-50/50 relative">
+        <div className="section-container relative z-10">
+          <AnimatedSection className="text-center mb-12">
+            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Why Choose OICA</span>
+            <h2 className="text-3xl font-heading font-black mb-4">
+              Building a Professional Career
+            </h2>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {features.slice(0, 4).map((f, i) => (
+              <AnimatedSection key={f.title} delay={i * 0.1}>
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col h-full hover:border-primary/30 transition-all shadow-sm group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+                    <f.icon className="w-5 h-5 text-primary group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="font-heading font-black text-base mb-3 text-slate-900 leading-tight">{f.title}</h3>
+                  <p className="text-slate-500 text-xs leading-relaxed font-medium mb-4">{f.desc}</p>
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Courses */}
+      <section className="section-padding">
+        <div className="section-container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <AnimatedSection>
+              <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Programs</span>
+              <h2 className="text-3xl font-heading font-black">
+                Master the <span className="text-primary">Digital World</span>
+              </h2>
+            </AnimatedSection>
+            <AnimatedSection delay={0.2}>
+              <Link to="/courses">
+                <Button variant="outline" size="sm" className="rounded-xl px-6 font-black text-[10px] uppercase tracking-widest">
+                  View All <ArrowRight className="w-3 h-3 ml-2" />
+                </Button>
+              </Link>
+            </AnimatedSection>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {popularCourses.slice(0, 4).map((course, i) => (
+              <AnimatedSection key={course.title} delay={i * 0.1}>
+                <div className="group h-full bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} text-white flex items-center justify-center font-black text-lg mb-6 shadow-md transition-transform duration-500 group-hover:scale-105`}>
+                    {course.icon}
+                  </div>
+                  <h3 className="font-heading font-black text-lg text-slate-800 mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
+                  <p className="text-slate-500 text-[11px] font-medium leading-relaxed mb-6">{course.desc}</p>
+                  <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Details</span>
+                    <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center transition-all group-hover:bg-primary group-hover:text-white">
+                      <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery (Simplified Compact) */}
+      <section ref={galleryRef} className="section-padding bg-slate-950 text-center relative overflow-hidden">
+        <div className="section-container relative z-10 w-full max-w-5xl">
+          <AnimatedSection className="mb-10">
+            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 flex items-center justify-center gap-2">
+              <Camera className="w-4 h-4" /> Campus Life
+            </span>
+            <h2 className="text-2xl font-heading font-black text-white">
+              Explore Our <span className="text-primary">Gallery</span>
+            </h2>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10 h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
+            <motion.div style={{ y: yGallery1 }} className="flex flex-col gap-3">
+              {homeGallery.slice(0, 2).map((src, i) => (
+                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
+                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
+                </div>
+              ))}
             </motion.div>
+            <motion.div style={{ y: yGallery2 }} className="flex flex-col gap-3 mt-10 md:mt-16">
+              {homeGallery.slice(2, 4).map((src, i) => (
+                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
+                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
+                </div>
+              ))}
+            </motion.div>
+            <motion.div style={{ y: yGallery1 }} className="hidden lg:flex flex-col gap-3">
+              {homeGallery.slice(4, 6).map((src, i) => (
+                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
+                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          <AnimatedSection>
+            <Link to="/gallery">
+              <Button size="sm" className="rounded-xl px-8 h-10 text-[10px] font-black uppercase tracking-widest shadow-md">
+                View Gallery <ArrowRight className="w-3 h-3 ml-2" />
+              </Button>
+            </Link>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Achievers Grid Compact */}
+      <section className="py-16 bg-white relative overflow-hidden">
+        <div className="section-container relative z-10 text-slate-900">
+          <AnimatedSection className="text-center mb-10">
+            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[9px] font-black mb-2 tracking-widest uppercase border border-slate-200">
+              Top Achievers
+            </span>
+            <h2 className="text-2xl font-heading font-black text-slate-900">
+              Student Success Stories
+            </h2>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {achievers.map((a, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -5 }}
+                className="group relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl flex items-center gap-4 transition-all hover:bg-white/10"
+              >
+                <img src={a.img} alt={a.name} className="w-16 h-16 rounded-2xl object-cover ring-2 ring-primary/20 group-hover:scale-105 transition-transform" />
+                <div>
+                  <h3 className="font-heading font-bold text-white text-lg">{a.name}</h3>
+                  <p className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">{a.role}</p>
+                </div>
+                <Star className="absolute top-6 right-6 w-4 h-4 text-emerald-400/20 group-hover:text-emerald-400 transition-colors" />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -352,14 +521,7 @@ const Home = () => {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
+          animation: marquee 30s linear infinite;
         }
       `}</style>
     </div>

@@ -1,70 +1,80 @@
 import { Send, GraduationCap, CheckCircle2, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const ApplyNow = () => {
   return (
-    <div className="pt-32 pb-24 min-h-screen bg-secondary/30">
+    <div className="pt-24 pb-16 min-h-screen bg-slate-50">
       <div className="container-max px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           {/* Header Info Info */}
-          <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-primary/10 text-primary rounded-3xl flex items-center justify-center mx-auto mb-8 animate-float">
-              <GraduationCap size={40} />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-10"
+          >
+            <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <GraduationCap size={32} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 italic">Secure Your Future Today</h1>
-            <p className="text-muted-foreground text-lg italic">
-              "Fill in your details below to apply for admission at Odisha Institute of Computer Application."
+            <h1 className="text-3xl md:text-4xl font-black mb-3 text-slate-900 tracking-tight">Apply for Admission</h1>
+            <p className="text-slate-500 text-sm font-medium italic">
+              "Join 10,000+ students building their future with OICA."
             </p>
-          </div>
+          </motion.div>
 
-          <div className="card-premium p-10 lg:p-16 shadow-2xl border-white bg-white/80 backdrop-blur-xl mb-12 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white p-6 md:p-10 rounded-2xl shadow-xl shadow-slate-200/20 border border-slate-200 mb-10 relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             
-            <form className="relative z-10 space-y-10" onSubmit={(e) => e.preventDefault()}>
+            <form className="relative z-10 space-y-8" onSubmit={(e) => e.preventDefault()}>
               {/* Personal Details Personal Sections */}
-              <div className="space-y-6">
-                <h3 className="text-xl font-bold flex items-center gap-3 text-primary">
-                  <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center text-sm">1</div>
-                  Student Information
+              <div className="space-y-5">
+                <h3 className="text-base font-black flex items-center gap-3 text-primary uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-lg bg-primary text-white flex items-center justify-center text-[10px]">1</div>
+                  Student Info
                 </h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Full Name</label>
-                    <input type="text" placeholder="John Doe" className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium" />
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Full Name</label>
+                    <input type="text" placeholder="John Doe" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Phone Number</label>
-                    <input type="tel" placeholder="+91 00000 00000" className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium" />
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Phone Number</label>
+                    <input type="tel" placeholder="+91 00000 00000" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Email Address</label>
-                    <input type="email" placeholder="example@mail.com" className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium" />
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Email Address</label>
+                    <input type="email" placeholder="example@mail.com" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Gender</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Gender</label>
                     <div className="relative">
-                      <select className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all appearance-none cursor-pointer font-medium">
+                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>Male</option>
                         <option>Female</option>
                         <option>Other</option>
                       </select>
-                      <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" size={20} />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Course & Location Location Sections */}
-              <div className="space-y-6 pt-6 border-t border-border">
-                <h3 className="text-xl font-bold flex items-center gap-3 text-primary">
-                  <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center text-sm">2</div>
-                  Course & Preferred Branch
+              <div className="space-y-5 pt-6 border-t border-slate-100">
+                <h3 className="text-base font-black flex items-center gap-3 text-primary uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-lg bg-primary text-white flex items-center justify-center text-[10px]">2</div>
+                  Course & Location
                 </h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Select Course</label>
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Select Course</label>
                     <div className="relative">
-                      <select className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all appearance-none cursor-pointer font-medium">
+                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>PGDCA</option>
                         <option>Tally ERP</option>
                         <option>Web Design</option>
@@ -72,62 +82,66 @@ const ApplyNow = () => {
                         <option>Advanced Office</option>
                         <option>DCA</option>
                       </select>
-                      <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" size={20} />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Select Branch/District</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Preferred District</label>
                     <div className="relative">
-                      <select className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all appearance-none cursor-pointer font-medium">
+                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>Bhubaneswar</option>
                         <option>Cuttack</option>
                         <option>Puri</option>
                         <option>Sambalpur</option>
                         <option>Ganjam</option>
-                        <option>Other District</option>
+                        <option>Other</option>
                       </select>
-                      <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" size={20} />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Message Message Section */}
-              <div className="space-y-6 pt-6 border-t border-border">
-                <h3 className="text-xl font-bold flex items-center gap-3 text-primary">
-                  <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center text-sm">3</div>
-                  Additional Message
+              {/* Message Section */}
+              <div className="space-y-5 pt-6 border-t border-slate-100">
+                <h3 className="text-base font-black flex items-center gap-3 text-primary uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-lg bg-primary text-white flex items-center justify-center text-[10px]">3</div>
+                  Additional
                 </h3>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">Your Message (Optional)</label>
-                  <textarea rows={4} placeholder="Any specific requirements or questions?" className="w-full bg-white border border-border rounded-2xl py-4 px-6 outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium resize-none"></textarea>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Message (Optional)</label>
+                  <textarea rows={3} placeholder="Any specific requirements?" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs resize-none"></textarea>
                 </div>
               </div>
 
-              <div className="pt-6">
-                <button type="submit" className="w-full bg-primary text-white py-6 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:scale-[1.01] active:scale-95 transition-all text-xl mb-6">
-                  Submit Application
-                  <Send size={24} />
+              <div className="pt-4">
+                <button type="submit" className="w-full bg-primary text-white py-4 rounded-xl font-black flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all text-xs tracking-widest uppercase mb-4">
+                  Send Application
+                  <Send size={14} />
                 </button>
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground font-medium">
-                  <CheckCircle2 size={16} className="text-emerald-500" />
-                  Your information is safe and will only be used for admission purposes.
+                <div className="flex items-center justify-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <CheckCircle2 size={12} className="text-emerald-500" />
+                  Secure & Privacy Guaranteed
                 </div>
               </div>
             </form>
-          </div>
+          </motion.div>
 
           {/* Student Help Help Sections */}
-          <div className="text-center p-12 bg-white rounded-[3rem] border border-border shadow-xl">
-            <h4 className="font-bold text-xl mb-4 italic text-primary">Already a student?</h4>
-            <p className="text-muted-foreground mb-8 italic">
-              "Verify your certificate or access student resources through our portal."
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-center p-8 bg-white rounded-2xl border border-slate-200 shadow-sm"
+          >
+            <h4 className="font-black text-sm mb-2 text-primary uppercase tracking-widest">Already a student?</h4>
+            <p className="text-slate-400 mb-6 font-bold text-xs uppercase tracking-tight">
+              Verify your certificate through our portal.
             </p>
-            <Link to="/verify" className="inline-flex items-center gap-2 text-primary font-bold hover:underline group">
+            <Link to="/verify" className="inline-flex items-center gap-2 text-primary font-black hover:underline group text-xs uppercase tracking-widest">
               Verify Certificate 
-              <ChevronDown className="-rotate-90 group-hover:translate-x-1 transition-transform" size={18} />
+              <ChevronDown className="-rotate-90 group-hover:translate-x-1 transition-transform" size={14} />
             </Link>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

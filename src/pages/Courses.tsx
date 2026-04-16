@@ -34,11 +34,10 @@ const Courses = () => {
   return (
     <div className="pb-24 min-h-screen">
       <PageHeader 
-        title="Our Courses"
-        subtitle="Master Your Future"
+        title="Our Training Programs"
+        subtitle="Modern Curriculum"
         breadcrumb="Courses"
-        description="Designed by experts to give you the practical skills needed for the IT industry. Choose from 16+ professional certifications."
-        backgroundImage="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
+        backgroundImage="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop"
         bottomPills={["Industry Ready", "Expert Led", "16+ Certifications"]}
       />
 

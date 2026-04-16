@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OICA - TakeIN Studio Proposal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap');
+
+        :root {
+            --primary: #4338ca;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-500: #64748b;
+            --slate-100: #f1f5f9;
+            --accent-1: #6366f1;
+            --accent-2: #818cf8;
+            --accent-3: #fbbf24;
+            --accent-4: #34d399;
+            --accent-5: #f472b6;
+            --accent-6: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--slate-700);
+            background: #fff;
+            padding: 0;
+        }
+
+        .page {
+            width: 850px;
+            margin: 0 auto;
+            padding: 80px;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid var(--slate-100);
+        }
+
+        .studio-logo {
+            font-family: 'Outfit';
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .studio-sub {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Outfit';
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--slate-900);
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .hero-sub {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 40px;
+            display: block;
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        h2 {
+            font-family: 'Outfit';
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-top: 50px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--slate-100);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-family: 'Outfit';
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 15px;
+        }
+
+        .meta-p {
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Pillars Section */
+        .pillar-card {
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--slate-100);
+            background: #fff;
+        }
+
+        .pillar-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pillar-title {
+            font-size: 20px;
+            font-family: 'Outfit';
+            font-weight: 800;
+            color: var(--slate-900);
+        }
+
+        .pillar-investment {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: var(--slate-100);
+        }
+
+        .obj-line {
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: block;
+        }
+
+        /* Vertical List Styling */
+        .v-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .v-list li {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--slate-500);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .v-list li span {
+            color: var(--primary);
+            font-size: 10px;
+        }
+
+        .outcome-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--slate-100);
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--slate-900);
+        }
+
+        /* Pricing Block */
+        .pricing-hero {
+            background: linear-gradient(135deg, var(--slate-900), #1e293b);
+            padding: 60px;
+            border-radius: 24px;
+            color: white;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-value {
+            font-family: 'Outfit';
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .pricing-checks {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.7;
+        }
+
+        /* General Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        th {
+            text-align: left;
+            padding: 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--slate-500);
+            background: var(--slate-100);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--slate-100);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .footer {
+            text-align: left;
+            padding: 40px 0;
+            margin-top: 40px;
+            border-top: 2px solid var(--slate-100);
+        }
+
+        .footer b {
+            font-family: 'Outfit';
+            font-size: 20px;
+            color: var(--slate-900);
+        }
+
+        .footer-logo {
+            font-family: 'Outfit';
+            font-weight: 900;
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .footer p {
+            font-size: 14px;
+            color: var(--slate-500);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .bold-quote {
+            font-size: 18px;
+            font-family: 'Outfit';
+            font-weight: 800;
+            color: var(--slate-900);
+            margin: 60px 0;
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 40px;
+        }
+
+        .commitment-section {
+            background: #f8fafc;
+            padding: 40px;
+            border-radius: 24px;
+            margin-top: 60px;
+            border: 1px solid var(--primary);
+            position: relative;
+        }
+
+        .commitment-title {
+            font-family: 'Outfit';
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .page {
+                width: 100%;
+                padding: 40px;
+            }
+
+            .pricing-hero {
+                background: var(--slate-900) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .p1 {
+                border-left: 6px solid var(--accent-1) !important;
+            }
+
+            .p2 {
+                border-left: 6px solid var(--accent-2) !important;
+            }
+
+            .p3 {
+                border-left: 6px solid var(--accent-3) !important;
+            }
+
+            .p4 {
+                border-left: 6px solid var(--accent-4) !important;
+            }
+
+            .p5 {
+                border-left: 6px solid var(--accent-5) !important;
+            }
+
+            .p6 {
+                border-left: 6px solid var(--accent-6) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <div>
+                <span class="studio-logo">TakeIN Studio</span>
+                <span class="studio-sub">Academic Infrastructure Design</span>
+            </div>
+            <div class="header-meta">
+                Date: April 08, 2026<br>
+
+            </div>
+        </header>
+
+        <section>
+            <h1>OICA Digital Learning Platform Proposal</h1>
+            <span class="hero-sub">Bespoke Academic Infrastructure</span>
+            <div class="meta-p">Prepared For: OICA (Odisha Institute of Computer Application) </div>
+                <div class="meta-p">Prepared By: TakeIN Studio (Ankit Tripathy)</div>
+                <div class="meta-p" style="color: var(--primary);">Estimated Delivery: On or before April 30, 2026</div>
+        </section>
+
+        <h2>Executive Summary</h2>
+        <p>To establish OICA as a technology-driven academic leader across Odisha, we propose the development of a fully
+            customized Digital Learning & Management Platform built using a high-performance React-based architecture.
+        </p>
+        <p>This is not a traditional website. It is a complete digital infrastructure designed to unify Student
+            Learning, Branch Management, Examination Systems, and Administrative Control into one centralized, scalable
+            ecosystem.</p>
+
+        <div class="pricing-hero">
+            <span
+                style="font-size: 11px; font-weight: 800; letter-spacing: 5px; opacity: 0.6; display: block; margin-bottom: 20px;">PROJECT
+                INVESTMENT</span>
+            <div class="pricing-value">₹11,000</div>
+            <div class="pricing-checks">
+                <span>● NO HIDDEN CHARGES</span>
+                <span>● FULLY CUSTOM-BUILT</span>
+                <span>● COMPLETE OWNERSHIP</span>
+            </div>
+        </div>
+
+        <h2>System Architecture – 6 Pillars of Excellence</h2>
+
+        <div class="pillar-card p1" style="border-left: 6px solid var(--accent-1);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 01: Premium Brand & Public Interface</span>
+                <span class="pillar-investment">₹2,000</span>
+            </div>
+            <span class="obj-line">Objective: Establish strong digital authority and first impression</span>
+            <ul class="v-list">
+                <li><span>●</span> Custom-built modern UI (React-based, no templates)</li>
+                <li><span>●</span> Fully responsive design (mobile, tablet, desktop)</li>
+                <li><span>●</span> Smooth animations and interactive sections</li>
+                <li><span>●</span> Dynamic course pages (editable anytime)</li>
+                <li><span>●</span> SEO-optimized structure for Google ranking</li>
+                <li><span>●</span> Lead capture system (enquiry/admission forms)</li>
+                <li><span>●</span> Our Presence page (district-wise coverage)</li>
+            </ul>
+            <div class="outcome-box">Positions OICA as a premium, tech-driven institute</div>
+        </div>
+
+        <div class="pillar-card p2" style="border-left: 6px solid var(--accent-2);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 02: Student Learning Management System (LMS)</span>
+                <span class="pillar-investment">₹2,200</span>
+            </div>
+            <span class="obj-line">Objective: Deliver seamless hybrid learning experience</span>
+            <ul class="v-list">
+                <li><span>●</span> Secure student login system</li>
+                <li><span>●</span> Personalized dashboard</li>
+                <li><span>●</span> Access to study materials (PDFs, videos, notes)</li>
+                <li><span>●</span> Course-wise structured content system</li>
+                <li><span>●</span> Progress tracking (visual indicators)</li>
+                <li><span>●</span> Activity-based learning flow</li>
+            </ul>
+            <div class="outcome-box">Transforms OICA into a hybrid (offline + online) education platform</div>
+        </div>
+
+        <div class="pillar-card p3" style="border-left: 6px solid var(--accent-3);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 03: Mock Test & Evaluation Engine</span>
+                <span class="pillar-investment">₹1,700</span>
+            </div>
+            <span class="obj-line">Objective: Automate assessments and performance tracking</span>
+            <ul class="v-list">
+                <li><span>●</span> MCQ-based examination system</li>
+                <li><span>●</span> Timer-based tests</li>
+                <li><span>●</span> Instant result generation</li>
+                <li><span>●</span> Score analytics and performance insights</li>
+                <li><span>●</span> Attempt history tracking</li>
+                <li><span>●</span> Scalable rank comparison system</li>
+            </ul>
+            <div class="outcome-box">Reduces manual workload and improves student engagement & performance tracking
+            </div>
+        </div>
+
+        <div class="pillar-card p4" style="border-left: 6px solid var(--accent-4);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 04: Multi-Branch Management Ecosystem</span>
+                <span class="pillar-investment">₹1,800</span>
+            </div>
+            <span class="obj-line">Objective: Centralized control with localized branch flexibility</span>
+            <ul class="v-list">
+                <li><span>●</span> Dedicated dashboard for each branch</li>
+                <li><span>●</span> Independent content management per branch</li>
+                <li><span>●</span> District-specific landing pages</li>
+                <li><span>●</span> Document upload & verification system</li>
+                <li><span>●</span> Location-based personalization</li>
+            </ul>
+            <div class="outcome-box">Each branch operates locally while maintaining central brand consistency</div>
+        </div>
+
+        <div class="pillar-card p5" style="border-left: 6px solid var(--accent-5);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 05: Admin Command Center</span>
+                <span class="pillar-investment">₹1,500</span>
+            </div>
+            <span class="obj-line">Objective: Full control over entire platform</span>
+            <ul class="v-list">
+                <li><span>●</span> Centralized dashboard for all operations</li>
+                <li><span>●</span> Student & branch management system</li>
+                <li><span>●</span> No-code content management system (CMS)</li>
+                <li><span>●</span> Analytics dashboard (engagement, activity)</li>
+                <li><span>●</span> Media & gallery management</li>
+                <li><span>●</span> Role-based access control</li>
+            </ul>
+            <div class="outcome-box">One dashboard to manage the entire OICA ecosystem</div>
+        </div>
+
+        <div class="pillar-card p6" style="border-left: 6px solid var(--accent-6);">
+            <div class="pillar-head">
+                <span class="pillar-title">Pillar 06: Future-Ready Scalable Architecture</span>
+                <span class="pillar-investment">₹1,000</span>
+            </div>
+            <span class="obj-line">Capabilities: Enable long-term growth without rebuilding</span>
+            <ul class="v-list">
+                <li><span>●</span> Easily scalable for new districts / branches</li>
+                <li><span>●</span> Mobile app compatibility (future-ready)</li>
+                <li><span>●</span> Feature upgrades without rewriting system</li>
+                <li><span>●</span> High-performance architecture (faster than WordPress)</li>
+                <li><span>●</span> Secure backend structure</li>
+            </ul>
+            <div class="outcome-box">A system that grows with OICA</div>
+        </div>
+
+        <h2>Additional System Integrations</h2>
+        <span class="obj-line" style="margin-top: -15px;">Investment: ₹800</span>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="pillar-card" style="padding: 20px;">
+                <h3>1. Certificate Verification</h3>
+                <ul class="v-list">
+                    <li><span>●</span> Unique certificate ID for each student</li>
+                    <li><span>●</span> Public verification page</li>
+                    <li><span>●</span> Real-time validation status</li>
+                </ul>
+            </div>
+            <div class="pillar-card" style="padding: 20px;">
+                <h3>2. Student Result Portal</h3>
+                <ul class="v-list">
+                    <li><span>●</span> Result access via Roll Number / ID</li>
+                    <li><span>●</span> Instant digital result display</li>
+                    <li><span>●</span> Exam history tracking</li>
+                </ul>
+            </div>
+            <div class="pillar-card" style="padding: 20px;">
+                <h3>3. Dynamic Testimonials</h3>
+                <ul class="v-list">
+                    <li><span>●</span> Social proof integration</li>
+                    <li><span>●</span> Student feedback management</li>
+                    <li><span>●</span> Enhanced brand credibility</li>
+                </ul>
+            </div>
+            <div class="pillar-card" style="padding: 20px;">
+                <h3>4. Media & System Utilities</h3>
+                <ul class="v-list">
+                    <li><span>●</span> Admin gallery management</li>
+                    <li><span>●</span> Optimized performance layers</li>
+                    <li><span>●</span> Advanced security & encryption</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Complete Platform Coverage</h2>
+        <ul class="v-list" style="columns: 2;">
+            <li><span>●</span> Home / Landing</li>
+            <li><span>●</span> Comprehensive About Us</li>
+            <li><span>●</span> Dynamic Courses Catalog</li>
+            <li><span>●</span> HQ Media Gallery</li>
+            <li><span>●</span> Customer Testimonials</li>
+            <li><span>●</span> Unique Features Section</li>
+            <li><span>●</span> Certificate Verification</li>
+            <li><span>●</span> Branch Network Explorer</li>
+            <li><span>●</span> Interactive Contact Hub</li>
+            <li><span>●</span> Apply Now Portal</li>
+        </ul>
+
+        <h2>Execution Advantage</h2>
+        <ul class="v-list">
+            <li><span>●</span> Delivered by a team of 8+ full-stack developers</li>
+            <li><span>●</span> Faster execution compared to standard agencies</li>
+            <li><span>●</span> High-quality architecture at optimized cost</li>
+            <li><span>●</span> Clean and scalable proprietary codebase</li>
+        </ul>
+
+        <h2>Final Price Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component Name</th>
+                    <th>Investment (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Premium Brand Interface</td>
+                    <td>2,000</td>
+                </tr>
+                <tr>
+                    <td>Student LMS System</td>
+                    <td>2,200</td>
+                </tr>
+                <tr>
+                    <td>Mock Test & Evaluation Engine</td>
+                    <td>1,700</td>
+                </tr>
+                <tr>
+                    <td>Multi-Branch Management System</td>
+                    <td>1,800</td>
+                </tr>
+                <tr>
+                    <td>Admin Command Center</td>
+                    <td>1,500</td>
+                </tr>
+                <tr>
+                    <td>Scalable Architecture</td>
+                    <td>1,000</td>
+                </tr>
+                <tr>
+                    <td>Additional Integrations</td>
+                    <td>800</td>
+                </tr>
+                <tr style="background: var(--slate-100);">
+                    <td style="color: var(--primary);">TOTAL INVESTMENT</td>
+                    <td style="color: var(--primary);">₹11,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="commitment-section">
+            <span class="commitment-title">A Personal Commitment</span>
+            <p style="font-size: 14px; color: var(--slate-900); font-weight: 600; font-style: italic;">
+                "This platform is being built with immense hard work, sleepless nights, and a vision that goes far
+                beyond a simple business agreement. For us, OICA isn't just a client; this project is a masterpiece we
+                are nurturing from scratch. We have poured our technical passion into every line of code to ensure that
+                OICA stands as the undisputed leader in Odisha's computer education landscape. We are fully committed to
+                your success, as your growth is a reflection of our dedication."
+            </p>
+        </div>
+
+        <div class="bold-quote">
+            This is not just a website; it is a complete digital infrastructure for OICA to manage students, branches,
+            and learning in one unified system.
+        </div>
+
+        <p style="text-align: center; font-weight: 800; font-size: 18px; color: var(--slate-900);">Build Once. Scale
+            Forever.</p>
+        <p style="text-align: center; font-size: 13px; color: var(--slate-500); margin-top: -10px;">Empowering the
+            future of computer education across Odisha.</p>
+
+        <div class="footer">
+            <span class="footer-logo">TakeIN Studio</span>
+            <b>Ankit Tripathy</b>
+            <p>📧 takeinstudio@gmail.com</p>
+            <p>📞 8908233590</p>
+        </div>
+    </div>
+</body>
+
+</html>

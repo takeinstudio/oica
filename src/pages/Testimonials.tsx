@@ -54,7 +54,6 @@ const Testimonials = () => {
         title="Student Success Stories"
         subtitle="Testimonials"
         breadcrumb="Testimonials"
-        description="Hear directly from our students about their learning experience and career growth at Odisha Institute of Computer Application."
         backgroundImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471&auto=format&fit=crop"
         bottomPills={["5000+ Happy Students", "95% Success Rate", "Verified Reviews"]}
       />

@@ -21,11 +21,10 @@ const Features = () => {
   return (
     <div className="pb-24">
       <PageHeader 
-        title="Core Features"
-        subtitle="Why Choose OICA"
+        title="Institutional Features"
+        subtitle="The OICA Advantage"
         breadcrumb="Features"
-        description="What sets OICA apart is our commitment to quality, practical-first learning, and a student-centric approach that ensures real-world success."
-        backgroundImage="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+        backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"
         bottomPills={["Govt. Registered", "ISO Certified", "100% Practical", "Placement Support"]}
       />
 
