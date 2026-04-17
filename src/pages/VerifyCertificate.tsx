@@ -207,7 +207,7 @@ const VerifyCertificate = () => {
                               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[9px] font-black uppercase mb-3">
                                  <Lock size={10} /> Official OICA Record
                               </div>
-                              <h2 className="text-4xl font-black tracking-tight">Verified Athlete</h2>
+                              <h2 className="text-4xl font-black tracking-tight">Verified Candidate</h2>
                            </div>
                         </div>
                         <div className="hidden md:flex flex-col items-end">
