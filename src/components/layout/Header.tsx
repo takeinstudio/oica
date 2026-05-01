@@ -13,7 +13,7 @@ const navLinks = [
   { label: "Courses", path: "/courses" },
   { label: "Gallery", path: "/gallery" },
   { label: "Branches", path: "/branches" },
-  { label: "Testimonials", path: "/#testimonials" },
+  { label: "Testimonials", path: "/testimonials" },
   { label: "Verification", path: "/verify" },
   { label: "Career", path: "/career" },
   { label: "Contact Us", path: "/contact" },
@@ -23,8 +23,17 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
-
-
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (path.startsWith('/#') && location.pathname === '/') {
+      e.preventDefault();
+      const id = path.replace('/#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      window.history.pushState({}, '', path);
+    }
+  };
   return (
     <header 
       className="fixed top-0 left-0 right-0 z-50 pointer-events-none"
@@ -69,7 +78,7 @@ const Header = () => {
             borderColor: "rgba(255, 255, 255, 0.15)",
             borderRadius: "24px",
           }}
-          className="relative flex items-center justify-between w-full border shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] backdrop-blur-2xl px-12"
+          className="relative flex items-center justify-between w-full border shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] backdrop-blur-2xl px-6 lg:px-8"
         >
           {/* Logo Section */}
           <div className="flex-1 flex justify-start items-center h-full">
@@ -95,13 +104,14 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation Navigation */}
-          <div className="hidden xl:flex flex-none items-center justify-center gap-1.5 h-full" aria-label="Main navigation">
+          <div className="hidden xl:flex flex-none items-center justify-center gap-1 h-full" aria-label="Main navigation">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
+                  onClick={(e) => handleNavClick(e, link.path)}
                   className={`nav-link-hover relative transition-all duration-300 ${
                     isActive 
                       ? "text-white font-bold"
@@ -119,8 +129,8 @@ const Header = () => {
                 </Link>
               );
             })}
-            <div className="w-px h-4 bg-white/10 mx-6" />
-            <Link to="/login" className="nav-link-hover text-white/90 hover:text-white">
+            <div className="w-px h-4 bg-white/10 mx-3" />
+            <Link to="/login" className="nav-link-hover text-white/90 hover:text-white pr-4 xl:pr-0">
                Login
             </Link>
           </div>

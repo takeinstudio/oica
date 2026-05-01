@@ -36,11 +36,7 @@ const App = () => {
   const [showPreloader, setShowPreloader] = useState(false);
 
   useEffect(() => {
-    const hasLoadedBefore = sessionStorage.getItem('oica_preloaded');
-    if (!hasLoadedBefore) {
-      setShowPreloader(true);
-      sessionStorage.setItem('oica_preloaded', 'true');
-    }
+    setShowPreloader(true);
   }, []);
 
   return (

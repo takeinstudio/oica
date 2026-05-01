@@ -490,20 +490,20 @@ const Home = () => {
       </section>
 
       {/* Testimonials / Achievers */}
-      <section id="testimonials" className="py-24 bg-slate-950 relative overflow-hidden">
+      <section id="testimonials" className="py-24 bg-slate-50 relative overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
         
         <div className="section-container relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 text-primary text-[10px] font-black mb-4 tracking-widest uppercase border border-white/10 shadow-lg">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white text-primary text-[10px] font-black mb-4 tracking-widest uppercase border border-slate-200 shadow-sm">
               Top Achievers
             </span>
-            <h2 className="text-3xl md:text-4xl font-heading font-black text-white">
+            <h2 className="text-3xl md:text-4xl font-heading font-black text-slate-900">
               Student Success Stories
             </h2>
-            <p className="text-slate-400 mt-4 max-w-2xl mx-auto font-medium">
+            <p className="text-slate-500 mt-4 max-w-2xl mx-auto font-medium">
               Discover how OICA has empowered our students to achieve their career goals and excel in the digital world.
             </p>
           </AnimatedSection>
@@ -513,9 +513,9 @@ const Home = () => {
               <AnimatedSection key={i} delay={i * 0.1}>
                 <motion.div
                   whileHover={{ y: -10 }}
-                  className="group relative bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] flex flex-col h-full transition-all hover:bg-white/10 hover:border-primary/30 shadow-2xl"
+                  className="group relative bg-white border border-slate-200 p-8 rounded-[2.5rem] flex flex-col h-full transition-all hover:border-primary/30 shadow-sm hover:shadow-xl"
                 >
-                  <Quote className="absolute top-8 right-8 w-8 h-8 text-white/10 group-hover:text-primary/40 transition-colors" />
+                  <Quote className="absolute top-8 right-8 w-8 h-8 text-slate-100 group-hover:text-primary/10 transition-colors" />
                   
                   <div className="flex gap-1 mb-6">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -523,18 +523,18 @@ const Home = () => {
                     ))}
                   </div>
 
-                  <p className="text-slate-300 italic mb-8 flex-1 leading-relaxed text-sm">
+                  <p className="text-slate-600 italic mb-8 flex-1 leading-relaxed text-sm relative z-10">
                     "{a.review}"
                   </p>
 
-                  <div className="flex items-center gap-4 mt-auto pt-6 border-t border-white/10">
+                  <div className="flex items-center gap-4 mt-auto pt-6 border-t border-slate-100">
                     <img 
                       src={a.img} 
                       alt={a.name} 
-                      className="w-14 h-14 rounded-2xl object-cover ring-2 ring-primary/30 group-hover:ring-primary transition-all shadow-lg" 
+                      className="w-14 h-14 rounded-2xl object-cover ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all shadow-sm" 
                     />
                     <div>
-                      <h3 className="font-heading font-black text-white text-base leading-tight">{a.name}</h3>
+                      <h3 className="font-heading font-black text-slate-900 text-base leading-tight">{a.name}</h3>
                       <p className="text-primary text-[10px] font-black uppercase tracking-widest mt-1">{a.role}</p>
                     </div>
                   </div>
