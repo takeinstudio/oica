@@ -37,7 +37,6 @@ const AdminDashboard = () => {
   // Data State
   const [students, setStudents] = useState<any[]>([]);
   const [branches, setBranches] = useState<any[]>([]);
-  const [lectures, setLectures] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
   const [careerJobs, setCareerJobs] = useState<any[]>([]);
   const [careerApps, setCareerApps] = useState<any[]>([]);
@@ -52,7 +51,6 @@ const AdminDashboard = () => {
     // Load Data
     setStudents(getStorageData(STORAGE_KEYS.USERS).filter((u: any) => u.role === 'student'));
     setBranches(getStorageData(STORAGE_KEYS.BRANCHES));
-    setLectures(getStorageData(STORAGE_KEYS.LECTURES));
     setGallery(getStorageData(STORAGE_KEYS.GALLERY));
     setCareerJobs(getStorageData(STORAGE_KEYS.JOBS));
     setCareerApps(getStorageData(STORAGE_KEYS.CAREER_APPS));

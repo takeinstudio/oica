@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Users,
   ArrowRight, Star, Shield, Camera,
-  GraduationCap, Mail
+  GraduationCap, Mail, Quote
 } from "lucide-react";
 import { useRef } from "react";
 
@@ -53,9 +53,24 @@ const popularCourses = [
 ];
 
 const achievers = [
-  { name: "Rahul Mohanty", role: "Software Engineer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374" },
-  { name: "Priya Das", role: "Data Analyst", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374" },
-  { name: "Sanjay Kumar", role: "UI Designer", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470" },
+  { 
+    name: "Rahul Mohanty", 
+    role: "Software Engineer", 
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
+    review: "The practical training at OICA helped me secure my dream job. The curriculum is perfectly aligned with industry needs."
+  },
+  { 
+    name: "Priya Das", 
+    role: "Data Analyst", 
+    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374",
+    review: "OICA's advanced courses provided me with the analytical skills I needed to transition into data science smoothly."
+  },
+  { 
+    name: "Sanjay Kumar", 
+    role: "UI Designer", 
+    img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470",
+    review: "The design tools and workshops offered here gave me the creative foundation and technical edge to excel."
+  },
 ];
 
 const homeGallery = [
@@ -93,7 +108,7 @@ const Home = () => {
   return (
     <div className="min-h-screen" ref={containerRef}>
       {/* Cinematic Hero Section */}
-      <section className="relative h-screen flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
+      <section className="relative min-h-screen flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
         {/* Full-Screen Video Background */}
         <div className="absolute inset-0 z-0 bg-slate-950">
           <motion.div
@@ -119,7 +134,7 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full px-6 lg:px-20">
+        <div className="relative z-10 w-full px-6 lg:px-20 py-16">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
 
             {/* Left Content Column */}
@@ -133,69 +148,68 @@ const Home = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/20 border border-secondary/30 rounded-full mb-8 backdrop-blur-md shadow-lg shadow-secondary/10"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/20 border border-secondary/30 rounded-full mb-6 backdrop-blur-md shadow-lg shadow-secondary/10"
               >
                 <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                 <span className="text-[11px] font-black text-secondary uppercase tracking-[0.2em]">Excellence in Computer Education</span>
               </motion.div>
 
-              <h1 className="text-4xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter mb-6 filter drop-shadow-2xl">
-                <br />
+              <h1 className="text-4xl md:text-5xl font-black text-white leading-[0.95] tracking-tighter mb-4 filter drop-shadow-2xl">
                 <span className="text-white">Odisha Institute </span> <br />
-                <span className="text-secondary text-5xl md:text-7xl">of Computer Application</span>
+                <span className="text-secondary text-5xl md:text-6xl">of Computer Application</span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/80 font-medium max-w-xl leading-relaxed mb-10 tracking-tight">
+              <p className="text-base md:text-lg text-white/80 font-medium max-w-xl leading-relaxed mb-8 tracking-tight">
                 Excellence in education for comprehensive skill development. Join our premier institution with proven results and dedicated mentorship across Odisha.
               </p>
 
-              <div className="flex flex-wrap gap-5">
+              <div className="flex flex-wrap gap-4">
                 <Link to="/courses">
-                  <Button size="lg" className="rounded-2xl px-10 py-7 font-black text-xs tracking-widest uppercase h-auto shadow-2xl shadow-secondary/20 hover:shadow-secondary/40 transition-all hover:scale-105 active:scale-95 bg-secondary text-slate-900 border-none">
+                  <Button size="lg" className="rounded-xl px-8 py-6 font-black text-xs tracking-widest uppercase h-auto shadow-2xl shadow-secondary/20 hover:shadow-secondary/40 transition-all hover:scale-105 active:scale-95 bg-secondary text-slate-900 border-none">
                     Explore Programs
-                    <ArrowRight className="ml-3 w-5 h-5" />
+                    <ArrowRight className="ml-3 w-4 h-4" />
                   </Button>
                 </Link>
                 <Link to="/contact">
-                  <Button size="lg" className="rounded-2xl px-10 py-7 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95">
+                  <Button size="lg" className="rounded-xl px-8 py-6 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95">
                     Contact Us
-                    <Mail className="ml-3 w-5 h-5" />
+                    <Mail className="ml-3 w-4 h-4" />
                   </Button>
                 </Link>
               </div>
             </motion.div>
 
             {/* Right Column (Floating Cards Layout) */}
-            <div className="relative hidden lg:block h-[600px]">
+            <div className="relative hidden lg:block h-[500px]">
               {/* Expert Faculty Card */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: 0.4, type: "spring" }}
-                className="absolute top-20 right-20 w-64 p-6 bg-secondary rounded-[2.5rem] shadow-2xl shadow-secondary/20 z-20 group"
+                className="absolute top-0 right-10 w-60 p-5 bg-secondary rounded-3xl shadow-2xl shadow-secondary/20 z-20 group"
               >
-                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-slate-900 mb-4 group-hover:scale-110 transition-transform">
-                  <GraduationCap size={24} />
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-slate-900 mb-3 group-hover:scale-110 transition-transform">
+                  <GraduationCap size={20} />
                 </div>
-                <h3 className="text-lg font-heading font-black text-slate-900 mb-2">Expert Faculty</h3>
-                <p className="text-slate-800 text-xs font-bold leading-relaxed opacity-80">
-                  Master computer science with industry-experienced professionals guiding your career journey.
+                <h3 className="text-base font-heading font-black text-slate-900 mb-1">Expert Faculty</h3>
+                <p className="text-slate-800 text-[11px] font-bold leading-relaxed opacity-80">
+                  Master computer science with industry-experienced professionals.
                 </p>
               </motion.div>
 
               {/* Trusted Community Card */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, x: -50 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
+                initial={{ opacity: 0, scale: 0.8, x: 50, y: 100 }}
+                animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
                 transition={{ delay: 0.6, type: "spring" }}
-                className="absolute top-52 left-0 w-64 p-6 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] shadow-2xl z-30 group"
+                className="absolute top-40 right-0 w-60 p-5 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl z-30 group"
               >
-                <div className="w-14 h-14 bg-secondary/80 rounded-2xl flex items-center justify-center text-slate-900 mb-6 group-hover:scale-110 transition-transform">
-                  <Users size={28} />
+                <div className="w-12 h-12 bg-secondary/80 rounded-xl flex items-center justify-center text-slate-900 mb-4 group-hover:scale-110 transition-transform">
+                  <Users size={24} />
                 </div>
-                <h3 className="text-xl font-heading font-black text-white mb-2">Trusted Community</h3>
-                <p className="text-white/60 text-xs font-bold leading-relaxed">
-                  Trusted by 5000+ students across Odisha since 2014. A legacy of excellence in training.
+                <h3 className="text-lg font-heading font-black text-white mb-1">Trusted Community</h3>
+                <p className="text-white/60 text-[11px] font-bold leading-relaxed">
+                  Trusted by 5000+ students across Odisha since 2014.
                 </p>
               </motion.div>
 
@@ -204,29 +218,19 @@ const Home = () => {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                className="absolute bottom-0 right-0 left-20 p-10 bg-rose-600 rounded-[3rem] shadow-2xl shadow-rose-900/40 z-10 overflow-hidden group"
+                className="absolute bottom-0 right-0 left-20 p-6 bg-rose-600 rounded-3xl shadow-2xl shadow-rose-900/40 z-10 overflow-hidden group"
               >
-                <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform">
-                  <Star size={100} />
+                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-125 transition-transform">
+                  <Star size={80} />
                 </div>
-                <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-4 block">Results Excellence</span>
-                <h3 className="text-4xl font-heading font-black text-white mb-2 leading-tight">100+ Success <br /> Stories</h3>
-                <p className="text-white/70 text-[11px] font-bold uppercase tracking-widest mt-4 flex items-center gap-2">
-                  In Top Educational Institutions <ArrowRight size={14} />
+                <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em] mb-2 block">Results Excellence</span>
+                <h3 className="text-2xl font-heading font-black text-white mb-1 leading-tight">100+ Success Stories</h3>
+                <p className="text-white/70 text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2">
+                  In Top Educational Institutions <ArrowRight size={12} />
                 </p>
               </motion.div>
             </div>
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30">
-          <span className="text-[8px] font-black uppercase tracking-[0.3em] font-sans">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent"
-          />
         </div>
 
         {/* Integrated Notice Board at bottom of Hero */}
@@ -485,32 +489,57 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Achievers Grid Compact */}
-      <section className="py-16 bg-white relative overflow-hidden">
-        <div className="section-container relative z-10 text-slate-900">
-          <AnimatedSection className="text-center mb-10">
-            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[9px] font-black mb-2 tracking-widest uppercase border border-slate-200">
+      {/* Testimonials / Achievers */}
+      <section id="testimonials" className="py-24 bg-slate-950 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="section-container relative z-10">
+          <AnimatedSection className="text-center mb-16">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 text-primary text-[10px] font-black mb-4 tracking-widest uppercase border border-white/10 shadow-lg">
               Top Achievers
             </span>
-            <h2 className="text-2xl font-heading font-black text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-heading font-black text-white">
               Student Success Stories
             </h2>
+            <p className="text-slate-400 mt-4 max-w-2xl mx-auto font-medium">
+              Discover how OICA has empowered our students to achieve their career goals and excel in the digital world.
+            </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {achievers.map((a, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ y: -5 }}
-                className="group relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl flex items-center gap-4 transition-all hover:bg-white/10"
-              >
-                <img src={a.img} alt={a.name} className="w-16 h-16 rounded-2xl object-cover ring-2 ring-primary/20 group-hover:scale-105 transition-transform" />
-                <div>
-                  <h3 className="font-heading font-bold text-white text-lg">{a.name}</h3>
-                  <p className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">{a.role}</p>
-                </div>
-                <Star className="absolute top-6 right-6 w-4 h-4 text-emerald-400/20 group-hover:text-emerald-400 transition-colors" />
-              </motion.div>
+              <AnimatedSection key={i} delay={i * 0.1}>
+                <motion.div
+                  whileHover={{ y: -10 }}
+                  className="group relative bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] flex flex-col h-full transition-all hover:bg-white/10 hover:border-primary/30 shadow-2xl"
+                >
+                  <Quote className="absolute top-8 right-8 w-8 h-8 text-white/10 group-hover:text-primary/40 transition-colors" />
+                  
+                  <div className="flex gap-1 mb-6">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+
+                  <p className="text-slate-300 italic mb-8 flex-1 leading-relaxed text-sm">
+                    "{a.review}"
+                  </p>
+
+                  <div className="flex items-center gap-4 mt-auto pt-6 border-t border-white/10">
+                    <img 
+                      src={a.img} 
+                      alt={a.name} 
+                      className="w-14 h-14 rounded-2xl object-cover ring-2 ring-primary/30 group-hover:ring-primary transition-all shadow-lg" 
+                    />
+                    <div>
+                      <h3 className="font-heading font-black text-white text-base leading-tight">{a.name}</h3>
+                      <p className="text-primary text-[10px] font-black uppercase tracking-widest mt-1">{a.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatedSection>
             ))}
           </div>
         </div>

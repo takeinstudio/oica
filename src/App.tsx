@@ -20,6 +20,8 @@ import Gallery from './pages/Gallery';
 import Testimonials from './pages/Testimonials';
 import Results from './pages/Results';
 import Career from './pages/Career';
+import CertificateView from './pages/CertificateView';
+import MarksheetView from './pages/MarksheetView';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -53,6 +55,8 @@ const App = () => {
         <Route path="/dashboard/admin" element={<AdminDashboard />} />
         <Route path="/dashboard/branch" element={<BranchDashboard />} />
         <Route path="/branch/:id" element={<BranchDetail />} />
+        <Route path="/certificate-view/:id" element={<CertificateView />} />
+        <Route path="/marksheet-view/:id" element={<MarksheetView />} />
         <Route
           path="*"
           element={

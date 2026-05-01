@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getStorageData, setStorageData, STORAGE_KEYS } from "@/lib/storage";
+import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 import { toast } from "sonner";
 import PageHeader from "@/components/PageHeader";
 

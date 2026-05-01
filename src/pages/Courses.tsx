@@ -8,7 +8,9 @@ import {
   Clock, 
   GraduationCap, 
   IndianRupee,
-  Plus
+  Plus,
+  X,
+  CheckCircle2
 } from 'lucide-react';
 import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
@@ -17,6 +19,23 @@ import { Button } from '@/components/ui/button';
 const Courses = () => {
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState("");
+  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
+  const [selectedCourseForEnroll, setSelectedCourseForEnroll] = useState<any>(null);
+  const [enrollForm, setEnrollForm] = useState({ name: '', phone: '', message: '' });
+  const [enrollStatus, setEnrollStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleEnrollClick = (course: any) => {
+    setSelectedCourseForEnroll(course);
+    setEnrollModalOpen(true);
+    setEnrollStatus('idle');
+    setEnrollForm({ name: '', phone: '', message: '' });
+  };
+
+  const submitEnrollment = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEnrollStatus('submitting');
+    setTimeout(() => setEnrollStatus('success'), 1500);
+  };
 
   const courseList = [
     { 
@@ -239,7 +258,10 @@ const Courses = () => {
                     <button className="flex-1 min-w-[100px] inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition-colors">
                       <Download size={14} /> Brochure
                     </button>
-                    <button className="flex-[1.5] min-w-[120px] inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                    <button 
+                      onClick={() => handleEnrollClick(course)}
+                      className="flex-[1.5] min-w-[120px] inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                    >
                       Enroll <ArrowRight size={14} />
                     </button>
                     <button className="w-10 h-10 inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-110">
@@ -266,6 +288,100 @@ const Courses = () => {
           </div>
         </div>
       </div>
+
+      {/* Enroll Modal */}
+      <AnimatePresence>
+        {enrollModalOpen && selectedCourseForEnroll && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" 
+              onClick={() => setEnrollModalOpen(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+            >
+              <button 
+                onClick={() => setEnrollModalOpen(false)} 
+                className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/20 hover:bg-white/40 text-slate-800 md:text-white rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Left Side: Course Info */}
+              <div className="md:w-2/5 bg-slate-900 relative overflow-hidden p-8 flex flex-col justify-center min-h-[250px]">
+                <div className="absolute inset-0 opacity-20">
+                   <img src={selectedCourseForEnroll.image} alt="course" className="w-full h-full object-cover" />
+                   <div className="absolute inset-0 bg-slate-900" />
+                </div>
+                <div className="relative z-10 text-white mt-8 md:mt-0">
+                  <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl mb-6">
+                    <BookOpen size={24} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 block">{selectedCourseForEnroll.category} Program</span>
+                  <h3 className="text-3xl font-black mb-4 leading-tight">{selectedCourseForEnroll.title}</h3>
+                  <div className="space-y-3 mb-8">
+                     <div className="flex items-center gap-3 text-sm text-slate-300 font-medium">
+                        <Clock size={16} className="text-primary" /> {selectedCourseForEnroll.duration}
+                     </div>
+                     <div className="flex items-center gap-3 text-sm text-slate-300 font-medium">
+                        <IndianRupee size={16} className="text-primary" /> {selectedCourseForEnroll.fee}
+                     </div>
+                  </div>
+                  <p className="text-sm text-slate-400 font-medium leading-relaxed hidden md:block">
+                     Complete your enrollment request and our counselors will get back to you with the next steps.
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Side: Form */}
+              <div className="md:w-3/5 p-8 md:p-12 bg-white relative">
+                {enrollStatus === 'success' ? (
+                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center text-center py-10">
+                      <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mb-6">
+                         <CheckCircle2 size={40} />
+                      </div>
+                      <h4 className="text-2xl font-black text-slate-900 mb-2">Request Received!</h4>
+                      <p className="text-slate-500 font-medium mb-8">Thank you for your interest in {selectedCourseForEnroll.title}. Our team will contact you shortly.</p>
+                      <Button onClick={() => setEnrollModalOpen(false)} className="rounded-xl px-8 bg-slate-900 font-black text-[11px] tracking-widest uppercase">
+                         Close Window
+                      </Button>
+                   </motion.div>
+                ) : (
+                   <div className="h-full flex flex-col justify-center">
+                      <div className="mb-8">
+                         <h4 className="text-2xl font-black text-slate-900">Enrollment Form</h4>
+                         <p className="text-slate-500 text-sm font-medium">Fill in your details to secure your seat.</p>
+                      </div>
+                      <form onSubmit={submitEnrollment} className="space-y-5">
+                         <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
+                            <input required type="text" value={enrollForm.name} onChange={(e) => setEnrollForm({...enrollForm, name: e.target.value})} className="w-full h-14 bg-slate-50 border border-slate-100 rounded-xl px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all font-bold" placeholder="John Doe" />
+                         </div>
+                         <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number</label>
+                            <input required type="tel" value={enrollForm.phone} onChange={(e) => setEnrollForm({...enrollForm, phone: e.target.value})} className="w-full h-14 bg-slate-50 border border-slate-100 rounded-xl px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all font-bold" placeholder="+91 00000 00000" />
+                         </div>
+                         <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Message (Optional)</label>
+                            <textarea value={enrollForm.message} onChange={(e) => setEnrollForm({...enrollForm, message: e.target.value})} className="w-full h-24 bg-slate-50 border border-slate-100 rounded-xl p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all font-bold resize-none" placeholder="Any specific questions?"></textarea>
+                         </div>
+                         <Button type="submit" disabled={enrollStatus === 'submitting'} className="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-[11px] tracking-widest uppercase shadow-xl shadow-primary/20 mt-4">
+                            {enrollStatus === 'submitting' ? "SENDING REQUEST..." : "SUBMIT ENROLLMENT"}
+                         </Button>
+                      </form>
+                   </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

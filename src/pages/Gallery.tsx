@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
-import { ImageIcon, Maximize2, Sparkles, Filter } from 'lucide-react';
+import { ImageIcon, Maximize2, Sparkles, Filter, X } from 'lucide-react';
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const categories = [
     'All', 
@@ -100,7 +101,10 @@ const Gallery = () => {
                          <div className="flex items-center gap-2 text-white/60 text-[10px] font-bold uppercase tracking-widest">
                             <ImageIcon size={14} className="text-primary" /> Gallery Asset
                          </div>
-                         <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center text-white border border-white/20 hover:bg-primary hover:border-primary transition-all">
+                         <div 
+                            onClick={() => setSelectedImage(img.url)}
+                            className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center text-white border border-white/20 hover:bg-primary hover:border-primary transition-all cursor-pointer"
+                          >
                             <Maximize2 size={18} />
                          </div>
                       </div>
@@ -110,6 +114,36 @@ const Gallery = () => {
             ))}
           </AnimatePresence>
         </div>
+
+        {/* Lightbox Modal */}
+        <AnimatePresence>
+          {selectedImage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedImage(null)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+            >
+              <motion.img
+                layoutId={selectedImage}
+                src={selectedImage}
+                alt="Full-size view"
+                className="max-w-full max-h-full rounded-2xl shadow-2xl"
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image
+              />
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1, transition: { delay: 0.3 } }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white/20 transition-all"
+              >
+                <X size={24} />
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Empty State */}
         {filteredImages.length === 0 && (
