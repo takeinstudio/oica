@@ -4,19 +4,23 @@ import {
   MapPin, 
   Phone, 
   ShieldCheck, 
-  FileText, 
   Image as ImageIcon,
   ArrowLeft,
   CheckCircle2,
   Building2,
   Star,
-  Download,
-  ExternalLink
+  ExternalLink,
+  BookOpen,
+  Bell,
+  Crown,
+  Globe,
+  Award
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 import { useState, useEffect, useMemo } from "react";
 import AnimatedSection from "@/components/shared/AnimatedSection";
+import Footer from "@/components/Footer";
 
 // Curated high-quality academy/tech images images for randomization
 const ACADEMY_IMAGES = [
@@ -47,7 +51,11 @@ const BranchDetail = () => {
 
   useEffect(() => {
     const branches = getStorageData(STORAGE_KEYS.BRANCHES);
-    const found = branches.find((b: any) => b.location === id || b.id === id);
+    // Match by location or id — handles "Bhubaneswar HQ" URL param
+    const found = branches.find((b: any) => 
+      b.location === id || b.id === id ||
+      b.location.replace(/\s/g, '') === (id || '').replace(/\s/g, '')
+    );
     if (found) {
       setBranchData(found);
     }
@@ -65,9 +73,9 @@ const BranchDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7]">
+    <div className="min-h-screen bg-[#FDFBF7] font-poppins">
       {/* Hero Hero Hero Section */}
-      <section className="relative h-[65vh] flex items-end overflow-hidden">
+      <section className="relative h-[50vh] flex items-end overflow-hidden">
         <motion.div 
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -75,49 +83,73 @@ const BranchDetail = () => {
           className="absolute inset-0 z-0"
         >
           <img src={randomHeroBg} className="w-full h-full object-cover" alt="Branch Background" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
         </motion.div>
         
-        <div className="container-max p-10 relative z-10 text-white w-full">
-           <Link to="/branches" className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 group transition-all text-[10px] font-black uppercase tracking-widest">
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to All Branches
+        <div className="container-max px-6 md:px-10 pb-12 relative z-10 text-white w-full">
+           <Link to="/branches" className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-6 group transition-all text-[9px] font-bold uppercase tracking-widest">
+              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> BACK TO NETWORK
            </Link>
            <div className="max-w-4xl">
-              <div className="flex flex-wrap items-center gap-3 mb-6">
-                 <span className="px-5 py-2 bg-primary/20 backdrop-blur-md text-white text-[10px] font-black rounded-full uppercase tracking-widest border border-white/10 shadow-xl">
-                    {branchData.location} REGION
+              <div className="flex flex-wrap items-center gap-2.5 mb-5">
+                 <span className="px-4 py-1.5 bg-primary/20 backdrop-blur-md text-white text-[9px] font-bold rounded-lg uppercase tracking-widest border border-white/10">
+                    {branchData.location}
                  </span>
-                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 backdrop-blur-md rounded-full text-emerald-400 font-black text-[10px] uppercase tracking-widest border border-emerald-500/20">
-                    <ShieldCheck size={14} /> State Verified Center
-                 </div>
-                 <div className="flex items-center gap-1.5 px-4 py-2 bg-amber-500/20 backdrop-blur-md rounded-full text-amber-400 font-black text-[10px] uppercase tracking-widest border border-amber-500/20">
-                    <Star size={14} fill="currentColor" /> ISO 9001:2008
+                 <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/20 backdrop-blur-md rounded-lg text-emerald-400 font-bold text-[9px] uppercase tracking-widest border border-emerald-500/20">
+                    <ShieldCheck size={12} /> Verified Center
                  </div>
               </div>
               <motion.h1 
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-5xl md:text-7xl font-heading font-black mb-8 tracking-tight leading-[0.9] text-white"
+                className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-[1.1] text-white"
               >
                 {branchData.name}
               </motion.h1>
-              <div className="flex flex-wrap gap-10 text-sm font-medium text-white/70">
-                 <div className="flex items-center gap-3 max-w-sm leading-relaxed">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                       <MapPin size={18} className="text-primary" />
-                    </div>
+              <div className="flex flex-wrap gap-8 text-xs font-medium text-white/60">
+                 <div className="flex items-center gap-3">
+                    <MapPin size={16} className="text-primary" />
                     {branchData.address}
                  </div>
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                       <Phone size={18} className="text-primary" />
-                    </div>
+                    <Phone size={16} className="text-primary" />
                     {branchData.phone}
                  </div>
               </div>
            </div>
         </div>
       </section>
+
+      {/* ===== HQ-ONLY PREMIUM BANNER ===== */}
+      {branchData.location === "Bhubaneswar HQ" && (
+        <section className="relative py-12 bg-slate-950 overflow-hidden border-y border-amber-500/20">
+          <div className="container-max px-6 md:px-10 relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-8 justify-between">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-2xl shadow-amber-500/40 shrink-0">
+                  <Crown size={28} className="text-slate-900" />
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-amber-400 uppercase tracking-widest block mb-1">Central Headquarters</span>
+                  <h2 className="text-xl font-bold text-white">The Flagship Campus of OICA</h2>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { icon: Globe, label: "Pan-Odisha" },
+                  { icon: Award, label: "ISO Certified" },
+                  { icon: ShieldCheck, label: "Govt. Regd" },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center gap-2.5 px-4 py-2 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
+                    <item.icon size={14} className="text-amber-400" />
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Main Main Content Section Section */}
       <section className="py-24">
@@ -128,31 +160,49 @@ const BranchDetail = () => {
             <div className="lg:col-span-8 space-y-24">
               {/* About Branch */}
               <AnimatedSection>
-                 <div className="space-y-8">
-                    <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
-                          <Building2 size={24} />
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                          <Building2 size={20} />
                        </div>
-                       <h2 className="text-3xl font-heading font-black text-slate-900 tracking-tight">Center Overview</h2>
+                       <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Center Overview</h2>
                     </div>
-                    <p className="text-slate-600 font-medium text-xl leading-relaxed max-w-3xl">
-                       {branchData.about || `The OICA ${branchData.name} center is a leading technology hub in the ${branchData.location} district, providing comprehensive IT training and career development programs for students and professionals alike.`}
+                    <p className="text-slate-600 font-medium text-lg leading-relaxed max-w-3xl">
+                       {branchData.about || `The OICA ${branchData.name} center is a leading technology hub in the ${branchData.location} district, providing comprehensive IT training and career development programs.`}
                     </p>
-                    <div className="grid sm:grid-cols-2 gap-4 pt-6">
+                    <div className="grid sm:grid-cols-2 gap-3 pt-4">
                        {[
                          "High-Speed Computing Labs",
                          "Expert 1:1 Lab Guidance",
-                         "Project-Based Certifications",
-                         "Statewide Placement Network",
-                         "Live Industry Workshop",
-                         "Student Growth Portal"
+                         "Project Certifications",
+                         "Placement Network",
+                         "Industry Workshops",
+                         "Student Portal"
                        ].map(f => (
-                         <div key={f} className="p-4 bg-white border border-slate-100 rounded-2xl flex items-center gap-3 shadow-sm group hover:border-primary/20 transition-all">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                               <CheckCircle2 size={16} />
-                            </div>
-                            <span className="text-xs font-black text-slate-700 uppercase tracking-wider">{f}</span>
+                         <div key={f} className="p-3.5 bg-white border border-slate-200/60 rounded-xl flex items-center gap-2.5 shadow-sm group hover:border-primary/20 transition-all">
+                            <CheckCircle2 size={14} className="text-emerald-500" />
+                            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wide">{f}</span>
                          </div>
+                       ))}
+                    </div>
+                 </div>
+              </AnimatedSection>
+
+              {/* Branch Courses */}
+              <AnimatedSection>
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 border border-blue-100">
+                          <BookOpen size={20} />
+                       </div>
+                       <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Courses</h2>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                       {['Advanced Excel & Tally ERP', 'Diploma in Computer Application', 'Full Stack Development', 'Graphic & Video Editing'].map((course, i) => (
+                          <div key={i} className="p-4 bg-white border border-slate-200/60 rounded-xl shadow-sm">
+                             <h4 className="font-bold text-slate-900 text-sm mb-1">{course}</h4>
+                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">6 Months • Cert</p>
+                          </div>
                        ))}
                     </div>
                  </div>
@@ -160,36 +210,51 @@ const BranchDetail = () => {
 
               {/* Dynamic Campus Gallery */}
               <AnimatedSection>
-                 <div className="space-y-10">
+                 <div className="space-y-6">
                     <div className="flex items-end justify-between">
-                       <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100">
-                             <ImageIcon size={24} />
+                       <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100">
+                             <ImageIcon size={20} />
                           </div>
-                          <h2 className="text-3xl font-heading font-black text-slate-900 tracking-tight">Campus Gallery</h2>
+                          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Gallery</h2>
                        </div>
-                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest hidden sm:block">Total 10 Media Assets</span>
                     </div>
                     
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                       {dynamicGallery.map((src, i) => (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                       {dynamicGallery.slice(0, 6).map((src, i) => (
                           <motion.div 
                             key={i} 
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ scale: 1.03, rotate: i % 2 === 0 ? 1 : -1 }}
-                            className={`rounded-[2rem] overflow-hidden border border-white shadow-xl aspect-square relative group ${
-                               (i === 0 || i === 3) ? 'md:col-span-2 md:aspect-video' : ''
-                            }`}
+                            className="rounded-xl overflow-hidden border border-white shadow-lg aspect-square relative group"
                           >
-                             <img src={src} className="w-full h-full object-cover" alt={`Campus Media ${i+1}`} />
+                             <img src={src} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="" />
                              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <ExternalLink size={24} className="text-white" />
+                                <ExternalLink size={18} className="text-white" />
                              </div>
                           </motion.div>
                        ))}
+                    </div>
+                 </div>
+              </AnimatedSection>
+
+              {/* Google Maps Location */}
+              <AnimatedSection>
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 border border-emerald-100">
+                          <MapPin size={20} />
+                       </div>
+                       <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Location</h2>
+                    </div>
+                    <div className="w-full h-[300px] rounded-xl overflow-hidden shadow-lg border border-slate-200/60">
+                       <iframe 
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(branchData.name + " " + branchData.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                          width="100%" 
+                          height="100%" 
+                          style={{ border: 0 }} 
+                       />
                     </div>
                  </div>
               </AnimatedSection>
@@ -197,55 +262,39 @@ const BranchDetail = () => {
 
             {/* Right Action Column */}
             <div className="lg:col-span-4 space-y-10">
-               {/* Corporate Trust Banner */}
-               <AnimatedSection direction="right">
-                  <div className="bg-white p-10 rounded-[3rem] border border-orange-100 shadow-xl shadow-orange-900/5 space-y-8 relative overflow-hidden">
-                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-50 rounded-full blur-3xl opacity-50" />
-                     <h3 className="text-2xl font-heading font-black text-slate-900 flex items-center gap-3">
-                        <FileText size={24} className="text-primary" /> Verified Documents
-                     </h3>
-                     <div className="space-y-4">
-                        {[
-                          { name: "Center Registration 2026", type: "PDF" },
-                          { name: "Trade License Certificate", type: "PDF" },
-                          { name: "ISO 9001 Compliance", type: "PDF" },
-                          { name: "Affiliation Document", type: "PDF" },
-                        ].map(doc => (
-                           <div key={doc.name} className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 flex items-center justify-between group hover:bg-white hover:border-primary/20 transition-all cursor-pointer">
-                              <div className="flex items-center gap-4">
-                                 <div className="w-10 h-10 rounded-xl bg-white shadow-sm text-slate-400 flex items-center justify-center group-hover:text-primary transition-colors">
-                                    <FileText size={18} />
-                                 </div>
-                                 <span className="text-[11px] font-black text-slate-700 uppercase tracking-wider leading-tight">{doc.name}</span>
-                              </div>
-                              <Download size={14} className="text-slate-300 group-hover:text-primary transition-colors" />
+               {/* Notice Board */}
+                <AnimatedSection direction="right">
+                   <div className="bg-white p-8 rounded-xl border border-slate-200/60 shadow-sm space-y-6 relative overflow-hidden">
+                      <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                         <Bell size={20} className="text-primary" /> Notice Board
+                      </h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
+                         Live updates from {branchData.name} campus.
+                      </p>
+                      <div className="space-y-3">
+                        {(branchData.notices || []).map((notice: any, i: number) => (
+                           <div key={i} className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:bg-white hover:border-primary/20 transition-all cursor-pointer">
+                              <span className="text-[9px] font-black text-primary uppercase tracking-wider block mb-1">{notice.date}</span>
+                              <p className="text-xs font-bold text-slate-700 leading-tight group-hover:text-primary transition-colors">{notice.title}</p>
                            </div>
                         ))}
-                     </div>
-                     <div className="pt-4 text-center">
-                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.3em] inline-block py-2 px-4 bg-slate-50 rounded-full">
-                           OICA State-Level Compliant
-                        </p>
                      </div>
                   </div>
                </AnimatedSection>
 
                {/* Quick Action Branding Branding */}
                <AnimatedSection direction="right" delay={0.2}>
-                  <div className="p-10 bg-slate-900 text-white rounded-[3rem] shadow-2xl relative overflow-hidden group">
-                     {/* Dynamic Background Blur */}
-                     <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary rounded-full blur-[100px] opacity-20 group-hover:scale-125 transition-transform" />
-                     
-                     <h3 className="text-3xl font-heading font-black mb-6 leading-tight">Start Your <span className="text-primary">Journey</span> Today</h3>
-                     <p className="text-sm text-white/40 mb-10 font-bold uppercase tracking-widest leading-relaxed">
-                        Join 100+ students currently training at this center. Get professional guidance and global certifications.
+                  <div className="p-8 bg-slate-900 text-white rounded-xl shadow-2xl relative overflow-hidden group">
+                     <h3 className="text-xl font-bold mb-4 leading-tight">Start Your <span className="text-primary">Journey</span> Today</h3>
+                     <p className="text-[10px] text-white/40 mb-8 font-bold uppercase tracking-widest leading-relaxed">
+                        Join 100+ students at this center. Get professional guidance and global certifications.
                      </p>
-                     <div className="space-y-4">
-                        <Button className="w-full h-16 bg-primary hover:bg-primary/90 text-white font-black tracking-widest text-[11px] uppercase rounded-2xl shadow-xl shadow-primary/20">
-                           Reserve a Counseling Seat
+                     <div className="space-y-3">
+                        <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold tracking-widest text-[10px] uppercase rounded-lg shadow-xl shadow-primary/20">
+                           Reserve A Seat
                         </Button>
-                        <Button variant="outline" className="w-full h-16 bg-white/5 border-white/10 text-white hover:bg-white hover:text-slate-900 font-black tracking-widest text-[11px] uppercase rounded-2xl">
-                           Call Branch In-Charge
+                        <Button variant="outline" className="w-full h-12 bg-white/5 border-white/10 text-white hover:bg-white hover:text-slate-900 font-bold tracking-widest text-[10px] uppercase rounded-lg">
+                           Contact Office
                         </Button>
                      </div>
                   </div>
@@ -255,6 +304,7 @@ const BranchDetail = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

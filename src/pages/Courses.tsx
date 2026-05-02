@@ -148,7 +148,7 @@ const Courses = () => {
         bottomPills={["Premium Training", "Job Assistance", "Global Certificates"]}
       />
 
-      <div className="container-max px-4 pt-24">
+      <div className="container-max pt-24">
         {/* Controls Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 mb-16 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
            {/* Categories */}
@@ -182,89 +182,82 @@ const Courses = () => {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredCourses.map((course, i) => (
               <motion.div
                 layout
                 key={course.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="group bg-white rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col h-full overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group bg-[#fdfcf9] rounded-[20px] shadow-[0_8px_25px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col h-full overflow-hidden hover:shadow-[0_16px_35px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500"
               >
                 {/* Course Image Area */}
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={course.image} 
-                    alt={course.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                  
-                  {/* Floating Icon Badge */}
-                  <div className="absolute -bottom-6 left-8 w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl border-4 border-white z-10 group-hover:rotate-12 transition-transform">
-                    <BookOpen size={24} />
+                <div className="relative p-4">
+                  <div className="h-52 overflow-hidden rounded-[16px]">
+                    <img 
+                      src={course.image} 
+                      alt={course.title} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                    />
                   </div>
-
+                  
                   {/* Top Category Badge */}
-                  <div className="absolute top-6 right-6">
-                    <span className="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-wider text-primary shadow-lg">
+                  <div className="absolute top-8 right-8">
+                    <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-wider text-primary shadow-sm">
                       {course.category}
                     </span>
                   </div>
                 </div>
-
+ 
                 {/* Content Area */}
-                <div className="pt-10 px-8 pb-8 flex flex-col flex-grow">
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-black text-slate-900 leading-tight mb-2 group-hover:text-primary transition-colors">
+                <div className="px-6 pb-6 flex flex-col flex-grow">
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="inline-block px-2 py-0.5 bg-primary/10 rounded-md text-[8px] font-black uppercase tracking-widest text-primary">
+                        COURSE {course.courseNo}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-primary transition-colors">
                       {course.title}
                     </h3>
-                    <span className="inline-block px-3 py-1 bg-slate-100 rounded-lg text-[9px] font-black uppercase tracking-widest text-slate-500">
-                      COURSE {course.courseNo}
-                    </span>
                   </div>
-
-                  {/* Details Box */}
-                  <div className="bg-slate-50 rounded-3xl p-6 space-y-4 mb-8">
+ 
+                  {/* Details Box - Clean Modern Style */}
+                  <div className="bg-[#f5f7fb] rounded-[16px] p-5 space-y-3 mb-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                        <GraduationCap size={16} /> Eligibility:
-                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Eligibility</span>
                       <span className="text-xs font-black text-slate-700">{course.eligibility}</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                        <Clock size={16} /> Duration:
-                      </div>
+                    <div className="flex items-center justify-between border-t border-slate-200/50 pt-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Duration</span>
                       <span className="text-xs font-black text-slate-700">{course.duration}</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                        <IndianRupee size={16} /> Total Fee:
-                      </div>
+                    <div className="flex items-center justify-between border-t border-slate-200/50 pt-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Course Fee</span>
                       <span className="text-sm font-black text-primary">{course.fee}</span>
                     </div>
                   </div>
-
-                  <p className="text-slate-500 text-xs font-medium leading-relaxed mb-8 flex-grow">
+ 
+                  <p className="text-slate-500 text-xs font-medium leading-relaxed mb-6 line-clamp-2">
                     {course.desc}
                   </p>
-
+ 
                   {/* Action Buttons */}
-                  <div className="pt-8 border-t border-slate-100 flex flex-wrap gap-3">
-                    <button className="flex-1 min-w-[100px] inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition-colors">
+                  <div className="mt-auto flex gap-2">
+                    <button className="flex-1 inline-flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition-all">
                       <Download size={14} /> Brochure
                     </button>
                     <button 
                       onClick={() => handleEnrollClick(course)}
-                      className="flex-[1.5] min-w-[120px] inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                      className="flex-[1.5] inline-flex items-center justify-center gap-2 bg-[#6c63ff] hover:bg-[#5b52ff] text-white font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-[#6c63ff]/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
-                      Enroll <ArrowRight size={14} />
+                      Enroll Now <ArrowRight size={14} />
                     </button>
-                    <button className="w-10 h-10 inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-110">
+                    <button className="w-10 h-10 inline-flex items-center justify-center bg-[#25D366] hover:bg-[#1ebe57] text-white rounded-xl shadow-lg shadow-emerald-500/10 transition-all hover:scale-110">
                       <MessageCircle size={18} />
                     </button>
                   </div>

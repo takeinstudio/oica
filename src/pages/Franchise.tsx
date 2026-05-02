@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Building2, CheckCircle2, FileText, Send, Upload, MapPin, Home, User } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
+import { STORAGE_KEYS, getStorageData, setStorageData } from '@/lib/storage';
+import { toast } from 'sonner';
 
 const Franchise = () => {
   const advantages = [
@@ -9,6 +11,33 @@ const Franchise = () => {
     "Placement Cell & Job Fairs",
     "Examination & Certification",
   ];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    const newEnquiry = {
+      id: Date.now().toString(),
+      name: formData.get('name'),
+      gender: formData.get('gender'),
+      phone: formData.get('phone'),
+      email: formData.get('email'),
+      address: formData.get('address'),
+      areaType: formData.get('areaType'),
+      district: formData.get('district'),
+      city: formData.get('city'),
+      premises: formData.get('premises'),
+      locationDetails: formData.get('locationDetails'),
+      premisesType: formData.get('premisesType'),
+      status: 'new',
+      date: new Date().toLocaleDateString(),
+    };
+
+    const existing = getStorageData(STORAGE_KEYS.FRANCHISE_ENQUIRIES);
+    setStorageData(STORAGE_KEYS.FRANCHISE_ENQUIRIES, [newEnquiry, ...existing]);
+    toast.success("Franchise enquiry sent! Admin will contact you.");
+    (e.target as HTMLFormElement).reset();
+  };
 
   return (
     <div className="pb-16 bg-[#fbfcfd]">
@@ -20,7 +49,7 @@ const Franchise = () => {
         bottomPills={["Low Investment", "High Returns", "Complete Support"]}
       />
 
-      <div className="container-max px-4 pt-12">
+      <div className="container-max pt-12">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           {/* Leftside Advantages */}
           <div className="lg:sticky lg:top-32">
@@ -79,7 +108,7 @@ const Franchise = () => {
                 </div>
               </div>
               
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 {/* Personal Section */}
                 <div className="space-y-4">
                    <div className="flex items-center gap-2 text-primary">
@@ -88,22 +117,22 @@ const Franchise = () => {
                    </div>
                    
                    <div className="grid md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Full Name" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="name" required type="text" placeholder="Full Name" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                     <div className="flex gap-2">
                         {['Male', 'Female'].map(g => (
                           <label key={g} className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all font-bold text-[10px] has-[:checked]:bg-primary/5 has-[:checked]:border-primary has-[:checked]:text-primary uppercase tracking-widest">
-                            <input type="radio" name="gender" className="w-3 h-3 accent-primary" /> {g}
+                            <input type="radio" name="gender" value={g} className="w-3 h-3 accent-primary" /> {g}
                           </label>
                         ))}
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <input type="tel" placeholder="Phone No" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
-                    <input type="email" placeholder="Email Address" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="phone" required type="tel" placeholder="Phone No" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="email" required type="email" placeholder="Email Address" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
 
-                  <input type="text" placeholder="Address / Village" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                  <input name="address" required type="text" placeholder="Address / Village" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                 </div>
 
                 {/* Location Section */}
@@ -114,12 +143,12 @@ const Franchise = () => {
                    </div>
 
                   <div className="grid md:grid-cols-3 gap-4">
-                    <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs appearance-none">
+                    <select name="areaType" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs appearance-none">
                         <option>Rural</option>
                         <option>Urban</option>
                     </select>
-                    <input type="text" placeholder="District" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
-                    <input type="text" placeholder="City" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="district" required type="text" placeholder="District" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="city" required type="text" placeholder="City" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
                 </div>
 
@@ -135,7 +164,7 @@ const Franchise = () => {
                     <div className="flex gap-4">
                       {['Yes', 'No'].map(v => (
                         <label key={v} className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="premises" className="w-3 h-3 accent-primary" /> 
+                          <input type="radio" name="premises" value={v} className="w-3 h-3 accent-primary" /> 
                           <span className="text-xs font-bold text-slate-600">{v}</span>
                         </label>
                       ))}
@@ -143,8 +172,8 @@ const Franchise = () => {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                     <input type="text" placeholder="Location Details" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
-                     <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs appearance-none">
+                     <input name="locationDetails" type="text" placeholder="Location Details" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                     <select name="premisesType" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs appearance-none">
                         <option>Owned</option>
                         <option>Leased</option>
                      </select>

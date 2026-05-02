@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/shared/AnimatedSection";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Users,
-  ArrowRight, Star, Shield, Camera,
-  GraduationCap, Mail, Quote
+  Users, 
+  ArrowRight, Star, Shield, Camera, Maximize2,
+  GraduationCap, Mail, Quote, Bell, MapPin,
+  Calendar, Paperclip
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
+import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 
 const stats = [
   { value: "12+", label: "YEARS EXP." },
@@ -82,12 +84,6 @@ const homeGallery = [
   "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1470",
 ];
 
-const notices = [
-  "New Admissions Started for 2026 Batch",
-  "Free Computer Courses Started on April 2025",
-  "Summer Courses Started - Register Now",
-  "Central and State Government Free Courses Available",
-];
 
 const Home = () => {
   const containerRef = useRef(null);
@@ -95,6 +91,54 @@ const Home = () => {
     target: containerRef,
     offset: ["start start", "end start"]
   });
+
+  // Dynamic notices from all branches
+  const [allNotices, setAllNotices] = useState<{title: string; date: string; branch: string; location: string}[]>([]);
+  // Dynamic testimonials
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<any[]>([]);
+
+  useEffect(() => {
+    const branches = getStorageData(STORAGE_KEYS.BRANCHES);
+    const collected: {title: string; date: string; branch: string; location: string}[] = [];
+    branches.forEach((b: any) => {
+      if (b.notices && b.notices.length > 0) {
+        b.notices.forEach((n: any) => {
+          collected.push({ title: n.title, date: n.date, branch: b.name, location: b.location });
+        });
+      }
+    });
+    setAllNotices(collected);
+
+    // Fetch approved feedback
+    const allFeedback = getStorageData(STORAGE_KEYS.FEEDBACK);
+    const approved = allFeedback.filter((f: any) => f.status === 'approved');
+    setDynamicTestimonials(approved.length > 0 ? approved : achievers);
+  }, []);
+  // Dual video crossfade logic
+  const [activeVideo, setActiveVideo] = useState<0 | 1>(() => (Math.random() > 0.5 ? 1 : 0));
+  const video0Ref = useRef<HTMLVideoElement>(null);
+  const video1Ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Start playing both videos immediately; control visibility via opacity
+    video0Ref.current?.play().catch(() => {});
+    video1Ref.current?.play().catch(() => {});
+
+    const interval = setInterval(() => {
+      setActiveVideo(prev => {
+        const next = prev === 0 ? 1 : 0;
+        // Reset and replay the video that's about to become active
+        const nextRef = next === 0 ? video0Ref.current : video1Ref.current;
+        if (nextRef) {
+          nextRef.currentTime = 0;
+          nextRef.play().catch(() => {});
+        }
+        return next;
+      });
+    }, 9000); // switch every 9 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
 
   const galleryRef = useRef(null);
@@ -106,32 +150,42 @@ const Home = () => {
   const yGallery2 = useTransform(galleryScroll, [0, 1], ["-10%", "10%"]);
 
   return (
-    <div className="min-h-screen" ref={containerRef}>
+    <div className="min-h-screen font-poppins antialiased" ref={containerRef}>
       {/* Cinematic Hero Section */}
       <section className="relative min-h-screen flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
-        {/* Full-Screen Video Background */}
+        {/* Dual Video Background with Crossfade */}
         <div className="absolute inset-0 z-0 bg-slate-950">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5 }}
-            className="w-full h-full"
+          {/* Video 0 — hero1.mp4 */}
+          <motion.video
+            ref={video0Ref}
+            muted
+            playsInline
+            loop
+            animate={{ opacity: activeVideo === 0 ? 0.82 : 0 }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072"
           >
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover opacity-60"
-              poster="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072"
-            >
-              <source src="/hero.mp4" type="video/mp4" />
-            </video>
-          </motion.div>
+            <source src="/hero1.mp4" type="video/mp4" />
+          </motion.video>
+
+          {/* Video 1 — hero2.mp4 */}
+          <motion.video
+            ref={video1Ref}
+            muted
+            playsInline
+            loop
+            animate={{ opacity: activeVideo === 1 ? 0.82 : 0 }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071"
+          >
+            <source src="/hero2.mp4" type="video/mp4" />
+          </motion.video>
 
           {/* Multi-Stage Cinematic Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
         </div>
 
         <div className="relative z-10 w-full px-6 lg:px-20 py-16">
@@ -159,7 +213,7 @@ const Home = () => {
                 <span className="text-secondary text-5xl md:text-6xl">of Computer Application</span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/80 font-medium max-w-xl leading-relaxed mb-8 tracking-tight">
+              <p className="text-base md:text-lg text-white/90 font-medium max-w-xl leading-relaxed mb-8 tracking-tight">
                 Excellence in education for comprehensive skill development. Join our premier institution with proven results and dedicated mentorship across Odisha.
               </p>
 
@@ -171,7 +225,7 @@ const Home = () => {
                   </Button>
                 </Link>
                 <Link to="/contact">
-                  <Button size="lg" className="rounded-xl px-8 py-6 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95">
+                  <Button size="lg" className="rounded-xl px-8 py-6 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-105 active:scale-95">
                     Contact Us
                     <Mail className="ml-3 w-4 h-4" />
                   </Button>
@@ -208,7 +262,7 @@ const Home = () => {
                   <Users size={24} />
                 </div>
                 <h3 className="text-lg font-heading font-black text-white mb-1">Trusted Community</h3>
-                <p className="text-white/60 text-[11px] font-bold leading-relaxed">
+                <p className="text-white/70 text-[11px] font-bold leading-relaxed">
                   Trusted by 5000+ students across Odisha since 2014.
                 </p>
               </motion.div>
@@ -233,28 +287,123 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Integrated Notice Board at bottom of Hero */}
-        <div className="absolute bottom-0 left-0 right-0 bg-primary py-3 z-30 overflow-hidden border-t border-white/10">
-          <div className="flex items-center gap-6 whitespace-nowrap animate-marquee">
-            {notices.concat(notices).map((notice, i) => (
-              <div key={i} className="flex items-center gap-3 text-white font-bold text-[10px] uppercase tracking-wider">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                {notice}
-              </div>
-            ))}
+      </section>
+
+      {/* ABOUT & NOTICE COMBINED SECTION — High Density SaaS Layout */}
+      <section className="section-padding relative overflow-hidden">
+        <div className="section-container relative z-10">
+          <div className="grid lg:grid-cols-12 gap-16 items-center">
+            
+            {/* Left Column: About Us Content */}
+            <div className="lg:col-span-7 space-y-8">
+              <AnimatedSection>
+                <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary mb-4">
+                  <span className="text-[10px] font-black uppercase tracking-widest">What's New</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-heading font-black text-slate-900 leading-tight tracking-tight">
+                  ABOUT <span className="text-primary italic">OICA</span>
+                </h2>
+                <div className="space-y-6 text-slate-600 font-medium leading-relaxed max-w-2xl">
+                  <p className="text-lg text-slate-700 font-bold">
+                    Odisha Institute of Computer Application is a premier educational institution registered under Govt. of Odisha and ISO 9001:2008 certified.
+                  </p>
+                  <p>
+                    Our journey is defined by a unique training methodology that balances rigorous theoretical knowledge with extensive 1-to-1 practical sessions. We believe that discipline and quality education are the backbones of any successful career.
+                  </p>
+                  <p>
+                    With over 31+ branches across Odisha, we are committed to making technology easy to learn and accessible to every student, ensuring they are industry-ready from day one.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <Link to="/about">
+                    <Button size="lg" className="rounded-2xl px-10 h-14 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20">
+                      Read More
+                    </Button>
+                  </Link>
+                  <Link to="/courses">
+                    <Button variant="outline" size="lg" className="rounded-2xl px-10 h-14 font-black uppercase text-[10px] tracking-widest bg-white">
+                      Our Courses
+                    </Button>
+                  </Link>
+                </div>
+              </AnimatedSection>
+            </div>
+
+            {/* Right Column: Compact Notice Board */}
+            <div className="lg:col-span-5">
+              <AnimatedSection direction="right">
+                <div className="relative rounded-[2rem] overflow-hidden bg-gradient-to-br from-blue-700 to-cyan-500 shadow-2xl p-6 md:p-8">
+                  {/* Header Section */}
+                  <div className="relative z-10 flex items-center justify-between gap-4 mb-6">
+                    <div className="space-y-1">
+                      <h3 className="text-xl font-heading font-black text-white tracking-tight">
+                        Latest Announcements
+                      </h3>
+                      <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/15 border border-white/20 text-white text-[8px] font-black uppercase tracking-widest backdrop-blur-md">
+                        Updates
+                      </div>
+                    </div>
+                    <Link to="/branches">
+                      <Button className="bg-white text-blue-600 font-black text-[9px] uppercase tracking-widest px-4 py-4 h-auto rounded-xl shadow-lg transition-all hover:scale-105">
+                        All Notifications
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Scrolling Notice Container */}
+                  <div className="relative z-10 h-[380px] overflow-hidden group">
+                    <div className="flex flex-col gap-3 animate-vertical-marquee group-hover:pause">
+                      {[...allNotices, ...allNotices].map((notice, i) => (
+                        <div 
+                          key={i} 
+                          className="bg-white rounded-2xl p-5 flex gap-4 shadow-md shadow-blue-900/10 hover:shadow-xl transition-all duration-300 group/card cursor-pointer shrink-0 border border-white/50"
+                        >
+                          {/* Calendar Icon Square */}
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-lg shrink-0 group-hover/card:scale-110 transition-transform">
+                            <Calendar size={18} />
+                          </div>
+
+                          {/* Content Section */}
+                          <div className="flex-1 space-y-1.5 min-w-0">
+                            <p className="text-[13px] font-heading font-black text-slate-900 leading-none">
+                              {notice.date}
+                            </p>
+                            <p className="text-slate-500 text-[11px] font-medium leading-relaxed line-clamp-2 mb-2">
+                              {notice.title} from <span className="text-blue-600 font-bold">{notice.branch}</span> center.
+                            </p>
+                            
+                            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-widest">
+                              <Paperclip size={10} />
+                              Attachment
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Scrollbar Decoration */}
+                    <div className="absolute right-0 top-0 bottom-0 w-1 bg-white/10 rounded-full" />
+                    
+                    {/* Gradient Fades */}
+                    <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-blue-700/20 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-cyan-500/20 to-transparent pointer-events-none" />
+                  </div>
+                </div>
+              </AnimatedSection>
+            </div>
+
           </div>
         </div>
       </section>
 
-
-      {/* Stats Bar */}
-      <section className="relative z-40">
+      {/* Stats Bar — Moved below About Us */}
+      <section className="relative z-40 -mt-10 mb-12">
         <div className="section-container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl shadow-2xl border border-slate-100 grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 overflow-hidden -translate-y-1/2"
+            className="bg-white rounded-2xl shadow-xl border border-slate-100 grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 overflow-hidden"
           >
             {stats.map((stat) => (
               <div key={stat.label} className="text-center py-6 px-4 hover:bg-slate-50 transition-colors group">
@@ -266,48 +415,18 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Welcome Section */}
-      <section className="section-padding relative">
-        <div className="section-container">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <AnimatedSection>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative group"
-              >
-                <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-2xl" />
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1470" alt="About OICA" className="relative rounded-2xl shadow-xl border border-slate-100 object-cover aspect-video w-full" />
-                <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg border border-slate-100 max-w-[200px]">
-                  <p className="font-heading font-black text-sm mb-0.5">Empowering Odisha</p>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase">Digital Future</p>
-                </div>
-              </motion.div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.2}>
-              <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Welcome to OICA</span>
-              <h2 className="text-2xl md:text-4xl font-heading font-black mb-4 leading-tight">
-                Pioneering <span className="text-primary">Computer Education</span>
-              </h2>
-              <div className="space-y-3 text-slate-600 text-sm leading-relaxed mb-6 font-medium">
-                <p>
-                  Odisha institution of Computer Application is an educational institution which is registered under Govt. of Odisha and it is also certified with an ISO 9001:2008 certified institute.
-                </p>
-                <p>
-                  It has its own and unique training program methodology, which imparts highest theory & practical timings in computer education. Discipline and quality of education is the backbone of the organization.
-                </p>
-              </div>
-              <Link to="/about">
-                <Button size="default" className="rounded-xl px-6 h-11 text-xs font-black uppercase tracking-widest shadow-md">
-                  Learn More
-                </Button>
-              </Link>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
+      <style>{`
+        @keyframes vertical-marquee {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+        .animate-vertical-marquee {
+          animation: vertical-marquee ${Math.max(allNotices.length * 3, 20)}s linear infinite;
+        }
+        .pause {
+          animation-play-state: paused !important;
+        }
+      `}</style>
 
       {/* Director's Message Section */}
       <section className="section-padding bg-slate-50 relative overflow-hidden">
@@ -343,97 +462,184 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Training Methodology Section */}
-      <section className="section-padding">
+      {/* Training Methodology Section — Process Path Design */}
+      <section className="section-padding bg-white relative overflow-hidden">
         <div className="section-container">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-16">
             <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Success Mantra</span>
-            <h2 className="text-3xl font-heading font-black">Training Methodology</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 tracking-tight">Training Methodology</h2>
           </AnimatedSection>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {[
-              { id: "01", title: "Theory", color: "bg-blue-500" },
-              { id: "02", title: "Practical", color: "bg-emerald-500" },
-              { id: "03", title: "Doubt", color: "bg-violet-500" },
-              { id: "04", title: "Assign", color: "bg-orange-500" },
-              { id: "05", title: "Exam", color: "bg-rose-500" },
-            ].map((m, i) => (
-              <AnimatedSection key={m.title} delay={i * 0.1}>
-                <div className="group relative bg-white p-6 rounded-2xl border border-slate-100 shadow-sm text-center hover:shadow-md transition-all">
-                  <div className={`w-10 h-10 mx-auto rounded-xl ${m.color} text-white flex items-center justify-center font-black mb-3 shadow-md text-xs`}>
-                    {m.id}
-                  </div>
-                  <h3 className="font-heading font-black text-[9px] uppercase tracking-widest">{m.title}</h3>
-                </div>
-              </AnimatedSection>
-            ))}
+          <div className="relative">
+             {/* Desktop Connecting Line */}
+             <div className="absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-slate-100 -translate-y-1/2 hidden md:block" />
+             
+             <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10">
+                {[
+                  { id: "01", title: "Theory", color: "from-blue-500 to-blue-600", desc: "Foundational knowledge sessions" },
+                  { id: "02", title: "Practical", color: "from-emerald-500 to-teal-600", desc: "Hands-on lab exercises" },
+                  { id: "03", title: "Doubt", color: "from-violet-500 to-purple-600", desc: "1-to-1 query resolution" },
+                  { id: "04", title: "Assign", color: "from-orange-500 to-amber-600", desc: "Real-world project tasks" },
+                  { id: "05", title: "Exam", color: "from-rose-500 to-pink-600", desc: "Performance assessment" },
+                ].map((m, i) => (
+                  <AnimatedSection key={m.title} delay={i * 0.15}>
+                    <div className="group relative text-center">
+                       {/* Floating Number Card */}
+                       <div className={`w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br ${m.color} text-white flex items-center justify-center font-black text-2xl mb-6 shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500 relative z-20`}>
+                          {m.id}
+                       </div>
+                       <h3 className="font-heading font-black text-lg text-slate-900 mb-2">{m.title}</h3>
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{m.desc}</p>
+                       
+                       {/* Mobile Connector */}
+                       {i < 4 && <div className="h-8 w-0.5 border-l-2 border-dashed border-slate-100 mx-auto mt-4 md:hidden" />}
+                    </div>
+                  </AnimatedSection>
+                ))}
+             </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="section-padding bg-slate-50/50 relative">
+      {/* Why Choose OICA — Bento Grid Layout */}
+      <section className="section-padding relative overflow-hidden">
         <div className="section-container relative z-10">
-          <AnimatedSection className="text-center mb-12">
-            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Why Choose OICA</span>
-            <h2 className="text-3xl font-heading font-black mb-4">
-              Building a Professional Career
-            </h2>
-          </AnimatedSection>
+          <div className="grid lg:grid-cols-12 gap-6">
+             {/* Left Text Box */}
+             <div className="lg:col-span-4 self-center space-y-6">
+                <AnimatedSection>
+                  <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Premium Features</span>
+                  <h2 className="text-4xl font-heading font-black text-slate-900 leading-tight">
+                    Why Choose <br /> <span className="text-primary italic text-5xl">OICA?</span>
+                  </h2>
+                  <p className="text-slate-500 font-medium leading-relaxed">
+                    We don't just teach software; we build professional careers with a focus on industry standards and individual growth.
+                  </p>
+                </AnimatedSection>
+             </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {features.slice(0, 4).map((f, i) => (
-              <AnimatedSection key={f.title} delay={i * 0.1}>
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  className="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col h-full hover:border-primary/30 transition-all shadow-sm group"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition-all">
-                    <f.icon className="w-5 h-5 text-primary group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="font-heading font-black text-base mb-3 text-slate-900 leading-tight">{f.title}</h3>
-                  <p className="text-slate-500 text-xs leading-relaxed font-medium mb-4">{f.desc}</p>
-                </motion.div>
-              </AnimatedSection>
-            ))}
+             {/* Bento Grid Features */}
+             <div className="lg:col-span-8 grid md:grid-cols-2 gap-6">
+                {[
+                  { 
+                    icon: Shield, 
+                    title: "High Trade Interface", 
+                    desc: "Maintaining high trade and industry interface to keep students updated with market trends.",
+                    size: "md:col-span-1"
+                  },
+                  { 
+                    icon: Star, 
+                    title: "Self-Confidence", 
+                    desc: "Strong focus on developing self-confidence, self-reliance, and reasoning abilities.",
+                    size: "md:col-span-1"
+                  },
+                  { 
+                    icon: Camera, 
+                    title: "AV Presentations", 
+                    desc: "Modern teaching methodology using Audio, Video, and Slide presentations for better learning.",
+                    size: "md:col-span-1"
+                  },
+                  { 
+                    icon: Users, 
+                    title: "1-to-1 Sessions", 
+                    desc: "Dedicated practical sessions with one-to-one computer access for every student.",
+                    size: "md:col-span-1"
+                  }
+                ].map((f, i) => (
+                  <AnimatedSection key={f.title} delay={i * 0.1} className={f.size}>
+                    <div className="h-full bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
+                       <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12 group-hover:rotate-0 transition-transform">
+                          <f.icon size={80} />
+                       </div>
+                       <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
+                          <f.icon className="w-6 h-6 text-primary group-hover:text-white transition-colors" />
+                       </div>
+                       <h3 className="font-heading font-black text-xl mb-4 text-slate-900 leading-tight">{f.title}</h3>
+                       <p className="text-slate-500 text-sm leading-relaxed font-medium">{f.desc}</p>
+                    </div>
+                  </AnimatedSection>
+                ))}
+             </div>
           </div>
         </div>
       </section>
 
-      {/* Courses */}
-      <section className="section-padding">
+      {/* Our Programs — Premium Interactive Cards */}
+      <section className="section-padding bg-white">
         <div className="section-container">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <AnimatedSection>
               <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Programs</span>
-              <h2 className="text-3xl font-heading font-black">
-                Master the <span className="text-primary">Digital World</span>
+              <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 tracking-tight">
+                Master the <span className="text-primary italic">Digital World</span>
               </h2>
             </AnimatedSection>
             <AnimatedSection delay={0.2}>
               <Link to="/courses">
-                <Button variant="outline" size="sm" className="rounded-xl px-6 font-black text-[10px] uppercase tracking-widest">
-                  View All <ArrowRight className="w-3 h-3 ml-2" />
+                <Button variant="outline" size="lg" className="rounded-2xl px-8 h-14 font-black text-[10px] uppercase tracking-widest border-slate-200 hover:border-primary hover:text-primary transition-all">
+                  Explore All Programs <ArrowRight className="w-4 h-4 ml-3" />
                 </Button>
               </Link>
             </AnimatedSection>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularCourses.slice(0, 4).map((course, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { 
+                title: "ADCA", 
+                code: "AO", 
+                full: "Advanced Office",
+                desc: "Master MS Office suite with advanced features including Excel, Word and Powerpoint.",
+                color: "from-blue-600 to-indigo-700",
+                meta: ["12 Months", "10th Pass"]
+              },
+              { 
+                title: "Tally Prime", 
+                code: "T9", 
+                full: "Tally ERP.9",
+                desc: "Complete accounting with Tally ERP software including GST and inventory management.",
+                color: "from-emerald-500 to-teal-700",
+                meta: ["03 Months", "10th Pass"]
+              },
+              { 
+                title: "PGDCA", 
+                code: "P", 
+                full: "PGDCA",
+                desc: "Post Graduate Diploma in Computer Application - Advanced level software development.",
+                color: "from-violet-600 to-purple-800",
+                meta: ["12 Months", "Graduation"]
+              },
+              { 
+                title: "DFA", 
+                code: "DFA", 
+                full: "DFA",
+                desc: "Diploma in Financial Accounting - Foundation of modern accounting systems.",
+                color: "from-rose-500 to-orange-600",
+                meta: ["06 Months", "10th Pass"]
+              }
+            ].map((course, i) => (
               <AnimatedSection key={course.title} delay={i * 0.1}>
-                <div className="group h-full bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} text-white flex items-center justify-center font-black text-lg mb-6 shadow-md transition-transform duration-500 group-hover:scale-105`}>
-                    {course.icon}
+                <div className="group h-full bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-2xl hover:bg-white transition-all duration-500 flex flex-col relative overflow-hidden">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${course.color} text-white flex items-center justify-center font-black text-xl mb-8 shadow-xl shadow-blue-500/10 group-hover:scale-110 transition-transform duration-500`}>
+                    {course.code}
                   </div>
-                  <h3 className="font-heading font-black text-lg text-slate-800 mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
-                  <p className="text-slate-500 text-[11px] font-medium leading-relaxed mb-6">{course.desc}</p>
-                  <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
-                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Details</span>
-                    <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center transition-all group-hover:bg-primary group-hover:text-white">
-                      <ArrowRight size={14} />
+                  <div className="space-y-3 mb-8">
+                    <h3 className="font-heading font-black text-2xl text-slate-900 leading-tight group-hover:text-primary transition-colors">{course.full}</h3>
+                    <p className="text-slate-500 text-xs font-medium leading-relaxed line-clamp-3">{course.desc}</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {course.meta.map(m => (
+                      <span key={m} className="px-3 py-1 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enroll Now</span>
+                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center transition-all group-hover:bg-primary group-hover:text-white shadow-sm">
+                      <ArrowRight size={18} />
                     </div>
                   </div>
                 </div>
@@ -443,105 +649,136 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery (Simplified Compact) */}
-      <section ref={galleryRef} className="section-padding bg-slate-950 text-center relative overflow-hidden">
-        <div className="section-container relative z-10 w-full max-w-5xl">
-          <AnimatedSection className="mb-10">
+      {/* Campus Life — Premium Bento Gallery */}
+      <section ref={galleryRef} className="section-padding relative overflow-hidden">
+        <div className="section-container relative z-10">
+          <AnimatedSection className="text-center mb-16">
             <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 flex items-center justify-center gap-2">
-              <Camera className="w-4 h-4" /> Campus Life
+              <Camera className="w-4 h-4" /> Visual Journey
             </span>
-            <h2 className="text-2xl font-heading font-black text-white">
-              Explore Our <span className="text-primary">Gallery</span>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 tracking-tight">
+              Explore Our <span className="text-primary italic">Campus Life</span>
             </h2>
           </AnimatedSection>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10 h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
-            <motion.div style={{ y: yGallery1 }} className="flex flex-col gap-3">
-              {homeGallery.slice(0, 2).map((src, i) => (
-                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
-                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 h-auto md:h-[600px]">
+             {/* Large Main Feature */}
+             <div className="md:col-span-2 md:row-span-2 rounded-[3rem] overflow-hidden group relative shadow-2xl">
+                <img src={homeGallery[0]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-10">
+                   <div className="text-white">
+                      <p className="text-[10px] font-black uppercase tracking-widest mb-2 text-primary">Lab Sessions</p>
+                      <h3 className="text-2xl font-black">Modern Computing Lab</h3>
+                   </div>
                 </div>
-              ))}
-            </motion.div>
-            <motion.div style={{ y: yGallery2 }} className="flex flex-col gap-3 mt-10 md:mt-16">
-              {homeGallery.slice(2, 4).map((src, i) => (
-                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
-                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
+             </div>
+             
+             {/* Top Right Box */}
+             <div className="md:col-span-2 rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[250px]">
+                <img src={homeGallery[1]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                      <Maximize2 size={20} />
+                   </div>
                 </div>
-              ))}
-            </motion.div>
-            <motion.div style={{ y: yGallery1 }} className="hidden lg:flex flex-col gap-3">
-              {homeGallery.slice(4, 6).map((src, i) => (
-                <div key={i} className="h-full rounded-xl overflow-hidden shadow-xl border border-white/5">
-                  <img src={src} className="w-full h-full object-cover" alt="Gallery" />
-                </div>
-              ))}
-            </motion.div>
+             </div>
+
+             {/* Bottom Two Boxes */}
+             <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
+                <img src={homeGallery[2]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+             </div>
+             <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
+                <img src={homeGallery[3]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+             </div>
           </div>
 
-          <AnimatedSection>
+          <AnimatedSection className="text-center">
             <Link to="/gallery">
-              <Button size="sm" className="rounded-xl px-8 h-10 text-[10px] font-black uppercase tracking-widest shadow-md">
-                View Gallery <ArrowRight className="w-3 h-3 ml-2" />
+              <Button size="lg" className="rounded-2xl px-12 h-16 text-[12px] font-black uppercase tracking-widest shadow-2xl shadow-primary/20 hover:scale-105 transition-all">
+                View Full Experience <ArrowRight className="w-4 h-4 ml-4" />
               </Button>
             </Link>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Testimonials / Achievers */}
-      <section id="testimonials" className="py-24 bg-slate-50 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
-        
+
+
+      {/* Success Stories — Refined Design from Reference */}
+      <section id="testimonials" className="py-32 relative overflow-hidden">
         <div className="section-container relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white text-primary text-[10px] font-black mb-4 tracking-widest uppercase border border-slate-200 shadow-sm">
-              Top Achievers
-            </span>
-            <h2 className="text-3xl md:text-4xl font-heading font-black text-slate-900">
-              Student Success Stories
+          <AnimatedSection className="text-center mb-20">
+            <div className="inline-flex items-center px-6 py-2 rounded-full bg-purple-100/80 backdrop-blur-md border border-purple-200 text-purple-700 text-[10px] font-black uppercase tracking-widest mb-6 shadow-sm">
+              Voices of Excellence
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-slate-900 leading-tight tracking-tight">
+              Success Stories <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">That Inspire</span>
             </h2>
-            <p className="text-slate-500 mt-4 max-w-2xl mx-auto font-medium">
-              Discover how OICA has empowered our students to achieve their career goals and excel in the digital world.
+            <p className="text-slate-500 mt-6 text-lg font-medium max-w-2xl mx-auto">
+              Real transformations from our community of learners
             </p>
+            {/* Visual Divider */}
+            <div className="flex justify-center gap-1 mt-6">
+              <div className="w-8 h-1 rounded-full bg-purple-500" />
+              <div className="w-3 h-1 rounded-full bg-pink-400" />
+            </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {achievers.map((a, i) => (
-              <AnimatedSection key={i} delay={i * 0.1}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...dynamicTestimonials, ...achievers].slice(0, 4).map((a, i) => (
+              <AnimatedSection key={i} delay={i * 0.05}>
                 <motion.div
-                  whileHover={{ y: -10 }}
-                  className="group relative bg-white border border-slate-200 p-8 rounded-[2.5rem] flex flex-col h-full transition-all hover:border-primary/30 shadow-sm hover:shadow-xl"
+                  whileHover={{ y: -5 }}
+                  className="group relative bg-white/70 backdrop-blur-xl border border-white/80 p-6 rounded-[2rem] flex flex-col h-full transition-all shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(109,40,217,0.06)] overflow-hidden"
                 >
-                  <Quote className="absolute top-8 right-8 w-8 h-8 text-slate-100 group-hover:text-primary/10 transition-colors" />
+                  {/* Quote Icon */}
+                  <div className="mb-4">
+                    <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-400">
+                      <Quote size={16} fill="currentColor" />
+                    </div>
+                  </div>
                   
-                  <div className="flex gap-1 mb-6">
+                  {/* Star Rating */}
+                  <div className="flex gap-1 mb-3">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <Star key={star} className="w-3 h-3 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
 
-                  <p className="text-slate-600 italic mb-8 flex-1 leading-relaxed text-sm relative z-10">
-                    "{a.review}"
+                  {/* Testimonial Text */}
+                  <p className="text-slate-700 font-medium leading-relaxed text-[13px] mb-8 flex-1 line-clamp-4">
+                    "{a.review || a.comment || a.desc || 'The computer center provides an excellent learning environment that truly support students in building strong technical skills.'}"
                   </p>
 
-                  <div className="flex items-center gap-4 mt-auto pt-6 border-t border-slate-100">
-                    <img 
-                      src={a.img} 
-                      alt={a.name} 
-                      className="w-14 h-14 rounded-2xl object-cover ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all shadow-sm" 
-                    />
+                  {/* Profile Section */}
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <img 
+                        src={a.img || a.studentPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} 
+                        alt={a.name || a.studentName} 
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" 
+                      />
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
+                    </div>
                     <div>
-                      <h3 className="font-heading font-black text-slate-900 text-base leading-tight">{a.name}</h3>
-                      <p className="text-primary text-[10px] font-black uppercase tracking-widest mt-1">{a.role}</p>
+                      <h3 className="font-heading font-black text-slate-900 text-[10px] uppercase tracking-wider mb-0.5">
+                        {a.name || a.studentName}
+                      </h3>
+                      <span className="text-blue-600 text-[8px] font-black uppercase tracking-widest">Verified</span>
                     </div>
                   </div>
                 </motion.div>
               </AnimatedSection>
             ))}
           </div>
+
+          <AnimatedSection className="mt-16 text-center">
+            <Link to="/testimonials">
+              <Button variant="outline" size="lg" className="rounded-2xl px-12 h-14 text-[11px] font-black uppercase tracking-widest border-purple-200 text-purple-700 hover:bg-purple-50 transition-all bg-white/50 backdrop-blur-md">
+                View All Success Stories <ArrowRight className="w-4 h-4 ml-3" />
+              </Button>
+            </Link>
+          </AnimatedSection>
         </div>
       </section>
 

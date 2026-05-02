@@ -16,7 +16,7 @@ const BRANCH_IMGS = [
 ];
 
 const districtList = [
-  "Angul", "Bargarh", "Bhadrak", "Balasore", "Balangir", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khurda", "Koraput", "Malkangiri", "Mayurbhanj", "Nuapada", "Nabarangpur", "Nayagarh", "Puri", "Rayagada", "Sambalpur", "Sonepur", "Sundargarh", "Bhubaneswar"
+  "Angul", "Bargarh", "Bhadrak", "Balasore", "Balangir", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khurda", "Koraput", "Malkangiri", "Mayurbhanj", "Nuapada", "Nabarangpur", "Nayagarh", "Puri", "Rayagada", "Sambalpur", "Sonepur", "Sundargarh", "Bhubaneswar HQ"
 ];
 
 const Branches = () => {
@@ -27,7 +27,7 @@ const Branches = () => {
   ).sort();
 
   return (
-    <div className="pb-32 min-h-screen bg-slate-50/50">
+    <div className="pb-24 min-h-screen bg-slate-50/50 font-poppins">
       <PageHeader 
         title="Institutional Network"
         subtitle="Our Presence"
@@ -36,74 +36,95 @@ const Branches = () => {
         bottomPills={["Statewide Network", "ISO Certified", "Local Mentorship", "Verified Hubs"]}
       />
 
-      <div className="container-max px-4 pt-24">
+      <div className="container-max pt-16">
         <AnimatedSection>
-           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-              <div className="max-w-xl">
-                 <span className="text-[10px] font-black text-primary tracking-[0.3em] uppercase mb-4 block">Center Selector</span>
-                 <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 leading-tight">
-                    Find Your Nearest <br /><span className="text-primary italic">OICA Center</span>
+           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+              <div className="max-w-xl space-y-1">
+                 <span className="text-[9px] font-bold text-primary tracking-widest uppercase block">Center Selector</span>
+                 <h2 className="text-3xl font-bold text-slate-900 leading-tight">
+                    Find Your Nearest <span className="text-primary">OICA Center</span>
                  </h2>
               </div>
               
-              <div className="w-full max-w-md relative group">
+              <div className="w-full max-w-sm relative group">
                  <input 
                     type="text" 
-                    placeholder="Search by district name..." 
+                    placeholder="Search district..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-2xl py-5 px-8 pl-14 text-sm focus:outline-none focus:border-primary transition-all font-bold shadow-lg shadow-primary/5"
+                    className="w-full bg-white border border-slate-200 rounded-xl py-4 px-6 pl-12 text-xs focus:outline-none focus:border-primary transition-all font-bold shadow-lg shadow-primary/5"
                  />
-                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-primary group-focus-within:scale-110 transition-transform" size={20} />
+                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={16} />
               </div>
            </div>
         </AnimatedSection>
 
         {/* District Selection Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredDistricts.map((district, i) => (
-            <AnimatedSection key={district} delay={i * 0.03}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {/* HQ Card – always first if in results */}
+          {filteredDistricts.includes("Bhubaneswar HQ") && (
+            <AnimatedSection delay={0} className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
+              <Link to="/branch/Bhubaneswar HQ" className="block">
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  className="group relative rounded-xl overflow-hidden border border-amber-400/30 shadow-xl bg-slate-950 cursor-pointer"
+                >
+                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2070&auto=format&fit=crop" alt="HQ" className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-700" />
+                  <div className="relative z-10 p-8 flex flex-col md:flex-row items-center gap-8">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-2xl shadow-amber-500/30 shrink-0">
+                      <Building2 size={28} className="text-slate-900" />
+                    </div>
+                    <div className="flex-1 text-center md:text-left">
+                      <div className="flex flex-wrap items-center gap-2 mb-2 justify-center md:justify-start">
+                        <span className="px-3 py-1 bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[8px] font-bold rounded-lg uppercase tracking-widest">Main Headquarters</span>
+                        <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[8px] font-bold rounded-lg uppercase tracking-widest flex items-center gap-1.5"><ShieldCheck size={10} /> ISO Certified</span>
+                      </div>
+                      <h3 className="font-bold text-2xl text-white tracking-tight mb-1">OICA Main Branch &mdash; <span className="text-amber-400">Bhubaneswar HQ</span></h3>
+                      <p className="text-slate-400 text-xs font-medium">The central flagship campus and policy center of OICA Network.</p>
+                    </div>
+                    <div className="w-12 h-12 rounded-xl bg-amber-400 flex items-center justify-center text-slate-900 shadow-xl shrink-0 group-hover:scale-110 transition-transform">
+                      <ChevronRight size={20} />
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </AnimatedSection>
+          )}
+
+          {filteredDistricts.filter(d => d !== "Bhubaneswar HQ").map((district, i) => (
+            <AnimatedSection key={district} delay={i * 0.02}>
                <Link to={`/branch/${district}`} className="block h-full">
                   <motion.div
                     whileHover={{ y: -5 }}
                     transition={{ type: 'spring', stiffness: 300 }}
-                    className="group h-full bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/20 transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden"
+                    className="group h-full bg-white rounded-xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden"
                   >
-                     {/* Branch Thumbnail */}
-                     <div className="w-full aspect-[4/3] overflow-hidden relative">
+                     <div className="w-full aspect-video overflow-hidden relative">
                         <img 
                            src={BRANCH_IMGS[i % BRANCH_IMGS.length]} 
                            alt={district}
-                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
-                           <ShieldCheck size={14} className="text-primary" />
-                           <span className="text-[9px] font-black tracking-widest text-slate-900 uppercase">Verified Center</span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-md">
+                           <ShieldCheck size={12} className="text-primary" />
+                           <span className="text-[8px] font-bold tracking-widest text-slate-900 uppercase">Verified</span>
                         </div>
                      </div>
-
-                     <div className="p-6 flex flex-col items-center text-center flex-1">
-                        <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-primary mb-5 group-hover:bg-primary group-hover:text-white group-hover:rotate-12 transition-all duration-500 shadow-sm border border-slate-100">
-                           <Building2 size={24} />
+                     <div className="p-5 flex flex-col items-center text-center flex-1">
+                        <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all duration-500 border border-slate-100">
+                           <Building2 size={20} />
                         </div>
-                        
-                        <div className="space-y-1">
-                           <h3 className="font-heading font-black text-xl text-slate-800 tracking-tight group-hover:text-primary transition-colors">{district}</h3>
-                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Odisha Center</p>
+                        <div className="space-y-0.5">
+                           <h3 className="font-bold text-lg text-slate-800 tracking-tight group-hover:text-primary transition-colors">{district}</h3>
+                           <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Odisha Center</p>
                         </div>
-                        
-                        <div className="mt-6 pt-6 border-t border-slate-100 w-full flex items-center justify-between">
-                           <div className="flex items-center gap-2">
-                              <div className="flex">
-                                 {[1,2,3,4,5].map(star => (
-                                    <Star key={star} size={12} className="text-amber-400 fill-amber-400" />
-                                 ))}
-                              </div>
-                              <span className="text-[9px] font-black text-slate-400 tracking-wider">OFFICIAL</span>
+                        <div className="mt-5 pt-4 border-t border-slate-100 w-full flex items-center justify-between">
+                           <div className="flex items-center gap-1.5">
+                              <div className="flex">{[1,2,3,4,5].map(star => <Star key={star} size={10} className="text-amber-400 fill-amber-400" />)}</div>
                            </div>
-                           <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                              <ChevronRight size={18} />
+                           <div className="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                              <ChevronRight size={16} />
                            </div>
                         </div>
                      </div>
@@ -113,53 +134,47 @@ const Branches = () => {
           ))}
           
           {filteredDistricts.length === 0 && (
-            <div className="col-span-full py-24 text-center bg-white rounded-3xl border border-dashed border-slate-200">
-              <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
-                 <Search size={40} />
+            <div className="col-span-full py-16 text-center bg-white rounded-xl border border-dashed border-slate-200">
+              <div className="w-16 h-16 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-4 text-slate-300">
+                 <Search size={32} />
               </div>
-              <h3 className="text-2xl font-black text-slate-400">No branches found</h3>
-              <p className="text-slate-400 mt-2 font-medium">Try adjusting your search term.</p>
+              <h3 className="text-lg font-bold text-slate-400 uppercase tracking-widest">No results found</h3>
               <button 
                 onClick={() => setSearchTerm('')}
-                className="mt-6 text-primary font-black uppercase tracking-widest text-xs hover:underline"
+                className="mt-4 text-primary font-bold uppercase tracking-widest text-[9px] hover:underline"
               >
-                 Clear Search
+                 Clear Filters
               </button>
             </div>
           )}
         </div>
         
         {/* Expanded Bottom CTA Section */}
-        <AnimatedSection className="mt-32">
-           <div className="p-12 md:p-20 bg-slate-900 rounded-3xl text-center relative overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 opacity-10 pointer-events-none">
-                 <div className="absolute top-0 right-0 w-96 h-96 bg-primary blur-[150px]" />
-                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500 blur-[150px]" />
-              </div>
-              
-              <div className="relative z-10 max-w-3xl mx-auto">
-                 <span className="text-[10px] font-black text-primary tracking-[0.3em] uppercase mb-4 block">Opportunity</span>
-                 <h2 className="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight text-white">
-                    Can't Find a Branch? <br /><span className="text-emerald-400 italic">Start Your Own</span>
+        <AnimatedSection className="mt-24">
+           <div className="p-12 bg-slate-900 rounded-xl text-center relative overflow-hidden shadow-2xl">
+              <div className="relative z-10 max-w-2xl mx-auto">
+                 <span className="text-[9px] font-bold text-primary tracking-widest uppercase mb-3 block">Opportunity</span>
+                 <h2 className="text-3xl font-bold mb-5 leading-tight text-white">
+                    Can't Find a Branch? <span className="text-emerald-400">Start Your Own</span>
                  </h2>
-                 <p className="text-slate-400 text-lg mb-10 font-medium leading-relaxed">
-                    We are rapidly expanding our digital footprint. Join the OICA family by applying for a franchise and opening a modern branch in your locality.
+                 <p className="text-slate-400 text-sm mb-8 font-medium leading-relaxed">
+                    Join the OICA family by applying for a franchise and opening a modern branch in your district.
                  </p>
-                 <div className="flex flex-wrap justify-center gap-4">
+                 <div className="flex flex-wrap justify-center gap-3">
                     <Link to="/franchise">
                        <motion.button 
-                         whileHover={{ scale: 1.05 }}
-                         whileTap={{ scale: 0.95 }}
-                         className="bg-primary text-slate-900 px-10 h-14 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20"
+                         whileHover={{ scale: 1.02 }}
+                         whileTap={{ scale: 0.98 }}
+                         className="bg-primary text-slate-900 px-8 h-12 rounded-lg font-bold text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20"
                        >
                           Apply for Franchise
                        </motion.button>
                     </Link>
                     <Link to="/contact">
                        <motion.button 
-                         whileHover={{ scale: 1.05 }}
-                         whileTap={{ scale: 0.95 }}
-                         className="bg-white/5 border border-white/10 text-white px-10 h-14 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10"
+                         whileHover={{ scale: 1.02 }}
+                         whileTap={{ scale: 0.98 }}
+                         className="bg-white/5 border border-white/10 text-white px-8 h-12 rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-white/10"
                        >
                           Contact Manager
                        </motion.button>

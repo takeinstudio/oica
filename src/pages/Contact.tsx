@@ -2,6 +2,8 @@ import { Mail, Phone, MapPin, Send, Facebook, Twitter, Instagram, Youtube, Messa
 import PageHeader from '../components/PageHeader';
 import AnimatedSection from '../components/shared/AnimatedSection';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+import { getStorageData, setStorageData, STORAGE_KEYS } from '../lib/storage';
 
 const Contact = () => {
   return (
@@ -98,26 +100,42 @@ const Contact = () => {
                      <h3 className="text-2xl font-heading font-black text-slate-900">Send a Message</h3>
                   </div>
 
-                  <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                  <form className="space-y-8" onSubmit={(e: any) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const newMessage = {
+                      id: Date.now(),
+                      name: formData.get('name'),
+                      email: formData.get('email'),
+                      subject: formData.get('subject'),
+                      message: formData.get('message'),
+                      status: 'new',
+                      date: new Date().toISOString()
+                    };
+                    const existing = getStorageData(STORAGE_KEYS.CONTACT_MESSAGES);
+                    setStorageData(STORAGE_KEYS.CONTACT_MESSAGES, [newMessage, ...existing]);
+                    toast.success("Message sent successfully!");
+                    e.target.reset();
+                  }}>
                     <div className="grid md:grid-cols-2 gap-8">
                        <div className="space-y-2">
                           <label className="text-[10px] font-black ml-1 uppercase tracking-[0.2em] text-slate-400">Full Name</label>
-                          <input type="text" placeholder="John Doe" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
+                          <input required name="name" type="text" placeholder="John Doe" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
                        </div>
                        <div className="space-y-2">
                           <label className="text-[10px] font-black ml-1 uppercase tracking-[0.2em] text-slate-400">Email Address</label>
-                          <input type="email" placeholder="john@example.com" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
+                          <input required name="email" type="email" placeholder="john@example.com" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
                        </div>
                     </div>
                     
                     <div className="space-y-2">
                        <label className="text-[10px] font-black ml-1 uppercase tracking-[0.2em] text-slate-400">Subject</label>
-                       <input type="text" placeholder="Enquiry about courses" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
+                       <input required name="subject" type="text" placeholder="Enquiry about courses" className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-4.5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm" />
                     </div>
 
                     <div className="space-y-2">
                        <label className="text-[10px] font-black ml-1 uppercase tracking-[0.2em] text-slate-400">Your Message</label>
-                       <textarea rows={5} placeholder="Tell us how we can help..." className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm resize-none"></textarea>
+                       <textarea required name="message" rows={5} placeholder="Tell us how we can help..." className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl py-5 px-6 outline-none focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm resize-none"></textarea>
                     </div>
 
                     <motion.button 

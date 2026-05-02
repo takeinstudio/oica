@@ -28,7 +28,7 @@ const Features = () => {
         bottomPills={["Govt. Registered", "ISO Certified", "100% Practical", "Placement Support"]}
       />
 
-      <div className="container-max px-4 pt-24">
+      <div className="container-max pt-24">
         {/* Why Choose OICA */}
         <div className="mb-24">
           

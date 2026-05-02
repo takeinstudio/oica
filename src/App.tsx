@@ -20,6 +20,8 @@ import Gallery from './pages/Gallery';
 import Testimonials from './pages/Testimonials';
 import Results from './pages/Results';
 import Career from './pages/Career';
+import JobSeekerForm from './pages/career/JobSeekerForm';
+import RecruiterForm from './pages/career/RecruiterForm';
 import CertificateView from './pages/CertificateView';
 import MarksheetView from './pages/MarksheetView';
 
@@ -69,6 +71,8 @@ const App = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/career" element={<Career />} />
+                <Route path="/career/apply" element={<JobSeekerForm />} />
+                <Route path="/career/post-job" element={<RecruiterForm />} />
                 <Route path="/testimonials" element={<Testimonials />} />
               </Routes>
             </Layout>

@@ -40,57 +40,61 @@ const Header = () => {
     >
       {/* Simple Top Bar - Always visible or removed based on preference, keeping it stable */}
       <div 
-        className={`hidden lg:flex items-center justify-between w-full bg-slate-900 border-b border-white/5 text-white text-[10px] font-black h-10 px-10 pointer-events-auto`}
+        className={`hidden lg:flex items-center justify-between w-full bg-slate-900/95 border-b border-white/5 text-white text-[10px] font-black h-8 px-10 pointer-events-auto backdrop-blur-md`}
       >
         <div className="flex items-center gap-6 tracking-wider">
           <a href="tel:+919853227488" className="flex items-center gap-2 hover:text-sky-400 transition-colors">
             <Phone className="w-3 h-3 text-sky-400" /> +91 98532 27488
           </a>
           <div className="w-px h-3 bg-white/10" />
-          <span className="flex items-center gap-2 text-white font-bold uppercase">
+          <span className="flex items-center gap-2 text-white/60 font-bold uppercase tracking-wider text-[9px]">
              EXCELLENCE IN COMPUTER EDUCATION
           </span>
         </div>
         
-        <div className="flex items-center gap-3 h-full py-1.5 pr-2">
+        <div className="flex items-center gap-2 h-full py-1 pr-2">
             {[
               { label: "Result", icon: LayoutIcon, path: "/results", color: "bg-blue-600/20 text-blue-400 border-blue-500/30" },
               { label: "Verify Certificate", icon: ShieldCheck, path: "/verify", color: "bg-sky-400/20 text-sky-400 border-sky-400/30" },
             ].map(item => (
               <Link key={item.label} to={item.path}>
-                <div className={`h-full flex items-center gap-2 px-4 py-1.5 rounded-xl border ${item.color} backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer`}>
-                   <item.icon size={13} />
-                   <span className="uppercase tracking-[0.1em] font-black text-[9px]">{item.label}</span>
+                <div className={`h-full flex items-center gap-1.5 px-3 py-1 rounded-lg border ${item.color} backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer`}>
+                   <item.icon size={11} />
+                   <span className="uppercase tracking-[0.1em] font-black text-[8px]">{item.label}</span>
                 </div>
               </Link>
             ))}
         </div>
       </div>
 
-      {/* Main floating navbar (Thin & Perfectly Fixed) */}
-      <div className="mx-auto mt-4 px-4 w-full flex justify-center pointer-events-auto">
+      {/* Main floating navbar — Slim, Glossy, Premium */}
+      <div className="mx-auto mt-3 px-4 w-full flex justify-center pointer-events-auto">
         <motion.nav 
           initial={false}
           animate={{
-            maxWidth: "1100px",
-            height: "64px",
-            backgroundColor: "rgba(76, 29, 149, 0.95)", // Glassy Deep Purple
-            borderColor: "rgba(255, 255, 255, 0.15)",
-            borderRadius: "24px",
+            maxWidth: "1120px",
+            height: "56px",
           }}
-          className="relative flex items-center justify-between w-full border shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] backdrop-blur-2xl px-6 lg:px-8"
+          className="relative flex items-center justify-between w-full px-5 lg:px-7 rounded-[20px] shadow-[0_8px_32px_-8px_rgba(59,130,246,0.35),0_2px_8px_rgba(0,0,0,0.25)] border border-white/20"
+          style={{
+            background: "linear-gradient(135deg, rgba(37,99,235,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(109,40,217,0.92) 100%)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          }}
         >
+          {/* Glossy inner sheen */}
+          <div className="absolute inset-x-0 top-0 h-1/2 rounded-t-[20px] bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
           {/* Logo Section */}
-          <div className="flex-1 flex justify-start items-center h-full">
+          <div className="flex-1 flex justify-start items-center h-full relative z-10">
             <Link to="/" className="inline-flex items-center gap-2.5 group whitespace-nowrap" aria-label="Home page">
               <div 
-                className="flex items-center justify-center rounded-lg p-1.5 transition-all duration-300 bg-white text-purple-700 shadow-sm"
+                className="flex items-center justify-center rounded-lg p-1.5 transition-all duration-300 bg-white text-blue-700 shadow-md group-hover:scale-110"
               >
                 <GraduationCap className="w-4 h-4" />
               </div>
               <div className="flex flex-col justify-center">
                 <span 
-                  className="font-heading font-black leading-none tracking-tight text-[11px] md:text-[12px] uppercase text-white"
+                  className="font-heading font-black leading-none tracking-tight text-[11px] md:text-[12px] uppercase text-white drop-shadow-sm"
                 >
                   Odisha Institute of
                 </span>
@@ -103,8 +107,8 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation Navigation */}
-          <div className="hidden xl:flex flex-none items-center justify-center gap-1 h-full" aria-label="Main navigation">
+          {/* Desktop Navigation */}
+          <div className="hidden xl:flex flex-none items-center justify-center gap-0.5 h-full relative z-10" aria-label="Main navigation">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
@@ -112,37 +116,35 @@ const Header = () => {
                   key={link.path}
                   to={link.path}
                   onClick={(e) => handleNavClick(e, link.path)}
-                  className={`nav-link-hover relative transition-all duration-300 ${
+                  className={`relative px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all duration-200 ${
                     isActive 
-                      ? "text-white font-bold"
-                      : "text-white/80 hover:text-white"
+                      ? "text-white" 
+                      : "text-white/75 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   <span className="relative z-10">{link.label}</span>
                   {isActive && (
                     <motion.span 
                       layoutId="activeTab"
-                      className="absolute inset-0 rounded-full bg-white/10"
-                      transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                      className="absolute inset-0 rounded-xl bg-white/15 shadow-inner"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                     />
                   )}
                 </Link>
               );
             })}
-            <div className="w-px h-4 bg-white/10 mx-3" />
-            <Link to="/login" className="nav-link-hover text-white/90 hover:text-white pr-4 xl:pr-0">
+            <div className="w-px h-4 bg-white/20 mx-2" />
+            <Link to="/login" className="relative px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider text-white/75 hover:text-white hover:bg-white/10 transition-all">
                Login
             </Link>
           </div>
 
-          {/* Right Actions - Empty but kept for flex spacing */}
-          <div className="hidden lg:flex flex-1 items-center justify-end ml-auto h-full">
-             {/* Apply Now button removed previously */}
-          </div>
+          {/* Right spacer */}
+          <div className="hidden lg:flex flex-1 items-center justify-end ml-auto h-full relative z-10" />
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Hamburger */}
           <button 
-            className="lg:hidden p-1.5 rounded-lg ml-auto transition-all active:scale-95 bg-white/10 text-white border border-white/20 hover:bg-white/20" 
+            className="lg:hidden p-1.5 rounded-lg ml-auto transition-all active:scale-95 bg-white/15 text-white border border-white/20 hover:bg-white/25 relative z-10" 
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -158,7 +160,7 @@ const Header = () => {
             animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
             exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="lg:hidden absolute top-[70px] md:top-[85px] left-4 right-4 bg-white/90 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-2xl overflow-hidden z-[60] pointer-events-auto"
+            className="lg:hidden absolute top-[62px] md:top-[76px] left-4 right-4 bg-white/95 backdrop-blur-2xl rounded-[28px] border border-white/40 shadow-2xl overflow-hidden z-[60] pointer-events-auto"
           >
             <div className="p-6 pt-8 space-y-1">
               {navLinks.map((link) => {

@@ -107,13 +107,59 @@
 }
 
 @layer components {
-  .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+
+  /* ============================================
+     GLOBAL LAYOUT SYSTEM
+     ============================================
+     Usage pattern:
+       <section class="bg-slate-50">          ← full-width background
+         <div class="container-max">          ← constrained content (1280px)
+           ...
+         </div>
+       </section>
+
+     OR for content-heavy sections:
+       <section class="section-padding">      ← vertical rhythm
+         <div class="section-container">      ← tighter 1200px container
+           ...
+         </div>
+       </section>
+  ============================================ */
+
+  /* Primary container — max 1280px, centered, responsive side padding */
+  .container-max {
+    @apply w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16;
   }
 
-  .section-padding {
-    @apply py-8 md:py-16;
+  /* Content-focused tighter container — max 1200px */
+  .section-container {
+    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
   }
+
+  /* Vertical rhythm helpers */
+  .section-padding {
+    @apply py-12 md:py-20 lg:py-24;
+  }
+
+  .section-padding-sm {
+    @apply py-8 md:py-12;
+  }
+
+  .section-padding-lg {
+    @apply py-16 md:py-28 lg:py-36;
+  }
+
+  /* Full-bleed section with constrained content — use as wrapper */
+  .content-section {
+    @apply w-full;
+  }
+
+  .content-section > .container-max,
+  .content-section > .section-container {
+    @apply mx-auto;
+  }
+
+  /* ============================================ */
 
   .gradient-text {
     @apply bg-clip-text text-transparent;
@@ -187,10 +233,12 @@
   100% { transform: translateX(-50%); }
 }
 
-/* Custom Premium Scrollbar */
+/* ======================================
+   PREMIUM BROWSER SCROLLBAR — Thin Blue
+   ====================================== */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -198,18 +246,30 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.1);
-  border-radius: 10px;
+  background: linear-gradient(to bottom, hsl(220 80% 55%), hsl(240 80% 65%));
+  border-radius: 99px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.3);
+  background: linear-gradient(to bottom, hsl(220 80% 45%), hsl(240 80% 55%));
 }
 
-/* For Firefox */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--primary) / 0.1) transparent;
+  scrollbar-color: hsl(220 80% 55%) transparent;
 }
 
+/* Utility: hide scrollbar but keep scroll */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

@@ -47,7 +47,7 @@ const Gallery = () => {
         bottomPills={["Campus Life", "Events", "Success Moments"]}
       />
 
-      <div className="container-max px-4 pt-24">
+      <div className="container-max pt-24">
         {/* Category Filter Chips */}
         <div className="flex flex-wrap justify-center gap-3 mb-16 scrollbar-hide">
           {categories.map((cat) => (

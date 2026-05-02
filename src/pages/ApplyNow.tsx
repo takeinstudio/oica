@@ -1,11 +1,36 @@
 import { Send, GraduationCap, CheckCircle2, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { STORAGE_KEYS, getStorageData, setStorageData } from '@/lib/storage';
+import { toast } from 'sonner';
 
 const ApplyNow = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    const newEnrollment = {
+      id: Date.now().toString(),
+      name: formData.get('name'),
+      phone: formData.get('phone'),
+      email: formData.get('email'),
+      gender: formData.get('gender'),
+      course: formData.get('course'),
+      district: formData.get('district'),
+      message: formData.get('message'),
+      status: 'new',
+      date: new Date().toLocaleDateString(),
+    };
+
+    const existing = getStorageData(STORAGE_KEYS.ENROLLMENTS);
+    setStorageData(STORAGE_KEYS.ENROLLMENTS, [newEnrollment, ...existing]);
+    toast.success("Application sent successfully! Admin will contact you soon.");
+    (e.target as HTMLFormElement).reset();
+  };
+
   return (
     <div className="pt-24 pb-16 min-h-screen bg-slate-50">
-      <div className="container-max px-4">
+      <div className="container-max">
         <div className="max-w-3xl mx-auto">
           {/* Header Info Info */}
           <motion.div 
@@ -30,7 +55,7 @@ const ApplyNow = () => {
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             
-            <form className="relative z-10 space-y-8" onSubmit={(e) => e.preventDefault()}>
+            <form className="relative z-10 space-y-8" onSubmit={handleSubmit}>
               {/* Personal Details Personal Sections */}
               <div className="space-y-5">
                 <h3 className="text-base font-black flex items-center gap-3 text-primary uppercase tracking-wider">
@@ -40,20 +65,20 @@ const ApplyNow = () => {
                 <div className="grid md:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Full Name</label>
-                    <input type="text" placeholder="John Doe" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="name" required type="text" placeholder="John Doe" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Phone Number</label>
-                    <input type="tel" placeholder="+91 00000 00000" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="phone" required type="tel" placeholder="+91 00000 00000" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Email Address</label>
-                    <input type="email" placeholder="example@mail.com" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
+                    <input name="email" required type="email" placeholder="example@mail.com" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Gender</label>
                     <div className="relative">
-                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
+                      <select name="gender" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>Male</option>
                         <option>Female</option>
                         <option>Other</option>
@@ -74,7 +99,7 @@ const ApplyNow = () => {
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Select Course</label>
                     <div className="relative">
-                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
+                      <select name="course" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>PGDCA</option>
                         <option>Tally ERP</option>
                         <option>Web Design</option>
@@ -88,7 +113,7 @@ const ApplyNow = () => {
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Preferred District</label>
                     <div className="relative">
-                      <select className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
+                      <select name="district" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
                         <option>Bhubaneswar</option>
                         <option>Cuttack</option>
                         <option>Puri</option>
@@ -110,7 +135,7 @@ const ApplyNow = () => {
                 </h3>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Message (Optional)</label>
-                  <textarea rows={3} placeholder="Any specific requirements?" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs resize-none"></textarea>
+                  <textarea name="message" rows={3} placeholder="Any specific requirements?" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xs resize-none"></textarea>
                 </div>
               </div>
 

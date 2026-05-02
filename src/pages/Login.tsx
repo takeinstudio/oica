@@ -3,12 +3,14 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { 
   Lock, User, ArrowLeft, ShieldCheck, Star, GraduationCap, 
   Code2, Cpu, Database, LayoutDashboard, Users, Award, 
-  BookOpen, Mail, Phone, UserPlus, Building2 
+  BookOpen, Mail, Phone, UserPlus, Building2, CreditCard,
+  CheckCircle2, Loader2, X
 } from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getStorageData, setStorageData, STORAGE_KEYS, initStorage } from "@/lib/storage";
+import { Button } from "@/components/ui/button";
 
 const portalMeta: Record<string, { name: string; color: string; accent: string; icon: typeof ShieldCheck; tagline: string; fullName: string }> = {
   student: { name: "Student", color: "from-blue-600 to-indigo-500", accent: "#2563eb", icon: GraduationCap, tagline: "Continue your learning journey", fullName: "Odisha Institute of Computer Application" },
@@ -39,6 +41,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [branches, setBranches] = useState<any[]>([]);
+
+  // Payment State
+  const [showPayment, setShowPayment] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [pendingUser, setPendingUser] = useState<any>(null);
 
   const meta = portalMeta[role] || portalMeta.student;
   const { name, color, accent, tagline, fullName: institutionName } = meta;
@@ -73,32 +81,55 @@ const Login = () => {
         toast.error("Invalid credentials. Please try again.");
       }
     } else {
-      // Signup Logic
+      // Signup Logic - Initial stage: Prepare user and show payment
       const users = getStorageData(STORAGE_KEYS.USERS);
       if (users.find((u: any) => u.username === username)) {
         toast.error("Username already exists.");
         return;
       }
 
-      const newUser = {
+      const preparedUser = {
         id: Date.now(),
         name: fullName,
         username,
         password,
         email,
         phone,
-        role: "student", // Only students can sign up
-        branchId: "BBSR-01", // Default to main branch
+        role: "student",
+        branchId: "BBSR-01",
         rollNo: `OICA/2026/${Math.floor(Math.random() * 900) + 100}`,
-        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
+        photo: `https://i.pravatar.cc/150?u=${username}`,
         age: "",
-        course: "OICA PGDCA 2026"
+        course: "OICA PGDCA 2026",
+        registeredAt: new Date().toISOString()
       };
 
-      setStorageData(STORAGE_KEYS.USERS, [...users, newUser]);
-      toast.success("Account created successfully! You can now login.");
-      setMode("login");
+      setPendingUser(preparedUser);
+      setShowPayment(true);
     }
+  };
+
+  const handleFinalizeSignup = () => {
+    setIsPaying(true);
+    // Simulate Gateway Delay
+    setTimeout(() => {
+      setIsPaying(false);
+      setPaymentSuccess(true);
+      
+      // Commit to Database
+      const users = getStorageData(STORAGE_KEYS.USERS);
+      setStorageData(STORAGE_KEYS.USERS, [...users, pendingUser]);
+      
+      toast.success("Payment Successful! Welcome to OICA.");
+      
+      // Delay before switching to login
+      setTimeout(() => {
+        setShowPayment(false);
+        setPaymentSuccess(false);
+        setMode("login");
+        setPendingUser(null);
+      }, 2500);
+    }, 2000);
   };
 
   return (
@@ -341,6 +372,121 @@ const Login = () => {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Simulated Razorpay Payment Gateway Modal */}
+      <AnimatePresence>
+        {showPayment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden shadow-2xl relative"
+            >
+              {!paymentSuccess ? (
+                <>
+                  <div className="bg-primary p-8 text-white flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/30 backdrop-blur-md">
+                        <CreditCard size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-heading font-black text-sm uppercase tracking-widest">Razorpay Gateway</h3>
+                        <p className="text-[10px] text-white/60 font-bold uppercase tracking-wider">Secure Payment • OICA</p>
+                      </div>
+                    </div>
+                    <button onClick={() => setShowPayment(false)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all">
+                      <X size={16} />
+                    </button>
+                  </div>
+                  
+                  <div className="p-10 space-y-8">
+                    <div className="text-center space-y-2">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Registration Fee</p>
+                      <h2 className="text-5xl font-black text-slate-950 tracking-tighter">₹500.00</h2>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+                        <div className="flex justify-between text-[11px] font-bold">
+                          <span className="text-slate-400 uppercase">Student</span>
+                          <span className="text-slate-900">{pendingUser?.name}</span>
+                        </div>
+                        <div className="flex justify-between text-[11px] font-bold">
+                          <span className="text-slate-400 uppercase">Course</span>
+                          <span className="text-slate-900">{pendingUser?.course}</span>
+                        </div>
+                        <div className="flex justify-between text-[11px] font-bold">
+                          <span className="text-slate-400 uppercase">Gateway ID</span>
+                          <span className="text-slate-900 font-mono">pay_demo_78291</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 p-4 border-2 border-primary/20 rounded-2xl bg-primary/5">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                          <ShieldCheck size={18} />
+                        </div>
+                        <p className="text-[10px] font-black text-primary leading-tight uppercase tracking-wider">
+                          Instant ID & Roll No Generation <br /> after successful payment
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button 
+                      onClick={handleFinalizeSignup}
+                      disabled={isPaying}
+                      className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-[10px] tracking-[0.2em] uppercase shadow-xl shadow-primary/20"
+                    >
+                      {isPaying ? (
+                        <>
+                          <Loader2 size={16} className="mr-3 animate-spin" />
+                          Processing Transaction...
+                        </>
+                      ) : (
+                        "PAY SECURELY NOW"
+                      )}
+                    </Button>
+
+                    <p className="text-center text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
+                      By paying, you agree to OICA's Admission Terms. <br /> Your data is encrypted and 100% secure.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="p-16 text-center space-y-8">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 12 }}
+                    className="w-24 h-24 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-emerald-500/20"
+                  >
+                    <CheckCircle2 size={48} />
+                  </motion.div>
+                  
+                  <div className="space-y-3">
+                    <h2 className="text-3xl font-black text-slate-950 tracking-tight">Admission Confirmed!</h2>
+                    <p className="text-slate-500 font-medium text-sm">Your payment was successful and your OICA Student ID has been generated.</p>
+                  </div>
+
+                  <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Your Allocated Roll No</p>
+                    <h3 className="text-3xl font-black text-primary tracking-tighter">{pendingUser?.rollNo}</h3>
+                  </div>
+
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest animate-pulse">
+                    Redirecting to portal...
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

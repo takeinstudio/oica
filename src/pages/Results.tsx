@@ -56,7 +56,7 @@ const Results = () => {
         bottomPills={["Real-time Access", "Digital Marksheet", "Performance Analytics"]}
       />
 
-      <div className="container-max px-4 -mt-24 pb-32 relative z-10">
+      <div className="container-max -mt-24 pb-32 relative z-10">
         <div className="max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
               <motion.div

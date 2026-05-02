@@ -3,17 +3,31 @@
 export const STORAGE_KEYS = {
   USERS: "oica_users",
   LECTURES: "oica_lectures",
+  TOPICS: "oica_topics",
+  MOCK_TESTS: "oica_mock_tests",
+  TEST_RESULTS: "oica_test_results",
   BRANCHES: "oica_branches",
   RESULTS: "oica_results",
   SESSION: "oica_session",
   GALLERY: "oica_gallery",
   JOBS: "oica_jobs",
-  CAREER_APPS: "oica_career_apps"
+  CAREER_APPS: "oica_career_apps",
+  FEEDBACK: "oica_feedback",
+  CONTACT_MESSAGES: "oica_contact_messages",
+  FRANCHISE_ENQUIRIES: "oica_franchise_enquiries",
+  ENROLLMENTS: "oica_enrollments"
 };
 
 export const getStorageData = (key: string) => {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
+  try {
+    const data = localStorage.getItem(key);
+    if (!data || data === "null") return [];
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.error(`Error loading ${key} from storage:`, e);
+    return [];
+  }
 };
 
 export const setStorageData = (key: string, data: any) => {
@@ -34,11 +48,18 @@ export const initStorage = () => {
   ];
 
   const existingUsers = getStorageData(STORAGE_KEYS.USERS);
-  const existingBranches = getStorageData(STORAGE_KEYS.BRANCHES);
+  let existingBranches = getStorageData(STORAGE_KEYS.BRANCHES);
+
+  // Migration: if any branch lacks the notices field, force re-init
+  const needsMigration = existingBranches.length > 0 && existingBranches.some((b: any) => !b.notices);
+  if (needsMigration) {
+    localStorage.removeItem(STORAGE_KEYS.BRANCHES);
+    existingBranches = [];
+  }
 
   // Initialize Default System Users
   const defaultUsers: any[] = [
-    { id: 1, name: "Ankit Kumar", username: "student", password: "password", role: "student", branchId: "KHORDHA-01", rollNo: "OICA/2026/001", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374", age: 20, course: "PGDCA", email: "ankit@demo.com", phone: "9876543210" },
+    { id: 1, name: "Ankit Kumar", username: "student", password: "password", role: "student", branchId: "KHORDHA-01", rollNo: "OICA/2026/001", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374", age: 20, course: "PGDCA", email: "ankit@demo.com", phone: "9876543210", completedVideos: [] },
     { id: 2, name: "Admin HQ", username: "admin", password: "admin123", role: "admin" },
   ];
 
@@ -74,6 +95,11 @@ export const initStorage = () => {
         `https://images.unsplash.com/photo-${1523050337456 + idx}-5d55f21af557?q=80&w=800`,
         `https://images.unsplash.com/photo-${1541339907198 + idx}-e08756ebafe3?q=80&w=800`
       ],
+      notices: [
+        { id: `n1_${idx}`, title: "New Batch Starting Next Week", date: "May 10, 2026" },
+        { id: `n2_${idx}`, title: "Holiday on account of Local Festival", date: "May 15, 2026" },
+        { id: `n3_${idx}`, title: "Exam Schedule for DCA Students", date: "May 20, 2026" }
+      ],
       students: 0 // Will be updated
     });
   });
@@ -98,7 +124,8 @@ export const initStorage = () => {
          age: 18 + Math.floor(Math.random() * 10),
          course: course,
          email: `${fName.toLowerCase()}${i}@gmail.com`,
-         phone: `${7000000000 + i}`
+         phone: `${7000000000 + i}`,
+         completedVideos: []
        });
 
        // Update branch student count
@@ -116,32 +143,60 @@ export const initStorage = () => {
     setStorageData(STORAGE_KEYS.BRANCHES, defaultBranches);
   }
 
-  // 4. Initialize Lectures
-  if (!localStorage.getItem(STORAGE_KEYS.LECTURES) || getStorageData(STORAGE_KEYS.LECTURES).length < 5) {
-     const mahaTandavVideos = [
-      { id: 1, title: "Function One Shot | Maha Tandav", desc: "Complete Function Revision for Computer Science and Math basics.", url: "https://www.youtube.com/embed/8-9-o97S6S8", thumbnail: "https://img.youtube.com/vi/8-9-o97S6S8/maxresdefault.jpg" },
-      { id: 2, title: "Inverse Trigonometry | Maha Tandav", desc: "Premium revision session on Trigonometric functions and logic.", url: "https://www.youtube.com/embed/g_T6JvI7v-0", thumbnail: "https://img.youtube.com/vi/g_T6JvI7v-0/maxresdefault.jpg" },
-      { id: 3, title: "Matrices & Determinants", desc: "Core data handling and matrix logic for automation.", url: "https://www.youtube.com/embed/6_6xWpZ-XkQ", thumbnail: "https://img.youtube.com/vi/6_6xWpZ-XkQ/maxresdefault.jpg" },
-      { id: 4, title: "Limits & Continuity", desc: "Advanced logic structures and continuous function management.", url: "https://www.youtube.com/embed/V6H3K8v7HkQ", thumbnail: "https://img.youtube.com/vi/V6H3K8v7HkQ/maxresdefault.jpg" },
-      { id: 5, title: "Differentiation Mastery", desc: "Understanding change and logic optimization.", url: "https://www.youtube.com/embed/k9oW9T6M-T4", thumbnail: "https://img.youtube.com/vi/k9oW9T6M-T4/maxresdefault.jpg" }
+  // 4. Initialize Topics & Lectures
+  const existingTopics = getStorageData(STORAGE_KEYS.TOPICS);
+  if (existingTopics.length === 0) {
+    const defaultTopics = [
+      { id: "t1", name: "C Programming", courseId: "PGDCA", order: 1, description: "Master the fundamentals of C Programming language.", color: "blue" },
+      { id: "t2", name: "Office Automation", courseId: "PGDCA", order: 2, description: "Advanced MS Office tools and productivity hacks.", color: "emerald" },
+      { id: "t3", name: "Web Design", courseId: "PGDCA", order: 3, description: "Modern web architecture with HTML, CSS, and JS.", color: "violet" },
     ];
-    setStorageData(STORAGE_KEYS.LECTURES, mahaTandavVideos);
+    setStorageData(STORAGE_KEYS.TOPICS, defaultTopics);
+
+    const defaultLectures = [
+      { id: "l1", topicId: "t1", order: 1, title: "Introduction to C", desc: "Setting up environment and first program.", url: "https://www.youtube.com/embed/8-9-o97S6S8", thumbnail: "https://img.youtube.com/vi/8-9-o97S6S8/maxresdefault.jpg", duration: "12:45" },
+      { id: "l2", topicId: "t1", order: 2, title: "Variables & Data Types", desc: "Understanding memory and types in C.", url: "https://www.youtube.com/embed/g_T6JvI7v-0", thumbnail: "https://img.youtube.com/vi/g_T6JvI7v-0/maxresdefault.jpg", duration: "15:20" },
+      { id: "l3", topicId: "t1", order: 3, title: "Control Flow", desc: "If-else and switch statements.", url: "https://www.youtube.com/embed/6_6xWpZ-XkQ", thumbnail: "https://img.youtube.com/vi/6_6xWpZ-XkQ/maxresdefault.jpg", duration: "18:10" },
+      { id: "l4", topicId: "t2", order: 1, title: "Advanced Excel Formulas", desc: "VLOOKUP, INDEX, MATCH and more.", url: "https://www.youtube.com/embed/V6H3K8v7HkQ", thumbnail: "https://img.youtube.com/vi/V6H3K8v7HkQ/maxresdefault.jpg", duration: "25:00" },
+    ];
+    setStorageData(STORAGE_KEYS.LECTURES, defaultLectures);
   }
 
-  // 5. Initialize Career Data (Jobs & Applications)
+  // 5. Initialize Mock Tests
+  const existingTests = getStorageData(STORAGE_KEYS.MOCK_TESTS);
+  if (existingTests.length === 0) {
+    const defaultTests = [
+      {
+        id: "mt1",
+        topicId: "t1",
+        isFinal: false,
+        timeLimit: 15,
+        questions: [
+          { id: "q1", text: "Who is the father of C language?", options: ["Steve Jobs", "James Gosling", "Dennis Ritchie", "Rasmus Lerdorf"], correct: 2 },
+          { id: "q2", text: "C is a ________ level language.", options: ["Low", "High", "Middle", "None"], correct: 2 },
+          { id: "q3", text: "Which of these is not a keyword in C?", options: ["auto", "case", "default", "function"], correct: 3 },
+        ]
+      },
+      {
+        id: "ft1",
+        topicId: "all",
+        isFinal: true,
+        timeLimit: 30,
+        questions: [
+          { id: "fq1", text: "What is the full form of PGDCA?", options: ["Post Graduate Diploma in Computer Application", "Primary Graduate Diploma in Computer Architecture", "Post General Diploma in Computer Art", "None"], correct: 0 },
+        ]
+      }
+    ];
+    setStorageData(STORAGE_KEYS.MOCK_TESTS, defaultTests);
+  }
+
+  // 6. Initialize Career Data (Jobs & Applications)
   const existingJobs = getStorageData(STORAGE_KEYS.JOBS);
   if (existingJobs.length === 0) {
     const defaultJobs = [
       { id: "j1", title: "Junior Software Developer", company: "TechNova Solutions", location: "Bhubaneswar", type: "Full-time", salary: "₹4.5 - 6.0 LPA", experience: "0-1 Years", requirements: "Knowledge of React, Node.js, and SQL. Good problem-solving skills.", postedAt: "2026-04-10" },
       { id: "j2", title: "Graphic Designer", company: "Pixel Perfect Agency", location: "Cuttack", type: "Full-time", salary: "₹3.0 - 4.2 LPA", experience: "0-2 Years", requirements: "Proficiency in Photoshop, Illustrator, and Canva. Portfolio required.", postedAt: "2026-04-12" },
       { id: "j3", title: "Tally & Accounts Expert", company: "OICA Corporate Office", location: "Bhubaneswar HQ", type: "Full-time", salary: "₹2.4 - 3.6 LPA", experience: "0-1 Years", requirements: "Advanced Tally Prime knowledge, GST filing, and basic bookkeeping.", postedAt: "2026-04-15" },
-      { id: "j4", title: "Web Development Intern", company: "CloudSphere IT", location: "Remote", type: "Internship", salary: "₹10,000 / month", experience: "Fresher", requirements: "Basic HTML, CSS, and JS knowledge. Eager to learn modern frameworks.", postedAt: "2026-04-16" },
-      { id: "j5", title: "Digital Marketing Specialist", company: "GrowthHacker Odisha", location: "Puri", type: "Full-time", salary: "₹3.5 - 5.0 LPA", experience: "1-2 Years", requirements: "SEO, SEM, Social Media Management, and Google Analytics.", postedAt: "2026-04-08" },
-      { id: "j6", title: "Office Assistant", company: "Odisha Govt. Vendor", location: "Sambalpur", type: "Part-time", salary: "₹1.8 - 2.4 LPA", experience: "Fresher", requirements: "Basic computer knowledge (MS Office), good typing speed.", postedAt: "2026-04-14" },
-      { id: "j7", title: "IT Faculty / Trainer", company: "OICA Kendrapara", location: "Kendrapara", type: "Full-time", salary: "₹3.0 - 4.5 LPA", experience: "1+ Years", requirements: "Excellent communication, deep knowledge of DCA/PGDCA syllabus.", postedAt: "2026-04-11" },
-      { id: "j8", title: "Android App Developer", company: "AppVantage Studio", location: "Berhampur", type: "Contract", salary: "₹5.0 - 7.5 LPA", experience: "2+ Years", requirements: "Java/Kotlin, Firebase integration, and API handling.", postedAt: "2026-04-13" },
-      { id: "j9", title: "Data Entry Operator", company: "Global Servicing", location: "Balasore", type: "Full-time", salary: "₹1.5 - 2.0 LPA", experience: "Fresher", requirements: "Fast typing, attention to detail, MS Excel proficiency.", postedAt: "2026-04-09" },
-      { id: "j10", title: "System Administrator", company: "OICA Main Branch", location: "Bhubaneswar", type: "Full-time", salary: "₹4.0 - 5.5 LPA", experience: "2+ Years", requirements: "Networking, Hardware maintenance, and Server management.", postedAt: "2026-04-15" }
     ];
     setStorageData(STORAGE_KEYS.JOBS, defaultJobs);
   }
@@ -160,5 +215,36 @@ export const initStorage = () => {
       appliedAt: "2026-04-16"
     }));
     setStorageData(STORAGE_KEYS.CAREER_APPS, defaultApps);
+  }
+  // 6. Initialize Feedback
+  const existingFeedback = getStorageData(STORAGE_KEYS.FEEDBACK);
+  if (existingFeedback.length === 0) {
+    const defaultFeedback = [
+      {
+        id: "fb-1",
+        studentId: 1,
+        studentName: "Ankit Kumar",
+        studentPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
+        rollNo: "OICA/2026/001",
+        course: "PGDCA",
+        rating: 5,
+        comment: "OICA has been a life-changing experience for me. The hands-on training and the supportive faculty helped me master complex concepts easily. Highly recommended for anyone looking to build a career in IT!",
+        status: "approved",
+        date: new Date().toISOString()
+      },
+      {
+        id: "fb-2",
+        studentId: 1001,
+        studentName: "Priya Das",
+        studentPhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374",
+        rollNo: "OICA/2026/101",
+        course: "Graphic Design",
+        rating: 5,
+        comment: "The Graphic Design course at OICA is exceptional. The curriculum is modern and industry-relevant. I especially loved the workshop sessions where we worked on real projects.",
+        status: "approved",
+        date: new Date().toISOString()
+      }
+    ];
+    setStorageData(STORAGE_KEYS.FEEDBACK, defaultFeedback);
   }
 };

@@ -33,7 +33,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[1px]" />
       </div>
 
-      <div className="container-max px-4 relative z-10 text-center flex flex-col justify-center items-center h-full pt-12 pb-8">
+      <div className="container-max relative z-10 text-center flex flex-col justify-center items-center h-full pt-12 pb-8">
         {/* Top Badge - Floating Animation */}
         <motion.div
             initial={{ opacity: 0, y: 10 }}
