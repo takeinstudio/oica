@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect } from "react";
-import { 
-  LayoutDashboard, 
-  Video, 
-  FileText, 
-  PenTool, 
-  LogOut, 
-  Search, 
-  GraduationCap, 
+import {
+  LayoutDashboard,
+  Video,
+  FileText,
+  PenTool,
+  LogOut,
+  Search,
+  GraduationCap,
   ChevronRight,
   ArrowRight,
   Award,
@@ -21,7 +21,10 @@ import {
   CheckCircle2,
   Clock,
   X,
-  Download
+  Download,
+  Users,
+  ShieldCheck,
+  QrCode
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,8 +32,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import SecureVideoPlayer from "@/components/shared/SecureVideoPlayer";
-import SecurePdfViewer from "@/components/shared/SecurePdfViewer";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
+import QRModal from "@/components/shared/QRModal";
+import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
 
 export const getStorageDataSafe = (key: string) => {
   try {
@@ -46,16 +50,17 @@ export const getStorageDataSafe = (key: string) => {
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
-  
+  const [showQRModal, setShowQRModal] = useState(false);
+
   // Navigation State
   const [selectedTopic, setSelectedTopic] = useState<any>(null);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [quizActive, setQuizActive] = useState(false);
   const [activeQuiz, setActiveQuiz] = useState<any>(null);
   const [quizResult, setQuizResult] = useState<any>(null);
-  
+
   const navigate = useNavigate();
-  
+
   // Auth & Profile State
   const [user, setUser] = useState<any>(null);
   const [profileForm, setProfileForm] = useState({
@@ -118,7 +123,7 @@ const StudentDashboard = () => {
       updatedUser.completedVideos.push(videoId);
       setUser(updatedUser);
       localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(updatedUser));
-      
+
       const allUsers = getStorageData(STORAGE_KEYS.USERS);
       const updatedUsers = allUsers.map((u: any) => u.id === user.id ? updatedUser : u);
       setStorageData(STORAGE_KEYS.USERS, updatedUsers);
@@ -166,6 +171,65 @@ const StudentDashboard = () => {
     setFeedbackForm({ rating: 5, comment: "" });
   };
 
+  const downloadID = () => {
+    // High-res canvas for premium ID download
+    const hiddenCanvas = document.querySelector("#hidden-qr-canvas") as HTMLCanvasElement;
+    if (!hiddenCanvas) {
+       toast.error("Security engine initializing...");
+       return;
+    }
+
+    const tempCanvas = document.createElement('canvas');
+    const ctx = tempCanvas.getContext('2d');
+    if (!ctx) return;
+
+    tempCanvas.width = 1200; 
+    tempCanvas.height = 1600;
+    
+    // Background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    
+    // Premium Border
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 20;
+    ctx.strokeRect(40, 40, 1120, 1520);
+    
+    // Branding
+    ctx.fillStyle = '#0f172a';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 40px Poppins';
+    ctx.fillText('ODISHA INSTITUTE OF COMPUTER APPLICATION', 600, 150);
+    
+    // Student Name
+    ctx.font = 'bold 80px Poppins';
+    ctx.fillText(user.name.toUpperCase(), 600, 320);
+    
+    // Roll No
+    ctx.font = 'bold 44px Poppins';
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(`STUDENT ID: ${user.rollNo}`, 600, 410);
+
+    // Draw QR Code from hidden high-res canvas
+    ctx.drawImage(hiddenCanvas, 200, 550, 800, 800);
+    
+    // Footer
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 30px Poppins';
+    ctx.fillText(user.course.toUpperCase(), 600, 1400);
+    ctx.fillText(`BRANCH: ${user.branchId}`, 600, 1450);
+    
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 24px Poppins';
+    ctx.fillText('SECURE ACADEMIC QR • IDENTITY VERIFIED', 600, 1530);
+
+    const link = document.createElement('a');
+    link.download = `OICA_Pass_${user.rollNo}.png`;
+    link.href = tempCanvas.toDataURL('image/png', 1.0);
+    link.click();
+    toast.success("Professional Digital Pass Exported!");
+  };
+
   if (!user) return null;
 
   return (
@@ -188,17 +252,17 @@ const StudentDashboard = () => {
             { id: "lectures", label: "Lectures", Icon: Video },
             { id: "resources", label: "PDF Resources", Icon: FileText },
             { id: "results", label: "Results", Icon: Award },
+            ...(user?.role === "student" ? [{ id: "idcard", label: "My ID Card", Icon: Download }] : []),
             { id: "feedback", label: "Feedback", Icon: MessageSquare },
             { id: "profile", label: "Profile", Icon: User },
           ].map(item => (
             <button
               key={item.id}
               onClick={() => { setActiveTab(item.id); setSelectedTopic(null); setSelectedVideo(null); setQuizActive(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 group relative ${
-                activeTab === item.id 
-                  ? "bg-white/10 text-white shadow-inner border border-white/5" 
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 group relative ${activeTab === item.id
+                  ? "bg-white/10 text-white shadow-inner border border-white/5"
                   : "text-slate-500 hover:bg-white/5 hover:text-slate-300"
-              }`}
+                }`}
             >
               <item.Icon size={16} className={activeTab === item.id ? "text-primary" : "text-slate-500 group-hover:text-slate-300"} />
               <span className="hidden lg:block font-bold text-[9px] uppercase tracking-widest">{item.label}</span>
@@ -209,8 +273,8 @@ const StudentDashboard = () => {
           ))}
         </nav>
 
-        <div className="p-4 mt-auto border-t border-white/5">
-          <button 
+        <div className="p-4 mt-auto border-t border-white/5 space-y-1">
+          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all font-bold text-[9px] uppercase tracking-widest"
           >
@@ -227,40 +291,40 @@ const StudentDashboard = () => {
           <div>
             <h1 className="text-lg font-bold text-slate-900 capitalize tracking-tight flex items-center gap-2">
               {activeTab}
-              {selectedTopic && <><ChevronRight size={14} className="text-slate-300" /> <span className="text-primary">{selectedTopic.name}</span></>}
+              {selectedTopic && <><ChevronRight size={14} className="text-slate-300" /> <span className="text-primary">{selectedTopic?.name}</span></>}
             </h1>
           </div>
           <div className="flex items-center gap-3">
-             <div className="hidden md:flex flex-col items-end border-r border-slate-200 pr-3 mr-1">
-                <span className="text-[11px] font-bold text-slate-900">{user.name}</span>
-                <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{user.rollNo}</span>
-             </div>
-             <div className="w-8 h-8 rounded-lg bg-slate-200 border border-slate-200 overflow-hidden shadow-sm">
-                <img src={user.photo} className="w-full h-full object-cover" alt="avatar" />
-             </div>
+            <div className="hidden md:flex flex-col items-end border-r border-slate-200 pr-3 mr-1">
+              <span className="text-[11px] font-bold text-slate-900">{user.name}</span>
+              <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{user.rollNo}</span>
+            </div>
+            <div className="w-8 h-8 rounded-lg bg-slate-200 border border-slate-200 overflow-hidden shadow-sm">
+              <img src={user.photo} className="w-full h-full object-cover" alt="avatar" />
+            </div>
           </div>
         </header>
 
         <div className="p-6 max-w-7xl mx-auto w-full">
           <AnimatePresence mode="wait">
             {activeTab === "dashboard" && (
-              <motion.div 
+              <motion.div
                 key="dashboard" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 className="space-y-6"
               >
                 {/* Hero Greeting */}
                 <div className="relative bg-slate-900 rounded-xl p-8 text-white overflow-hidden shadow-xl shadow-slate-900/10">
                   <div className="relative z-10">
-                     <span className="inline-block px-3 py-1 bg-primary/20 border border-primary/30 rounded-full text-[8px] font-bold uppercase tracking-widest text-primary mb-4 backdrop-blur-md">
-                        2026 Batch • Session Active
-                     </span>
-                     <h2 className="text-3xl font-bold mb-3 leading-tight tracking-tight">Welcome back, <br /> <span className="text-primary">{user.name.split(' ')[0]}!</span></h2>
-                     <p className="text-slate-400 max-w-lg mb-8 text-xs font-medium leading-relaxed">
-                        Your learning journey is 65% complete. You have 2 new topics waiting and a mock test scheduled for Friday.
-                     </p>
-                     <Button onClick={() => setActiveTab('lectures')} className="h-11 rounded-xl px-8 bg-primary hover:bg-primary/90 text-white font-bold text-[9px] tracking-widest shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
-                        RESUME LEARNING <ArrowRight size={14} className="ml-2" />
-                     </Button>
+                    <span className="inline-block px-3 py-1 bg-primary/20 border border-primary/30 rounded-full text-[8px] font-bold uppercase tracking-widest text-primary mb-4 backdrop-blur-md">
+                      2026 Batch • Session Active
+                    </span>
+                    <h2 className="text-3xl font-bold mb-3 leading-tight tracking-tight">Welcome back, <br /> <span className="text-primary">{user.name.split(' ')[0]}!</span></h2>
+                    <p className="text-slate-400 max-w-lg mb-8 text-xs font-medium leading-relaxed">
+                      Your learning journey is 65% complete. You have 2 new topics waiting and a mock test scheduled for Friday.
+                    </p>
+                    <Button onClick={() => setActiveTab('lectures')} className="h-11 rounded-xl px-8 bg-primary hover:bg-primary/90 text-white font-bold text-[9px] tracking-widest shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
+                      RESUME LEARNING <ArrowRight size={14} className="ml-2" />
+                    </Button>
                   </div>
                   <div className="absolute -right-10 -bottom-20 opacity-10 rotate-12 scale-150 pointer-events-none">
                     <GraduationCap size={300} />
@@ -270,63 +334,63 @@ const StudentDashboard = () => {
 
                 {/* Stats Grid */}
                 <div className="grid md:grid-cols-3 gap-6">
-                   {[
-                     { label: "Attendance", value: "94%", desc: "Consistent Performance", color: "blue" },
-                     { label: "Lectures", value: `${user.completedVideos?.length || 0} Units`, desc: "Units Completed", color: "emerald" },
-                     { label: "Tests Passed", value: `${testResults.length} / ${mockTests.length}`, desc: "Evaluation Score", color: "violet" }
-                   ].map((stat, i) => (
-                     <motion.div 
-                        key={i}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="bg-white rounded-xl p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-all"
-                     >
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{stat.label}</p>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">{stat.value}</h3>
-                        <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
-                           <motion.div 
-                              initial={{ width: 0 }} 
-                              animate={{ width: "80%" }} 
-                              className={`h-full bg-${stat.color}-500`} 
-                           />
-                        </div>
-                        <p className="text-[8px] font-bold text-slate-400 mt-3 uppercase tracking-widest">{stat.desc}</p>
-                     </motion.div>
-                   ))}
+                  {[
+                    { label: "Attendance", value: "94%", desc: "Consistent Performance", color: "blue" },
+                    { label: "Lectures", value: `${user.completedVideos?.length || 0} Units`, desc: "Units Completed", color: "emerald" },
+                    { label: "Tests Passed", value: `${testResults.length} / ${mockTests.length}`, desc: "Evaluation Score", color: "violet" }
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="bg-white rounded-xl p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-all"
+                    >
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{stat.label}</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">{stat.value}</h3>
+                      <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: "80%" }}
+                          className={`h-full bg-${stat.color}-500`}
+                        />
+                      </div>
+                      <p className="text-[8px] font-bold text-slate-400 mt-3 uppercase tracking-widest">{stat.desc}</p>
+                    </motion.div>
+                  ))}
                 </div>
 
                 {/* Recent Activity */}
                 <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm">
-                   <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
-                      <Activity size={24} className="text-primary" /> Learning Progress
-                   </h3>
-                   <div className="space-y-6">
-                      {topics.slice(0, 3).map((topic, i) => {
-                        const topicLectures = lectures.filter(l => l.topicId === topic.id);
-                        const completedInTopic = topicLectures.filter(l => user.completedVideos?.includes(l.id)).length;
-                        const progress = topicLectures.length ? (completedInTopic / topicLectures.length) * 100 : 0;
-                        
-                        return (
-                          <div key={topic.id} className="group cursor-pointer">
-                             <div className="flex justify-between items-end mb-3">
-                                <div>
-                                   <h4 className="font-black text-slate-800 text-sm">{topic.name}</h4>
-                                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{completedInTopic} of {topicLectures.length} units completed</p>
-                                </div>
-                                <span className="text-xs font-black text-primary">{Math.round(progress)}%</span>
-                             </div>
-                             <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                                <motion.div 
-                                   initial={{ width: 0 }} 
-                                   animate={{ width: `${progress}%` }} 
-                                   className="h-full bg-primary" 
-                                />
-                             </div>
+                  <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                    <Activity size={24} className="text-primary" /> Learning Progress
+                  </h3>
+                  <div className="space-y-6">
+                    {topics.slice(0, 3).map((topic, i) => {
+                      const topicLectures = lectures.filter(l => l.topicId === topic.id);
+                      const completedInTopic = topicLectures.filter(l => user?.completedVideos?.includes(l.id)).length;
+                      const progress = topicLectures.length ? (completedInTopic / topicLectures.length) * 100 : 0;
+
+                      return (
+                        <div key={topic.id} className="group cursor-pointer">
+                          <div className="flex justify-between items-end mb-3">
+                            <div>
+                              <h4 className="font-black text-slate-800 text-sm">{topic.name}</h4>
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{completedInTopic} of {topicLectures.length} units completed</p>
+                            </div>
+                            <span className="text-xs font-black text-primary">{Math.round(progress)}%</span>
                           </div>
-                        );
-                      })}
-                   </div>
+                          <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${progress}%` }}
+                              className="h-full bg-primary"
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -352,10 +416,10 @@ const StudentDashboard = () => {
                         <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 block">TOPIC {topic.order}</span>
                         <h3 className="text-base font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors">{topic.name}</h3>
                         <p className="text-slate-500 text-[11px] font-medium leading-relaxed mb-6 line-clamp-2">{topic.description}</p>
-                        
+
                         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                           <span className="text-[8px] font-bold text-primary uppercase tracking-widest">Enter Module</span>
-                           <ArrowRight size={14} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
+                          <span className="text-[8px] font-bold text-primary uppercase tracking-widest">Enter Module</span>
+                          <ArrowRight size={14} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </motion.div>
                     ))}
@@ -368,174 +432,174 @@ const StudentDashboard = () => {
                     </button>
 
                     <div className="flex flex-col lg:flex-row gap-6">
-                       <div className="lg:w-1/3 space-y-4">
-                          <div className="bg-slate-900 rounded-xl p-6 text-white relative overflow-hidden">
-                             <div className="relative z-10">
-                                <h2 className="text-xl font-bold mb-1">{selectedTopic.name}</h2>
-                                <p className="text-slate-400 text-[10px] font-medium mb-6 leading-relaxed">{selectedTopic.description}</p>
-                                <Button onClick={() => startQuiz(selectedTopic.id)} className="w-full h-11 rounded-lg bg-white text-slate-900 hover:bg-slate-100 font-bold text-[9px] tracking-widest uppercase shadow-lg">
-                                   Take Mock Test <PenTool size={14} className="ml-2" />
-                                </Button>
-                             </div>
-                             <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 rounded-full blur-[60px]" />
+                      <div className="lg:w-1/3 space-y-4">
+                        <div className="bg-slate-900 rounded-xl p-6 text-white relative overflow-hidden">
+                          <div className="relative z-10">
+                            <h2 className="text-xl font-bold mb-1">{selectedTopic.name}</h2>
+                            <p className="text-slate-400 text-[10px] font-medium mb-6 leading-relaxed">{selectedTopic.description}</p>
+                            <Button onClick={() => startQuiz(selectedTopic.id)} className="w-full h-11 rounded-lg bg-white text-slate-900 hover:bg-slate-100 font-bold text-[9px] tracking-widest uppercase shadow-lg">
+                              Take Mock Test <PenTool size={14} className="ml-2" />
+                            </Button>
                           </div>
-                          
-                          <div className="bg-white rounded-xl p-6 border border-slate-200/60 shadow-sm">
-                             <h4 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4">Course Summary</h4>
-                             <div className="space-y-3">
-                                <div className="flex justify-between items-center text-[11px]">
-                                   <span className="text-slate-500 font-medium">Total Units</span>
-                                   <span className="font-bold text-slate-900">{lectures.filter(l => l.topicId === selectedTopic.id).length} Videos</span>
-                                </div>
-                                <div className="flex justify-between items-center text-[11px]">
-                                   <span className="text-slate-500 font-medium">Completed</span>
-                                   <span className="font-bold text-emerald-500">{lectures.filter(l => l.topicId === selectedTopic.id && user.completedVideos?.includes(l.id)).length} Units</span>
-                                </div>
-                             </div>
-                          </div>
-                       </div>
+                          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 rounded-full blur-[60px]" />
+                        </div>
 
-                       <div className="lg:w-2/3 space-y-3">
-                          {lectures.filter(l => l.topicId === selectedTopic.id).sort((a,b) => a.order - b.order).map((lecture, i) => (
-                            <motion.div 
-                              key={lecture.id}
-                              initial={{ opacity: 0, x: 20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.05 }}
-                              onClick={() => setSelectedVideo(lecture)}
-                              className="group bg-white rounded-lg p-4 border border-slate-200/60 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all relative overflow-hidden"
-                            >
-                               <div className="w-9 h-9 bg-slate-50 rounded-lg flex items-center justify-center font-bold text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shrink-0 text-xs">
-                                  {lecture.order}
-                               </div>
-                               <div className="flex-1">
-                                  <h4 className="font-bold text-slate-800 text-[13px] group-hover:text-primary transition-colors">{lecture.title}</h4>
-                                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{lecture.duration} • Lecture {lecture.order}</p>
-                               </div>
-                               {user.completedVideos?.includes(lecture.id) ? (
-                                 <div className="w-7 h-7 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center border border-emerald-100">
-                                    <CheckCircle2 size={14} />
-                                 </div>
-                               ) : (
-                                 <div className="w-7 h-7 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center group-hover:text-primary transition-all">
-                                    <Play size={14} fill="currentColor" />
-                                 </div>
-                               )}
-                               <div className="absolute inset-y-0 left-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
-                            </motion.div>
-                          ))}
-                       </div>
+                        <div className="bg-white rounded-xl p-6 border border-slate-200/60 shadow-sm">
+                          <h4 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4">Course Summary</h4>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center text-[11px]">
+                              <span className="text-slate-500 font-medium">Total Units</span>
+                              <span className="font-bold text-slate-900">{lectures.filter(l => l.topicId === selectedTopic.id).length} Videos</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[11px]">
+                              <span className="text-slate-500 font-medium">Completed</span>
+                              <span className="font-bold text-emerald-500">{lectures.filter(l => l.topicId === selectedTopic.id && user.completedVideos?.includes(l.id)).length} Units</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="lg:w-2/3 space-y-3">
+                        {lectures.filter(l => l.topicId === selectedTopic.id).sort((a, b) => a.order - b.order).map((lecture, i) => (
+                          <motion.div
+                            key={lecture.id}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.05 }}
+                            onClick={() => setSelectedVideo(lecture)}
+                            className="group bg-white rounded-lg p-4 border border-slate-200/60 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all relative overflow-hidden"
+                          >
+                            <div className="w-9 h-9 bg-slate-50 rounded-lg flex items-center justify-center font-bold text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shrink-0 text-xs">
+                              {lecture.order}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-bold text-slate-800 text-[13px] group-hover:text-primary transition-colors">{lecture.title}</h4>
+                              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{lecture.duration} • Lecture {lecture.order}</p>
+                            </div>
+                            {user.completedVideos?.includes(lecture.id) ? (
+                              <div className="w-7 h-7 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center border border-emerald-100">
+                                <CheckCircle2 size={14} />
+                              </div>
+                            ) : (
+                              <div className="w-7 h-7 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center group-hover:text-primary transition-all">
+                                <Play size={14} fill="currentColor" />
+                              </div>
+                            )}
+                            <div className="absolute inset-y-0 left-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : selectedVideo ? (
                   /* 3. Video Player Drill-down */
                   <div className="space-y-6 max-w-5xl mx-auto">
-                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => setSelectedVideo(null)} className="flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors font-bold text-[9px] uppercase tracking-widest">
-                          <ChevronRight size={12} className="rotate-180" /> Back to Lessons
-                        </button>
-                        <div className="flex items-center gap-3">
-                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{selectedVideo.order} / {lectures.filter(l => l.topicId === selectedTopic.id).length} UNITS</span>
-                           <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                              <div className="h-full bg-primary" style={{ width: `${(selectedVideo.order / lectures.filter(l => l.topicId === selectedTopic.id).length) * 100}%` }} />
-                           </div>
+                    <div className="flex items-center justify-between mb-4">
+                      <button onClick={() => setSelectedVideo(null)} className="flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors font-bold text-[9px] uppercase tracking-widest">
+                        <ChevronRight size={12} className="rotate-180" /> Back to Lessons
+                      </button>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{selectedVideo.order} / {lectures.filter(l => l.topicId === selectedTopic.id).length} UNITS</span>
+                        <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary" style={{ width: `${(selectedVideo.order / lectures.filter(l => l.topicId === selectedTopic.id).length) * 100}%` }} />
                         </div>
-                     </div>
+                      </div>
+                    </div>
 
-                     <div className="rounded-xl overflow-hidden shadow-xl border-2 border-white">
-                        <SecureVideoPlayer url={selectedVideo.url} title={selectedVideo.title} />
-                     </div>
+                    <div className="rounded-xl overflow-hidden shadow-xl border-2 border-white">
+                      <SecureVideoPlayer url={selectedVideo.url} title={selectedVideo.title} />
+                    </div>
 
-                     <div className="bg-white rounded-xl p-6 border border-slate-200/60 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div>
-                           <h2 className="text-xl font-bold text-slate-900 mb-1">{selectedVideo.title}</h2>
-                           <p className="text-slate-500 font-medium flex items-center gap-2 text-xs">
-                              <span className="px-2 py-0.5 bg-primary/10 rounded text-primary text-[8px] font-bold uppercase tracking-widest">{selectedTopic.name}</span>
-                              • Lesson {selectedVideo.order} • {selectedVideo.duration}
-                           </p>
-                        </div>
-                        <div className="flex gap-3">
-                           {!user.completedVideos?.includes(selectedVideo.id) ? (
-                             <Button onClick={() => markVideoComplete(selectedVideo.id)} className="h-10 rounded-lg px-6 bg-primary hover:bg-primary/90 text-white font-bold text-[9px] tracking-widest shadow-xl shadow-primary/20">
-                                COMPLETE UNIT <CheckCircle2 size={14} className="ml-2" />
-                             </Button>
-                           ) : (
-                             <div className="h-10 flex items-center px-6 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100 font-bold text-[8px] uppercase tracking-widest gap-2">
-                                <CheckCircle2 size={16} /> COMPLETED
-                             </div>
-                           )}
-                        </div>
-                     </div>
+                    <div className="bg-white rounded-xl p-6 border border-slate-200/60 flex flex-col md:flex-row items-center justify-between gap-6">
+                      <div>
+                        <h2 className="text-xl font-bold text-slate-900 mb-1">{selectedVideo.title}</h2>
+                        <p className="text-slate-500 font-medium flex items-center gap-2 text-xs">
+                          <span className="px-2 py-0.5 bg-primary/10 rounded text-primary text-[8px] font-bold uppercase tracking-widest">{selectedTopic.name}</span>
+                          • Lesson {selectedVideo.order} • {selectedVideo.duration}
+                        </p>
+                      </div>
+                      <div className="flex gap-3">
+                        {!user.completedVideos?.includes(selectedVideo.id) ? (
+                          <Button onClick={() => markVideoComplete(selectedVideo.id)} className="h-10 rounded-lg px-6 bg-primary hover:bg-primary/90 text-white font-bold text-[9px] tracking-widest shadow-xl shadow-primary/20">
+                            COMPLETE UNIT <CheckCircle2 size={14} className="ml-2" />
+                          </Button>
+                        ) : (
+                          <div className="h-10 flex items-center px-6 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100 font-bold text-[8px] uppercase tracking-widest gap-2">
+                            <CheckCircle2 size={16} /> COMPLETED
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ) : quizActive ? (
                   /* 4. Quiz Engine View */
                   <motion.div key="quiz" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-4xl mx-auto">
                     {!quizResult ? (
                       <div className="bg-white rounded-xl p-8 border border-slate-200/60 shadow-xl">
-                         <div className="flex justify-between items-center mb-8 pb-6 border-b border-slate-100">
-                            <div className="flex items-center gap-3">
-                               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
-                                  <Clock size={20} />
-                               </div>
-                               <div>
-                                  <h3 className="text-lg font-bold text-slate-900">Topic Assessment</h3>
-                                  <p className="text-[8px] font-bold text-primary uppercase tracking-widest">Time: {activeQuiz.timeLimit}:00</p>
-                               </div>
+                        <div className="flex justify-between items-center mb-8 pb-6 border-b border-slate-100">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+                              <Clock size={20} />
                             </div>
-                            <button onClick={() => setQuizActive(false)} className="text-slate-400 hover:text-rose-500 transition-colors">
-                               <X size={20} />
-                            </button>
-                         </div>
+                            <div>
+                              <h3 className="text-lg font-bold text-slate-900">Topic Assessment</h3>
+                              <p className="text-[8px] font-bold text-primary uppercase tracking-widest">Time: {activeQuiz.timeLimit}:00</p>
+                            </div>
+                          </div>
+                          <button onClick={() => setQuizActive(false)} className="text-slate-400 hover:text-rose-500 transition-colors">
+                            <X size={20} />
+                          </button>
+                        </div>
 
-                         <div className="space-y-8">
-                            {activeQuiz.questions.map((q: any, qIdx: number) => (
-                              <div key={q.id} className="space-y-4">
-                                 <h4 className="text-sm font-bold text-slate-900 flex items-start gap-3">
-                                    <span className="w-6 h-6 rounded bg-slate-950 text-white flex items-center justify-center text-[10px] shrink-0">{qIdx + 1}</span>
-                                    {q.text}
-                                 </h4>
-                                 <div className="grid md:grid-cols-2 gap-3 ml-9">
-                                    {q.options.map((opt: string, oIdx: number) => (
-                                       <label key={oIdx} className="group cursor-pointer">
-                                          <input type="radio" name={`q-${qIdx}`} className="hidden" />
-                                          <div className="p-3.5 border border-slate-100 rounded-xl font-bold text-slate-600 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center gap-3 text-xs">
-                                             <div className="w-4 h-4 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:border-primary">
-                                                <div className="w-2 h-2 bg-primary rounded-full scale-0 group-has-[:checked]:scale-100 transition-transform" />
-                                             </div>
-                                             {opt}
-                                          </div>
-                                       </label>
-                                    ))}
-                                 </div>
+                        <div className="space-y-8">
+                          {activeQuiz.questions.map((q: any, qIdx: number) => (
+                            <div key={q.id} className="space-y-4">
+                              <h4 className="text-sm font-bold text-slate-900 flex items-start gap-3">
+                                <span className="w-6 h-6 rounded bg-slate-950 text-white flex items-center justify-center text-[10px] shrink-0">{qIdx + 1}</span>
+                                {q.text}
+                              </h4>
+                              <div className="grid md:grid-cols-2 gap-3 ml-9">
+                                {q.options.map((opt: string, oIdx: number) => (
+                                  <label key={oIdx} className="group cursor-pointer">
+                                    <input type="radio" name={`q-${qIdx}`} className="hidden" />
+                                    <div className="p-3.5 border border-slate-100 rounded-xl font-bold text-slate-600 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center gap-3 text-xs">
+                                      <div className="w-4 h-4 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:border-primary">
+                                        <div className="w-2 h-2 bg-primary rounded-full scale-0 group-has-[:checked]:scale-100 transition-transform" />
+                                      </div>
+                                      {opt}
+                                    </div>
+                                  </label>
+                                ))}
                               </div>
-                            ))}
-                         </div>
+                            </div>
+                          ))}
+                        </div>
 
-                         <div className="mt-10 pt-6 border-t border-slate-100 flex justify-end">
-                            <Button onClick={() => setQuizResult({ score: activeQuiz.questions.length, total: activeQuiz.questions.length })} className="h-10 rounded-lg px-8 bg-slate-950 text-white font-bold text-[9px] tracking-widest shadow-xl">
-                               SUBMIT EXAM <Save size={14} className="ml-2" />
-                            </Button>
-                         </div>
+                        <div className="mt-10 pt-6 border-t border-slate-100 flex justify-end">
+                          <Button onClick={() => setQuizResult({ score: activeQuiz.questions.length, total: activeQuiz.questions.length })} className="h-10 rounded-lg px-8 bg-slate-950 text-white font-bold text-[9px] tracking-widest shadow-xl">
+                            SUBMIT EXAM <Save size={14} className="ml-2" />
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       /* Quiz Result View */
                       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center bg-white rounded-xl p-10 border border-slate-200/60 shadow-xl">
-                         <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Award size={32} />
-                         </div>
-                         <h2 className="text-2xl font-bold text-slate-900 mb-1">Assessment Completed!</h2>
-                         <p className="text-slate-400 text-xs font-medium mb-8">Topic: {selectedTopic.name}</p>
-                         
-                         <div className="inline-block px-10 py-6 bg-slate-50 rounded-xl border border-slate-100 mb-8">
-                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Final Score</p>
-                            <h3 className="text-4xl font-bold text-primary tracking-tight">{quizResult.score} <span className="text-xl text-slate-300">/ {quizResult.total}</span></h3>
-                         </div>
+                        <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <Award size={32} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-1">Assessment Completed!</h2>
+                        <p className="text-slate-400 text-xs font-medium mb-8">Topic: {selectedTopic?.name}</p>
 
-                         <div className="flex justify-center gap-3">
-                            <Button onClick={() => { setQuizActive(false); setQuizResult(null); }} className="h-10 rounded-lg px-8 bg-slate-950 text-white font-bold text-[9px] tracking-widest">
-                               BACK TO LESSONS
-                            </Button>
-                         </div>
+                        <div className="inline-block px-10 py-6 bg-slate-50 rounded-xl border border-slate-100 mb-8">
+                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Final Score</p>
+                          <h3 className="text-4xl font-bold text-primary tracking-tight">{quizResult.score} <span className="text-xl text-slate-300">/ {quizResult.total}</span></h3>
+                        </div>
+
+                        <div className="flex justify-center gap-3">
+                          <Button onClick={() => { setQuizActive(false); setQuizResult(null); }} className="h-10 rounded-lg px-8 bg-slate-950 text-white font-bold text-[9px] tracking-widest">
+                            BACK TO LESSONS
+                          </Button>
+                        </div>
                       </motion.div>
                     )}
                   </motion.div>
@@ -546,39 +610,39 @@ const StudentDashboard = () => {
             {activeTab === "resources" && (
               <motion.div key="resources" className="space-y-6">
                 <div className="bg-white rounded-xl p-6 border border-slate-200/60 shadow-sm">
-                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                      <div>
-                         <h2 className="text-xl font-bold text-slate-900 mb-1">Academic Repository</h2>
-                         <p className="text-slate-400 text-xs font-medium">Access your curated course materials.</p>
-                      </div>
-                      <div className="relative w-full max-w-xs">
-                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                         <Input placeholder="Search documents..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="h-11 pl-10 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs focus:bg-white transition-all shadow-inner" />
-                      </div>
-                   </div>
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                    <div>
+                      <h2 className="text-xl font-bold text-slate-900 mb-1">Academic Repository</h2>
+                      <p className="text-slate-400 text-xs font-medium">Access your curated course materials.</p>
+                    </div>
+                    <div className="relative w-full max-w-xs">
+                      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                      <Input placeholder="Search documents..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="h-11 pl-10 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs focus:bg-white transition-all shadow-inner" />
+                    </div>
+                  </div>
 
-                   <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                     {filteredPdfs.map((pdf, i) => (
-                       <motion.div 
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {filteredPdfs.map((pdf, i) => (
+                      <motion.div
                         key={pdf.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
                         className="bg-[#f8fafc] p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:bg-white transition-all group cursor-pointer relative overflow-hidden"
-                       >
-                          <div className="w-11 h-11 bg-white rounded-xl text-slate-400 group-hover:bg-primary group-hover:text-white transition-all flex items-center justify-center mb-5 shadow-sm border border-slate-100 group-hover:border-primary/20">
-                             <FileText size={20} />
-                          </div>
-                          <h4 className="font-bold text-slate-900 text-sm leading-tight mb-1 group-hover:text-primary transition-colors">{pdf.title}</h4>
-                          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{pdf.size} • Secured PDF</p>
-                          
-                          <div className="mt-5 pt-4 border-t border-slate-200/50 flex items-center justify-between">
-                             <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-primary">Download</span>
-                             <Download size={14} className="text-slate-200 group-hover:text-primary transition-colors" />
-                          </div>
-                       </motion.div>
-                     ))}
-                   </div>
+                      >
+                        <div className="w-11 h-11 bg-white rounded-xl text-slate-400 group-hover:bg-primary group-hover:text-white transition-all flex items-center justify-center mb-5 shadow-sm border border-slate-100 group-hover:border-primary/20">
+                          <FileText size={20} />
+                        </div>
+                        <h4 className="font-bold text-slate-900 text-sm leading-tight mb-1 group-hover:text-primary transition-colors">{pdf.title}</h4>
+                        <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{pdf.size} • Secured PDF</p>
+
+                        <div className="mt-5 pt-4 border-t border-slate-200/50 flex items-center justify-between">
+                          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-primary">Download</span>
+                          <Download size={14} className="text-slate-200 group-hover:text-primary transition-colors" />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -586,131 +650,131 @@ const StudentDashboard = () => {
             {activeTab === "results" && (
               <motion.div key="results" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
                 <div className="bg-white rounded-xl p-8 border border-slate-200/60 shadow-sm relative overflow-hidden">
-                   <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-                      <div>
-                         <h3 className="text-xl font-bold text-slate-900 mb-1 tracking-tight">Academic Achievement</h3>
-                         <p className="text-slate-400 text-xs font-medium">Your verified performance metrics.</p>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-1 tracking-tight">Academic Achievement</h3>
+                      <p className="text-slate-400 text-xs font-medium">Your verified performance metrics.</p>
+                    </div>
+                    <div className="px-4 py-2.5 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex items-center gap-3 shadow-sm">
+                      <div className="w-8 h-8 bg-emerald-500 text-white rounded-lg flex items-center justify-center shadow-lg"><Award size={16} /></div>
+                      <div className="flex flex-col">
+                        <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Verified CGPA</span>
+                        <span className="text-lg font-bold">8.42 / 10</span>
                       </div>
-                      <div className="px-4 py-2.5 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex items-center gap-3 shadow-sm">
-                         <div className="w-8 h-8 bg-emerald-500 text-white rounded-lg flex items-center justify-center shadow-lg"><Award size={16} /></div>
-                         <div className="flex flex-col">
-                            <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Verified CGPA</span>
-                            <span className="text-lg font-bold">8.42 / 10</span>
-                         </div>
-                      </div>
-                   </div>
+                    </div>
+                  </div>
 
-                   <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-slate-100">
-                             <th className="text-left py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Examination Unit</th>
-                             <th className="text-center py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Score / Total</th>
-                             <th className="text-center py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Grade</th>
-                             <th className="text-right py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50">
-                           {[
-                             { subject: "Fundamentals of IT", marks: 85, total: 100, grade: "A" },
-                             { subject: "Advanced MS Office", marks: 92, total: 100, grade: "A+" },
-                             { subject: "Tally ERP.9 Core", marks: 78, total: 100, grade: "B+" },
-                             { subject: "C Programming Logic", marks: 88, total: 100, grade: "A" }
-                           ].map((res, i) => (
-                             <motion.tr 
-                               key={i} 
-                               initial={{ opacity: 0, y: 10 }}
-                               whileInView={{ opacity: 1, y: 0 }}
-                               viewport={{ once: true }}
-                               transition={{ delay: i * 0.1 }}
-                               className="group hover:bg-slate-50 transition-all"
-                             >
-                                <td className="py-3.5 font-bold text-slate-800 text-xs">{res.subject}</td>
-                                <td className="py-3.5 text-center font-bold text-slate-900 text-sm">{res.marks} <span className="text-[10px] text-slate-300">/ {res.total}</span></td>
-                                <td className="py-3.5 text-center">
-                                   <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-bold text-[11px] border border-primary/20`}>{res.grade}</span>
-                                </td>
-                                <td className="py-3.5 text-right">
-                                   <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full font-bold text-[8px] uppercase tracking-widest border border-emerald-100">Pass</span>
-                                </td>
-                             </motion.tr>
-                           ))}
-                        </tbody>
-                      </table>
-                   </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-slate-100">
+                          <th className="text-left py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Examination Unit</th>
+                          <th className="text-center py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Score / Total</th>
+                          <th className="text-center py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Grade</th>
+                          <th className="text-right py-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {[
+                          { subject: "Fundamentals of IT", marks: 85, total: 100, grade: "A" },
+                          { subject: "Advanced MS Office", marks: 92, total: 100, grade: "A+" },
+                          { subject: "Tally ERP.9 Core", marks: 78, total: 100, grade: "B+" },
+                          { subject: "C Programming Logic", marks: 88, total: 100, grade: "A" }
+                        ].map((res, i) => (
+                          <motion.tr
+                            key={i}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                            className="group hover:bg-slate-50 transition-all"
+                          >
+                            <td className="py-3.5 font-bold text-slate-800 text-xs">{res.subject}</td>
+                            <td className="py-3.5 text-center font-bold text-slate-900 text-sm">{res.marks} <span className="text-[10px] text-slate-300">/ {res.total}</span></td>
+                            <td className="py-3.5 text-center">
+                              <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-bold text-[11px] border border-primary/20`}>{res.grade}</span>
+                            </td>
+                            <td className="py-3.5 text-right">
+                              <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full font-bold text-[8px] uppercase tracking-widest border border-emerald-100">Pass</span>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 {/* Mock Test History */}
                 <div className="bg-slate-900 rounded-xl p-8 text-white shadow-xl">
-                   <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-                      <PenTool size={20} className="text-primary" /> Assessment History
-                   </h3>
-                   <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {testResults.length === 0 ? (
-                        <div className="col-span-full py-8 text-center text-slate-500 font-bold uppercase tracking-widest text-[10px]">
-                           No assessment attempts recorded yet.
-                        </div>
-                      ) : (
-                        testResults.map((result, i) => (
-                          <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-all group">
-                             <p className="text-[8px] font-bold text-primary uppercase tracking-widest mb-1">{result.topicName}</p>
-                             <div className="flex justify-between items-end mb-3">
-                                <h4 className="text-base font-bold text-white">{result.score} / {result.total}</h4>
-                                <span className="text-[9px] font-bold text-slate-500">{new Date(result.takenAt).toLocaleDateString()}</span>
-                             </div>
-                             <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                                <div className="h-full bg-emerald-500" style={{ width: `${(result.score/result.total)*100}%` }} />
-                             </div>
+                  <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <PenTool size={20} className="text-primary" /> Assessment History
+                  </h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {testResults.length === 0 ? (
+                      <div className="col-span-full py-8 text-center text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                        No assessment attempts recorded yet.
+                      </div>
+                    ) : (
+                      testResults.map((result, i) => (
+                        <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-all group">
+                          <p className="text-[8px] font-bold text-primary uppercase tracking-widest mb-1">{result.topicName}</p>
+                          <div className="flex justify-between items-end mb-3">
+                            <h4 className="text-base font-bold text-white">{result.score} / {result.total}</h4>
+                            <span className="text-[9px] font-bold text-slate-500">{new Date(result.takenAt).toLocaleDateString()}</span>
                           </div>
-                        ))
-                      )}
-                   </div>
+                          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div className="h-full bg-emerald-500" style={{ width: `${(result.score / result.total) * 100}%` }} />
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}
 
             {activeTab === "feedback" && (
-               <motion.div key="feedback" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-3xl mx-auto space-y-8">
+              <motion.div key="feedback" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-3xl mx-auto space-y-8">
                 <div className="bg-white rounded-xl p-8 border border-slate-200/60 shadow-sm relative overflow-hidden">
-                   <div className="mb-8">
-                      <h3 className="text-xl font-bold text-slate-900 mb-1">Student Testimonial</h3>
-                      <p className="text-slate-400 text-xs font-medium">Your feedback helps us improve.</p>
-                   </div>
-                   
-                   <div className="space-y-6">
-                      {/* Rating Selector */}
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Satisfaction</label>
-                         <div className="flex gap-1.5">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <button 
-                                key={star} 
-                                onClick={() => setFeedbackForm({ ...feedbackForm, rating: star })}
-                                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${feedbackForm.rating >= star ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 text-slate-300'}`}
-                              >
-                                <StarIcon size={18} fill={feedbackForm.rating >= star ? "currentColor" : "none"} />
-                              </button>
-                            ))}
-                         </div>
-                      </div>
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">Student Testimonial</h3>
+                    <p className="text-slate-400 text-xs font-medium">Your feedback helps us improve.</p>
+                  </div>
 
-                      {/* Comment Input */}
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Your Experience</label>
-                         <textarea 
-                            value={feedbackForm.comment}
-                            onChange={(e) => setFeedbackForm({ ...feedbackForm, comment: e.target.value })}
-                            className="w-full h-32 bg-slate-50 border border-slate-100 rounded-xl p-4 focus:bg-white transition-all font-bold text-slate-700 resize-none text-xs"
-                            placeholder="Tell us about your journey at OICA..."
-                         />
+                  <div className="space-y-6">
+                    {/* Rating Selector */}
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Satisfaction</label>
+                      <div className="flex gap-1.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => setFeedbackForm({ ...feedbackForm, rating: star })}
+                            className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${feedbackForm.rating >= star ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 text-slate-300'}`}
+                          >
+                            <StarIcon size={18} fill={feedbackForm.rating >= star ? "currentColor" : "none"} />
+                          </button>
+                        ))}
                       </div>
+                    </div>
 
-                      <div className="flex justify-center pt-6 border-t border-slate-50">
-                         <Button onClick={submitFeedback} className="h-11 rounded-xl px-8 bg-primary text-white font-bold text-[9px] tracking-widest flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all">
-                           <Save size={16} /> SUBMIT FEEDBACK
-                         </Button>
-                      </div>
-                   </div>
+                    {/* Comment Input */}
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Your Experience</label>
+                      <textarea
+                        value={feedbackForm.comment}
+                        onChange={(e) => setFeedbackForm({ ...feedbackForm, comment: e.target.value })}
+                        className="w-full h-32 bg-slate-50 border border-slate-100 rounded-xl p-4 focus:bg-white transition-all font-bold text-slate-700 resize-none text-xs"
+                        placeholder="Tell us about your journey at OICA..."
+                      />
+                    </div>
+
+                    <div className="flex justify-center pt-6 border-t border-slate-50">
+                      <Button onClick={submitFeedback} className="h-11 rounded-xl px-8 bg-primary text-white font-bold text-[9px] tracking-widest flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                        <Save size={16} /> SUBMIT FEEDBACK
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -718,45 +782,140 @@ const StudentDashboard = () => {
             {activeTab === "profile" && (
               <motion.div key="profile" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-8">
                 <div className="bg-white rounded-xl p-8 border border-slate-200/60 shadow-sm text-center">
-                   <div className="relative w-32 h-32 mx-auto mb-8 group">
-                      <div className="w-full h-full rounded-xl overflow-hidden border-4 border-slate-50 shadow-xl bg-slate-100 ring-2 ring-primary/20">
-                         <img src={profileForm.photo} className="w-full h-full object-cover" alt="Profile" />
-                      </div>
-                      <button className="absolute -bottom-1 -right-1 w-9 h-9 bg-slate-950 text-white rounded-lg flex items-center justify-center border-2 border-white shadow-lg hover:bg-primary transition-all scale-90 group-hover:scale-100">
-                         <Camera size={16} />
-                      </button>
-                   </div>
-                   
-                   <div className="grid md:grid-cols-2 gap-x-8 gap-y-6 text-left mt-10">
-                      <div className="space-y-1.5">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
-                         <Input value={profileForm.name} onChange={(e) => setProfileForm({...profileForm, name: e.target.value})} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
-                      </div>
-                      <div className="space-y-1.5">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Roll No</label>
-                         <Input value={user.rollNo} readOnly className="h-11 rounded-lg bg-slate-100 border-slate-100 opacity-60 font-bold text-slate-400 cursor-not-allowed text-xs" />
-                      </div>
-                      <div className="space-y-1.5">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
-                         <Input value={profileForm.email} onChange={(e) => setProfileForm({...profileForm, email: e.target.value})} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
-                      </div>
-                      <div className="space-y-1.5">
-                         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Phone</label>
-                         <Input value={profileForm.phone} onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
-                      </div>
-                   </div>
-                   
-                   <div className="mt-10 flex justify-center pt-6 border-t border-slate-50">
-                      <Button onClick={() => toast.success("Profile Updated!")} className="h-11 rounded-xl px-10 bg-slate-950 text-white font-bold text-[9px] tracking-widest flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all">
-                        <Save size={16} /> SAVE CHANGES
-                      </Button>
-                   </div>
+                  <div className="relative w-32 h-32 mx-auto mb-8 group">
+                    <div className="w-full h-full rounded-xl overflow-hidden border-4 border-slate-50 shadow-xl bg-slate-100 ring-2 ring-primary/20">
+                      <img src={profileForm.photo} className="w-full h-full object-cover" alt="Profile" />
+                    </div>
+                    <button className="absolute -bottom-1 -right-1 w-9 h-9 bg-slate-950 text-white rounded-lg flex items-center justify-center border-2 border-white shadow-lg hover:bg-primary transition-all scale-90 group-hover:scale-100">
+                      <Camera size={16} />
+                    </button>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-6 text-left mt-10">
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                      <Input value={profileForm.name} onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Roll No</label>
+                      <Input value={user.rollNo} readOnly className="h-11 rounded-lg bg-slate-100 border-slate-100 opacity-60 font-bold text-slate-400 cursor-not-allowed text-xs" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                      <Input value={profileForm.email} onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Phone</label>
+                      <Input value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} className="h-11 rounded-lg bg-slate-50 border-slate-100 focus:bg-white transition-all font-bold text-slate-700 text-xs" />
+                    </div>
+                  </div>
+
+                  <div className="mt-10 flex justify-center pt-6 border-t border-slate-50">
+                    <Button onClick={() => toast.success("Profile Updated!")} className="h-11 rounded-xl px-10 bg-slate-950 text-white font-bold text-[9px] tracking-widest flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                      <Save size={16} /> SAVE CHANGES
+                    </Button>
+                  </div>
                 </div>
+              </motion.div>
+            )}
+
+            {activeTab === "idcard" && user && (
+              <motion.div key="idcard" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-3xl mx-auto py-10">
+                <div id="printable-id-card" className="relative bg-white rounded-[2.5rem] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden flex flex-col md:flex-row min-h-[340px]">
+                  {/* Security Side Strip */}
+                  <div className="md:w-16 bg-slate-900 flex flex-col items-center justify-center gap-6 py-8">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="[writing-mode:vertical-lr] rotate-180 text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">Academic Identity Pass</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />
+                  </div>
+
+                  <div className="flex-1 p-10 flex flex-col justify-between text-left">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 mb-4">
+                           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                              <GraduationCap size={18} />
+                           </div>
+                           <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">OICA Digital Credential</span>
+                        </div>
+                        <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">{user.name}</h2>
+                        <p className="text-blue-600 text-[11px] font-mono font-bold uppercase tracking-wider">{user.rollNo || "ADMIN"}</p>
+                      </div>
+                      
+                      <div className="w-24 h-24 rounded-2xl overflow-hidden border-[6px] border-slate-50 shadow-inner group">
+                        <img src={user.photo || "https://i.pravatar.cc/150?u=admin"} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-end justify-between mt-8">
+                      <div className="grid grid-cols-2 gap-x-12 gap-y-4">
+                        {[
+                          { label: "Department / Course", value: user.course || "Administration" },
+                          { label: "Assigned Branch", value: user.branchId || "HQ-Main" },
+                          { label: "Academic Year", value: "2026-27" },
+                          { label: "Verification", value: "Verified Active" }
+                        ].map((item, i) => (
+                          <div key={i}>
+                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-1">{item.label}</p>
+                            <p className="text-[10px] font-black text-slate-700 uppercase tracking-tight">{item.value}</p>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="relative group">
+                         <div className="absolute -inset-2 bg-blue-500/5 rounded-2xl blur-xl group-hover:bg-blue-500/10 transition-colors" />
+                         <div className="relative bg-white p-3 rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-slate-100">
+                            <QRCodeSVG 
+                              value={user.rollNo || "OICA-ADMIN"} 
+                              size={120} 
+                              level="H" 
+                              includeMargin={false}
+                            />
+                            <div className="hidden">
+                               <QRCodeCanvas 
+                                  id="hidden-qr-canvas"
+                                  value={user.rollNo || "OICA-ADMIN"} 
+                                  size={1024} 
+                                  level="H"
+                               />
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+                       <p className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Odisha Institute of Computer Application</p>
+                       <div className="flex items-center gap-1.5 grayscale opacity-30">
+                          <div className="w-2 h-2 rounded-full bg-blue-600" />
+                          <span className="text-[8px] font-bold uppercase text-slate-900 tracking-tighter">Identity Verified</span>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 no-print">
+                  <Button onClick={() => window.print()} className="h-14 rounded-2xl px-12 bg-slate-900 text-white font-black text-[10px] tracking-[0.2em] uppercase flex items-center gap-3 shadow-2xl shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all group">
+                    <Download size={18} className="group-hover:translate-y-0.5 transition-transform" /> Print Academic Pass
+                  </Button>
+                  <Button onClick={downloadID} variant="outline" className="h-14 rounded-2xl px-12 border-2 border-slate-200 bg-white text-slate-700 font-black text-[10px] tracking-[0.2em] uppercase flex items-center gap-3 shadow-xl hover:bg-slate-50 hover:border-slate-900 hover:text-slate-900 transition-all active:scale-[0.95]">
+                    <QrCode size={18} /> Download Identity PNG
+                  </Button>
+                </div>
+                <p className="mt-8 text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center justify-center gap-2 no-print">
+                  <ShieldCheck size={14} className="text-blue-500" /> Authorized Academic Credential System
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </main>
+
+      {showQRModal && user && (
+        <QRModal
+          user={{ name: user.name, rollNo: user.rollNo, email: user.email || "", course: user.course, branchId: user.branchId }}
+          onClose={() => setShowQRModal(false)}
+        />
+      )}
     </div>
   );
 };

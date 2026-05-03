@@ -14,7 +14,10 @@ import {
   Bell,
   Search,
   TrendingUp,
-  Download
+  Download,
+  X,
+  Link2,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +30,10 @@ const BranchDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditing, setIsEditing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddingNotice, setIsAddingNotice] = useState(false);
+  const [isAddingStudent, setIsAddingStudent] = useState(false);
+  const [newNoticeData, setNewNoticeData] = useState({ title: "", link: "" });
+  const [newStudentData, setNewStudentData] = useState({ name: "", course: "DCA", rollNo: "", email: "", phone: "" });
   const navigate = useNavigate();
   
   // Data State
@@ -67,6 +74,41 @@ const BranchDashboard = () => {
     setStorageData(STORAGE_KEYS.BRANCHES, updated);
     setIsEditing(false);
     toast.success("Branch profile synced successfully!");
+  };
+
+  const handleExport = () => {
+    toast.info("Preparing student directory for export...");
+    setTimeout(() => {
+      console.log("Exporting Student Data:", students);
+      toast.success("Student list exported successfully!");
+    }, 1500);
+  };
+
+  const handleAddStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newStudentData.name || !newStudentData.rollNo) {
+      toast.error("Student name and Roll No are required");
+      return;
+    }
+
+    const newStudent = {
+      id: Date.now(),
+      ...newStudentData,
+      role: 'student',
+      branchId: branch.id,
+      photo: `https://i.pravatar.cc/150?u=${Date.now()}`,
+      completedVideos: [],
+      age: 20
+    };
+
+    const allUsers = getStorageData(STORAGE_KEYS.USERS);
+    const updatedUsers = [newStudent, ...allUsers];
+    setStorageData(STORAGE_KEYS.USERS, updatedUsers);
+    setStudents([newStudent, ...students]);
+    
+    setIsAddingStudent(false);
+    setNewStudentData({ name: "", course: "DCA", rollNo: "", email: "", phone: "" });
+    toast.success(`${newStudentData.name} enrolled successfully!`);
   };
 
 
@@ -180,14 +222,21 @@ const BranchDashboard = () => {
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                         <Input placeholder="Search students..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10 h-11 rounded-xl bg-white border-slate-200 shadow-sm text-sm" />
                      </div>
-                     <div className="flex gap-2">
-                        <Button variant="outline" className="h-11 rounded-xl border-slate-200 font-bold text-[9px] tracking-widest uppercase px-5">
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={handleExport}
+                          variant="outline" 
+                          className="h-11 rounded-xl border-slate-200 font-bold text-[9px] tracking-widest uppercase px-5"
+                        >
                           <Download size={14} className="mr-2" /> EXPORT
                         </Button>
-                        <Button className="h-11 rounded-xl bg-slate-900 text-white font-bold text-[9px] tracking-widest uppercase px-6 shadow-xl">
+                        <Button 
+                          onClick={() => setIsAddingStudent(true)}
+                          className="h-11 rounded-xl bg-slate-900 text-white font-bold text-[9px] tracking-widest uppercase px-6 shadow-xl"
+                        >
                           <Plus size={14} className="mr-2" /> ADD NEW
                         </Button>
-                     </div>
+                      </div>
                   </div>
 
                   <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -292,18 +341,11 @@ const BranchDashboard = () => {
               <motion.div key="notices" initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
                  <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                       <h3 className="text-lg font-bold text-slate-900">Broadcast Center</h3>
-                       <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest leading-none">Branch Announcements</p>
+                       <h3 className="text-lg font-bold text-slate-900">Notice Board</h3>
+                       <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest leading-none">Campus Notifications</p>
                     </div>
-                    <Button onClick={() => {
-                        const newNotice = { id: `n_${Date.now()}`, title: "Draft Notice", date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
-                        const updatedBranch = { ...branch, notices: [newNotice, ...(branch.notices || [])] };
-                        setBranch(updatedBranch);
-                        const branches = getStorageData(STORAGE_KEYS.BRANCHES);
-                        setStorageData(STORAGE_KEYS.BRANCHES, branches.map((b: any) => b.id === branch.id ? updatedBranch : b));
-                        toast.success("New notice drafted.");
-                    }} className="h-10 rounded-lg bg-slate-900 text-white font-bold text-[9px] tracking-widest uppercase px-6 shadow-md">
-                      <Plus className="mr-2" size={14} /> NEW BROADCAST
+                    <Button onClick={() => setIsAddingNotice(true)} className="h-10 rounded-lg bg-slate-900 text-white font-bold text-[9px] tracking-widest uppercase px-6 shadow-md">
+                      <Plus className="mr-2" size={14} /> ADD NEW NOTICE
                     </Button>
                  </div>
 
@@ -323,7 +365,7 @@ const BranchDashboard = () => {
                                   onBlur={() => {
                                       const branches = getStorageData(STORAGE_KEYS.BRANCHES);
                                       setStorageData(STORAGE_KEYS.BRANCHES, branches.map((b: any) => b.id === branch.id ? branch : b));
-                                      toast.success("Broadcast updated");
+                                      toast.success("Notice updated");
                                   }}
                                   className="text-sm font-bold text-slate-700 border-transparent focus:border-slate-200 bg-transparent px-0 focus:px-3 transition-all h-9 shadow-none"
                                 />
@@ -348,6 +390,212 @@ const BranchDashboard = () => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Add Notice Modal */}
+        <AnimatePresence>
+          {isAddingNotice && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsAddingNotice(false)}
+                className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+              >
+                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Upload New Notice</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Campus Announcement</p>
+                  </div>
+                  <button onClick={() => setIsAddingNotice(false)} className="p-2 hover:bg-slate-200/50 rounded-full transition-colors">
+                    <X size={18} className="text-slate-400" />
+                  </button>
+                </div>
+                
+                <div className="p-6 space-y-5">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Notice Title</label>
+                    <div className="relative">
+                      <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                      <Input 
+                        placeholder="e.g. Summer Vacation Schedule" 
+                        value={newNoticeData.title}
+                        onChange={(e) => setNewNoticeData({...newNoticeData, title: e.target.value})}
+                        className="pl-11 h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Notice Link / PDF URL (Optional)</label>
+                    <div className="relative">
+                      <Link2 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                      <Input 
+                        placeholder="https://example.com/notice.pdf" 
+                        value={newNoticeData.link}
+                        onChange={(e) => setNewNoticeData({...newNoticeData, link: e.target.value})}
+                        className="pl-11 h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-medium"
+                      />
+                    </div>
+                    <p className="text-[8px] text-slate-400 font-medium px-1 italic">* Students can click the notice to view this link.</p>
+                  </div>
+
+                  <div className="pt-2 flex gap-3">
+                    <Button 
+                      onClick={() => setIsAddingNotice(false)}
+                      variant="outline" 
+                      className="flex-1 h-12 rounded-xl border-slate-200 font-bold text-[10px] tracking-widest uppercase"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        if (!newNoticeData.title) {
+                          toast.error("Please enter a notice title");
+                          return;
+                        }
+                        const newNotice = { 
+                          id: `n_${Date.now()}`, 
+                          title: newNoticeData.title, 
+                          link: newNoticeData.link,
+                          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
+                        };
+                        const updatedBranch = { ...branch, notices: [newNotice, ...(branch.notices || [])] };
+                        setBranch(updatedBranch);
+                        const branches = getStorageData(STORAGE_KEYS.BRANCHES);
+                        setStorageData(STORAGE_KEYS.BRANCHES, branches.map((b: any) => b.id === branch.id ? updatedBranch : b));
+                        
+                        setIsAddingNotice(false);
+                        setNewNoticeData({ title: "", link: "" });
+                        toast.success("Notice uploaded successfully!");
+                      }}
+                      className="flex-1 h-12 rounded-xl bg-slate-900 text-white font-bold text-[10px] tracking-widest uppercase shadow-xl shadow-slate-900/20"
+                    >
+                      Post Notice
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* Add Student Modal */}
+        <AnimatePresence>
+          {isAddingStudent && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsAddingStudent(false)}
+                className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+              >
+                <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Manual Enrollment</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Onboard New Student to {branch.location}</p>
+                  </div>
+                  <button onClick={() => setIsAddingStudent(false)} className="w-10 h-10 rounded-full bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleAddStudent} className="p-8 space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Student Name</label>
+                      <Input 
+                        required
+                        placeholder="Full Name" 
+                        value={newStudentData.name}
+                        onChange={(e) => setNewStudentData({...newStudentData, name: e.target.value})}
+                        className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Roll Number</label>
+                      <Input 
+                        required
+                        placeholder="OICA/2026/..." 
+                        value={newStudentData.rollNo}
+                        onChange={(e) => setNewStudentData({...newStudentData, rollNo: e.target.value})}
+                        className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Course Program</label>
+                      <select 
+                        className="w-full h-12 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white px-4 transition-all font-bold text-xs outline-none"
+                        value={newStudentData.course}
+                        onChange={(e) => setNewStudentData({...newStudentData, course: e.target.value})}
+                      >
+                        <option>DCA</option>
+                        <option>PGDCA</option>
+                        <option>Tally ERP.9</option>
+                        <option>Graphic Design</option>
+                        <option>Web Development</option>
+                        <option>Digital Marketing</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                      <Input 
+                        placeholder="+91" 
+                        value={newStudentData.phone}
+                        onChange={(e) => setNewStudentData({...newStudentData, phone: e.target.value})}
+                        className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <Input 
+                      type="email"
+                      placeholder="student@example.com" 
+                      value={newStudentData.email}
+                      onChange={(e) => setNewStudentData({...newStudentData, email: e.target.value})}
+                      className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                    />
+                  </div>
+
+                  <div className="pt-4 flex gap-4">
+                    <Button 
+                      type="button"
+                      onClick={() => setIsAddingStudent(false)}
+                      variant="outline" 
+                      className="flex-1 h-14 rounded-2xl border-slate-200 font-black text-[10px] tracking-widest uppercase"
+                    >
+                      Dismiss
+                    </Button>
+                    <Button 
+                      type="submit"
+                      className="flex-[1.5] h-14 rounded-2xl bg-slate-900 text-white font-black text-[10px] tracking-widest uppercase shadow-2xl shadow-slate-900/20"
+                    >
+                      Complete Enrollment
+                    </Button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

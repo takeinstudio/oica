@@ -233,6 +233,23 @@
   100% { transform: translateX(-50%); }
 }
 
+@keyframes scan {
+  0% { top: 0%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+#reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 2rem;
+}
+
+#reader {
+  border: none !important;
+}
+
 /* ======================================
    PREMIUM BROWSER SCROLLBAR — Thin Blue
    ====================================== */
@@ -272,4 +289,62 @@
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* ======================================
+   PREMIUM PRINT ENGINE — ID Card Focus
+   ====================================== */
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+  
+  body {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show only the printable ID card container */
+  #printable-id-card, 
+  #printable-id-card * {
+    visibility: visible !important;
+  }
+
+  /* Center the card on the page */
+  #printable-id-card {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 900px !important; /* Fixed width for consistent print quality */
+    height: auto !important;
+    visibility: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Ensure the background of the card itself is visible */
+  #printable-id-card > div {
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide the export button and other interactive elements during print */
+  .no-print, 
+  button, 
+  .mt-12.text-center {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }

@@ -354,7 +354,8 @@ const Home = () => {
                   <div className="relative z-10 h-[380px] overflow-hidden group">
                     <div className="flex flex-col gap-3 animate-vertical-marquee group-hover:pause">
                       {[...allNotices, ...allNotices].map((notice, i) => (
-                        <div 
+                        <Link 
+                          to={`/branch/${notice.location}`}
                           key={i} 
                           className="bg-white rounded-2xl p-5 flex gap-4 shadow-md shadow-blue-900/10 hover:shadow-xl transition-all duration-300 group/card cursor-pointer shrink-0 border border-white/50"
                         >
@@ -374,10 +375,10 @@ const Home = () => {
                             
                             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-widest">
                               <Paperclip size={10} />
-                              Attachment
+                              View Notice
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
 
@@ -636,12 +637,12 @@ const Home = () => {
                     ))}
                   </div>
 
-                  <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enroll Now</span>
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center transition-all group-hover:bg-primary group-hover:text-white shadow-sm">
+                  <Link to="/apply" className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between group/link">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover/link:text-primary transition-colors">Enroll Now</span>
+                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center transition-all group-hover/link:bg-primary group-hover/link:text-white shadow-sm">
                       <ArrowRight size={18} />
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </AnimatedSection>
             ))}

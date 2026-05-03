@@ -15,6 +15,8 @@ import {
 import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 const Courses = () => {
   const [filter, setFilter] = useState('All');
@@ -248,7 +250,10 @@ const Courses = () => {
  
                   {/* Action Buttons */}
                   <div className="mt-auto flex gap-2">
-                    <button className="flex-1 inline-flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition-all">
+                    <button 
+                      onClick={() => toast.info(`Downloading ${course.title} brochure...`)}
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition-all"
+                    >
                       <Download size={14} /> Brochure
                     </button>
                     <button 
@@ -257,7 +262,10 @@ const Courses = () => {
                     >
                       Enroll Now <ArrowRight size={14} />
                     </button>
-                    <button className="w-10 h-10 inline-flex items-center justify-center bg-[#25D366] hover:bg-[#1ebe57] text-white rounded-xl shadow-lg shadow-emerald-500/10 transition-all hover:scale-110">
+                    <button 
+                      onClick={() => window.open(`https://wa.me/919853227488?text=I'm interested in the ${course.title} course.`, '_blank')}
+                      className="w-10 h-10 inline-flex items-center justify-center bg-[#25D366] hover:bg-[#1ebe57] text-white rounded-xl shadow-lg shadow-emerald-500/10 transition-all hover:scale-110"
+                    >
                       <MessageCircle size={18} />
                     </button>
                   </div>
@@ -275,9 +283,11 @@ const Courses = () => {
           </div>
           <h2 className="text-4xl font-black text-slate-900 mb-8">Ready to start your journey?</h2>
           <div className="flex justify-center gap-4">
-            <Button className="h-14 px-10 rounded-2xl bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest shadow-2xl">
-              CONSULT COUNSELOR
-            </Button>
+            <Link to="/contact">
+              <Button className="h-14 px-10 rounded-2xl bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest shadow-2xl">
+                CONSULT COUNSELOR
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

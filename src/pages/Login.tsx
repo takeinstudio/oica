@@ -366,6 +366,13 @@ const Login = () => {
                       <span className="text-[9px] font-black uppercase tracking-wider">{v.name}</span>
                     </Link>
                   ))}
+                  <Link
+                    to="/attendance"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-primary hover:bg-primary/5 transition-all duration-300"
+                  >
+                    <CheckCircle2 size={14} />
+                    <span className="text-[9px] font-black uppercase tracking-wider">Attendance</span>
+                  </Link>
                 </div>
               )}
             </div>

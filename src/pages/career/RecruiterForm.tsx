@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Mail, Phone, MapPin, Briefcase, DollarSign, Globe, CheckCircle, ShieldAlert, Send } from "lucide-react";
+import { Building2, Mail, Phone, Briefcase, ChevronRight, Zap, ShieldAlert, CheckCircle, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Layout from "@/components/Layout";
-import AnimatedSection from "@/components/shared/AnimatedSection";
-import { STORAGE_KEYS, getStorageData, saveStorageData } from "@/lib/storage";
+import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
 import { toast } from "sonner";
 
 const RecruiterForm = () => {
@@ -25,40 +25,38 @@ const RecruiterForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Save to local storage for admin approval
     const existingJobs = getStorageData(STORAGE_KEYS.JOBS) || [];
     const newJob = {
       id: Date.now().toString(),
       ...formData,
-      status: 'pending', // Requires Admin Approval
-      isOrgVerified: false, // Admin must verify organization first
+      status: 'pending',
+      isOrgVerified: false,
       postedDate: new Date().toLocaleDateString(),
     };
     
-    saveStorageData(STORAGE_KEYS.JOBS, [newJob, ...existingJobs]);
+    setStorageData(STORAGE_KEYS.JOBS, [newJob, ...existingJobs]);
     setIsSubmitted(true);
-    toast.success("Job post submitted! Waiting for admin verification.");
+    toast.success("Submission successful. Admin verification in progress.");
   };
 
   if (isSubmitted) {
     return (
       <Layout>
-        <div className="min-h-[80vh] flex items-center justify-center p-6">
+        <div className="min-h-[80vh] flex items-center justify-center p-6 bg-slate-50/50">
           <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.98, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="max-w-md w-full bg-white rounded-[2.5rem] p-12 text-center shadow-2xl border border-slate-100"
+            className="max-w-md w-full bg-white rounded-2xl p-10 text-center shadow-xl border border-slate-200"
           >
-            <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8">
-              <CheckCircle size={40} />
+            <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-6 border border-emerald-100">
+              <CheckCircle size={32} />
             </div>
-            <h2 className="text-3xl font-heading font-black text-slate-900 mb-4">Verification Pending</h2>
-            <p className="text-slate-500 font-medium leading-relaxed mb-10">
-              Thank you for posting! To maintain high standards, our admin team will first verify your organization. Once verified, the job will be visible to our verified student talent pool.
+            <h2 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">Record Logged</h2>
+            <p className="text-slate-500 font-medium leading-relaxed mb-8 text-xs">
+              Your organization credentials have been queued for administrative vetting. Access to the talent pool will be granted upon verification.
             </p>
-            <Button className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs" onClick={() => window.location.href = '/career'}>
-              Return to Career Hub
+            <Button className="w-full h-12 rounded-lg bg-slate-900 text-white font-bold uppercase tracking-wider text-[10px]" onClick={() => window.location.href = '/career'}>
+              Return to Hub
             </Button>
           </motion.div>
         </div>
@@ -68,142 +66,178 @@ const RecruiterForm = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen pt-32 pb-20 px-6">
+      <div className="flex-grow bg-slate-50/50 pt-32 pb-20 px-6 font-poppins antialiased">
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <AnimatedSection className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-4">
-              For Employers
-            </span>
-            <h1 className="text-4xl md:text-5xl font-heading font-black text-slate-900 mb-4">Post a New Opening</h1>
-            <p className="text-slate-500 font-medium max-w-2xl mx-auto">Hire verified top talent from OICA. Your organization and job post will undergo a brief verification process.</p>
-          </AnimatedSection>
+          {/* Professional Compact Header */}
+          <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-2 py-1 bg-blue-50 text-blue-600 rounded-md text-[9px] font-bold uppercase tracking-wider mb-3 border border-blue-100">
+                Corporate Access
+              </div>
+              <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Post New Opening</h1>
+              <p className="text-slate-500 font-medium mt-1 text-sm">Provide organization and job specifications for verification.</p>
+            </div>
+            <div className="flex items-center gap-4">
+               <div className="text-right hidden sm:block">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Assistance</p>
+                  <p className="text-xs font-bold text-slate-900">+91 98532 27488</p>
+               </div>
+               <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
+                  <Phone size={16} />
+               </div>
+            </div>
+          </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-12 gap-8">
             {/* Form Column */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden">
+            <div className="lg:col-span-8">
+              <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
                 <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-8">
                   {/* Company Info */}
                   <div className="space-y-6">
-                    <h3 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                      <Building2 size={16} /> Company & Verification Details
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <input 
-                        required
-                        type="text"
-                        placeholder="Company Name"
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.companyName}
-                        onChange={(e) => setFormData({...formData, companyName: e.target.value})}
-                      />
-                      <input 
-                        required
-                        type="url"
-                        placeholder="Company Website (URL)"
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.website}
-                        onChange={(e) => setFormData({...formData, website: e.target.value})}
-                      />
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center"><Building2 size={16} /></div>
+                       <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">Entity Details</h3>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <input 
-                        required
-                        type="email"
-                        placeholder="Official Email"
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      />
-                      <input 
-                        required
-                        type="tel"
-                        placeholder="Contact Phone"
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      />
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Company Name</label>
+                        <Input 
+                          required
+                          placeholder="Legal Entity Name"
+                          className="h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                          value={formData.companyName}
+                          onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Website URL</label>
+                        <Input 
+                          required
+                          type="url"
+                          placeholder="https://company.com"
+                          className="h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                          value={formData.website}
+                          onChange={(e) => setFormData({...formData, website: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Official Email</label>
+                        <Input 
+                          required
+                          type="email"
+                          placeholder="hr@company.com"
+                          className="h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Contact Phone</label>
+                        <Input 
+                          required
+                          type="tel"
+                          placeholder="+91"
+                          className="h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        />
+                      </div>
                     </div>
                   </div>
 
                   {/* Job Info */}
-                  <div className="space-y-6">
-                    <h3 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2 pt-4 border-t border-slate-50">
-                      <Briefcase size={16} /> Job Specifications
-                    </h3>
-                    <input 
-                      required
-                      type="text"
-                      placeholder="Job Title (e.g. Junior Accountant)"
-                      className="w-full h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      value={formData.jobTitle}
-                      onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
-                    />
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <select 
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.category}
-                        onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      >
-                        <option>Full Time</option>
-                        <option>Part Time</option>
-                        <option>Internship</option>
-                        <option>Remote</option>
-                      </select>
-                      <input 
+                  <div className="space-y-6 pt-8 border-t border-slate-100">
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center"><Briefcase size={16} /></div>
+                       <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">Position Architecture</h3>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Job Title</label>
+                      <Input 
                         required
-                        type="text"
-                        placeholder="Expected Salary (e.g. 15k - 20k)"
-                        className="h-14 px-6 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        value={formData.salary}
-                        onChange={(e) => setFormData({...formData, salary: e.target.value})}
+                        placeholder="e.g. Accounts Manager"
+                        className="w-full h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                        value={formData.jobTitle}
+                        onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
                       />
                     </div>
-                    <textarea 
-                      required
-                      placeholder="Job Description & Requirements..."
-                      className="w-full min-h-[150px] p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium resize-none"
-                      value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    />
+                   <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Category</label>
+                        <select 
+                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs outline-none"
+                          value={formData.category}
+                          onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        >
+                          <option>Full Time</option>
+                          <option>Part Time</option>
+                          <option>Internship</option>
+                          <option>Remote</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Location</label>
+                        <Input 
+                          required
+                          placeholder="e.g. Bhubaneswar, Odisha"
+                          className="h-11 px-4 bg-slate-50 border-slate-200 rounded-lg focus:bg-white transition-all font-bold text-xs"
+                          value={formData.location}
+                          onChange={(e) => setFormData({...formData, location: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Description & Requirements</label>
+                      <textarea 
+                        required
+                        placeholder="Detail the role specifications..."
+                        className="w-full min-h-[140px] p-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white transition-all font-bold text-xs resize-none outline-none"
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      />
+                    </div>
                   </div>
 
-                  <Button type="submit" className="w-full h-16 rounded-2xl font-black uppercase tracking-widest text-xs gap-3 shadow-xl">
-                    Submit Job for Verification <Send size={16} />
+                  <Button type="submit" className="w-full h-14 rounded-lg font-bold uppercase tracking-wider text-[10px] gap-3 shadow-xl">
+                    Deploy Requirement <Zap size={14} />
                   </Button>
                 </form>
               </div>
             </div>
 
             {/* Side Column: Guidelines */}
-            <div className="space-y-6">
-              <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white">
-                <ShieldAlert className="text-amber-400 mb-6" size={32} />
-                <h3 className="text-xl font-heading font-black mb-4">Verification Policy</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                  To ensure student safety, all recruiters must provide legit organization details. 
+            <div className="lg:col-span-4 space-y-6">
+              <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+                <ShieldAlert className="text-primary mb-6" size={32} />
+                <h3 className="text-lg font-bold mb-3 tracking-tight">OICA Protocol</h3>
+                <p className="text-slate-400 text-[11px] font-medium leading-relaxed mb-6">
+                  Vetting standards enforced for all corporate listings to ensure career safety.
                 </p>
-                <ul className="space-y-4">
+                <div className="space-y-4">
                   {[
-                    "Organization legitimacy check",
-                    "Official email verification",
-                    "Job role relevance",
-                    "Fair salary standards"
+                    "Entity Legitimacy",
+                    "Official Domain Verification",
+                    "Role Integrity"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-xs font-bold">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      {item}
-                    </li>
+                    <div key={i} className="flex items-center gap-3">
+                       <CheckCircle size={12} className="text-primary" />
+                       <span className="text-[9px] font-bold uppercase tracking-wider text-slate-200">{item}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
 
-              <div className="bg-blue-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-blue-500/20">
-                <h3 className="text-lg font-heading font-black mb-2">Talent Access</h3>
-                <p className="text-blue-100 text-[11px] font-medium leading-relaxed">
-                  Only verified organizations can download student resumes and view full contact details.
-                </p>
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                 <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 mx-auto border border-blue-100">
+                    <Target size={20} />
+                 </div>
+                 <h3 className="text-sm font-bold text-slate-900 mb-1">Talent Reach</h3>
+                 <p className="text-slate-500 text-[10px] font-bold leading-relaxed">
+                   Access elite certified professionals across our nationwide network.
+                 </p>
               </div>
             </div>
           </div>

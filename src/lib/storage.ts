@@ -15,7 +15,8 @@ export const STORAGE_KEYS = {
   FEEDBACK: "oica_feedback",
   CONTACT_MESSAGES: "oica_contact_messages",
   FRANCHISE_ENQUIRIES: "oica_franchise_enquiries",
-  ENROLLMENTS: "oica_enrollments"
+  ENROLLMENTS: "oica_enrollments",
+  ATTENDANCE: "oica_attendance"
 };
 
 export const getStorageData = (key: string) => {
@@ -216,35 +217,38 @@ export const initStorage = () => {
     }));
     setStorageData(STORAGE_KEYS.CAREER_APPS, defaultApps);
   }
-  // 6. Initialize Feedback
-  const existingFeedback = getStorageData(STORAGE_KEYS.FEEDBACK);
-  if (existingFeedback.length === 0) {
-    const defaultFeedback = [
-      {
-        id: "fb-1",
-        studentId: 1,
-        studentName: "Ankit Kumar",
-        studentPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
-        rollNo: "OICA/2026/001",
-        course: "PGDCA",
-        rating: 5,
-        comment: "OICA has been a life-changing experience for me. The hands-on training and the supportive faculty helped me master complex concepts easily. Highly recommended for anyone looking to build a career in IT!",
-        status: "approved",
-        date: new Date().toISOString()
-      },
-      {
-        id: "fb-2",
-        studentId: 1001,
-        studentName: "Priya Das",
-        studentPhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374",
-        rollNo: "OICA/2026/101",
-        course: "Graphic Design",
-        rating: 5,
-        comment: "The Graphic Design course at OICA is exceptional. The curriculum is modern and industry-relevant. I especially loved the workshop sessions where we worked on real projects.",
-        status: "approved",
-        date: new Date().toISOString()
+  // 7. Seed Attendance Records (30 days)
+  const existingAttendance = getStorageData(STORAGE_KEYS.ATTENDANCE);
+  if (existingAttendance.length === 0) {
+    const allUsers = getStorageData(STORAGE_KEYS.USERS);
+    const students = allUsers.filter((u: any) => u.role === 'student').slice(0, 30);
+    const records: any[] = [];
+    const today = new Date();
+    students.forEach((student: any) => {
+      for (let d = 29; d >= 0; d--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - d);
+        const dayOfWeek = date.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) continue; // skip weekends
+        const present = Math.random() > 0.2; // 80% attendance
+        if (present) {
+          records.push({
+            id: `att_${student.id}_${d}`,
+            studentId: student.id,
+            rollNo: student.rollNo,
+            studentName: student.name,
+            branchId: student.branchId,
+            course: student.course,
+            date: date.toISOString().split('T')[0],
+            time: `${9 + Math.floor(Math.random() * 2)}:${Math.random() > 0.5 ? '00' : '30'} AM`,
+            markedBy: 'system',
+            method: 'manual',
+            status: 'present'
+          });
+        }
       }
-    ];
-    setStorageData(STORAGE_KEYS.FEEDBACK, defaultFeedback);
+    });
+    setStorageData(STORAGE_KEYS.ATTENDANCE, records);
   }
 };
+

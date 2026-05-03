@@ -1,0 +1,165 @@
+# Production Database & Backend Implementation Plan
+
+The objective is to transition the OICA educational portal from a simulation-based `localStorage` architecture to a robust production environment with a centralized database and backend.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Database Choice**: We are proceeding with a **Node.js/Express** backend and a **PostgreSQL** database as requested. We will use **Prisma ORM** for type-safe database access.
+
+> [!IMPORTANT]
+> **Data Migration**: Existing `localStorage` data will be discarded. We will start with a fresh PostgreSQL schema and seed it with premium demo data.
+
+## Proposed Database Schema
+
+### 1. `branches`
+Stores information about physical OICA centers.
+- `id`: `UUID` (PK)
+- `branch_code`: `VARCHAR(20)` (Unique, e.g., 'KHORDHA-01')
+- `name`: `VARCHAR(100)`
+- `location`: `VARCHAR(100)`
+- `manager_name`: `VARCHAR(100)`
+- `phone`: `VARCHAR(20)`
+- `email`: `VARCHAR(100)`
+- `address`: `TEXT`
+- `about_text`: `TEXT`
+- `created_at`: `TIMESTAMP`
+
+### 2. `users`
+Centralized user table for Students, Admins, and Branch Managers.
+- `id`: `UUID` (PK)
+- `branch_id`: `UUID` (FK to `branches.id`, Nullable for HQ Admins)
+- `name`: `VARCHAR(100)`
+- `email`: `VARCHAR(100)` (Unique)
+- `username`: `VARCHAR(50)` (Unique)
+- `password_hash`: `TEXT`
+- `role`: `ENUM('admin', 'branch', 'student')`
+- `roll_no`: `VARCHAR(50)` (Unique, Nullable)
+- `course_id`: `UUID` (FK to `courses.id`, Nullable)
+- `photo_url`: `TEXT`
+- `phone`: `VARCHAR(20)`
+- `age`: `INTEGER`
+- `completed_video_ids`: `JSONB` (Array of Lecture IDs)
+- `created_at`: `TIMESTAMP`
+
+### 3. `notices`
+Campus broadcasts and announcements.
+- `id`: `UUID` (PK)
+- `branch_id`: `UUID` (FK to `branches.id`)
+- `title`: `VARCHAR(255)`
+- `link_url`: `TEXT` (Optional)
+- `posted_date`: `DATE`
+- `created_at`: `TIMESTAMP`
+
+### 4. `courses` (Topics)
+Academic modules.
+- `id`: `UUID` (PK)
+- `name`: `VARCHAR(100)`
+- `category`: `VARCHAR(50)` (e.g., 'PGDCA', 'DCA')
+- `sort_order`: `INTEGER`
+- `description`: `TEXT`
+- `ui_color`: `VARCHAR(20)` (e.g., 'blue', 'emerald')
+- `created_at`: `TIMESTAMP`
+
+### 5. `lectures`
+Video content within courses.
+- `id`: `UUID` (PK)
+- `course_id`: `UUID` (FK to `courses.id`)
+- `title`: `VARCHAR(255)`
+- `description`: `TEXT`
+- `video_url`: `TEXT`
+- `thumbnail_url`: `TEXT`
+- `duration`: `VARCHAR(20)`
+- `sort_order`: `INTEGER`
+- `created_at`: `TIMESTAMP`
+
+### 6. `mock_tests`
+Assessments for courses.
+- `id`: `UUID` (PK)
+- `course_id`: `UUID` (FK to `courses.id`, or NULL for general)
+- `is_final`: `BOOLEAN`
+- `time_limit_mins`: `INTEGER`
+- `created_at`: `TIMESTAMP`
+
+### 7. `questions`
+Individual test questions.
+- `id`: `UUID` (PK)
+- `test_id`: `UUID` (FK to `mock_tests.id`)
+- `question_text`: `TEXT`
+- `options`: `JSONB` (Array of strings)
+- `correct_index`: `INTEGER`
+- `created_at`: `TIMESTAMP`
+
+### 8. `test_results`
+Student performance tracking.
+- `id`: `UUID` (PK)
+- `student_id`: `UUID` (FK to `users.id`)
+- `test_id`: `UUID` (FK to `mock_tests.id`)
+- `score`: `INTEGER`
+- `total_questions`: `INTEGER`
+- `taken_at`: `TIMESTAMP`
+
+### 9. `attendance`
+Daily presence logs.
+- `id`: `UUID` (PK)
+- `student_id`: `UUID` (FK to `users.id`)
+- `branch_id`: `UUID` (FK to `branches.id`)
+- `log_date`: `DATE`
+- `log_time`: `TIME`
+- `marked_by`: `VARCHAR(50)` (e.g., 'system', 'branch_manager')
+- `method`: `VARCHAR(20)` (e.g., 'barcode', 'manual')
+- `status`: `VARCHAR(20)` (e.g., 'present', 'absent')
+
+### 10. `jobs` & `job_applications`
+Career portal data.
+- **Jobs**: `title`, `company`, `location`, `salary`, `requirements`, `posted_at`
+- **Applications**: `job_id`, `student_id`, `status` ('Pending', 'Shortlisted'), `applied_at`
+
+### 11. `inquiries`
+Unified table for all leads (Contact, Franchise, Admissions).
+- `id`: `UUID` (PK)
+- `type`: `ENUM('contact', 'franchise', 'admission')`
+- `name`: `VARCHAR(100)`
+- `email`: `VARCHAR(100)`
+- `phone`: `VARCHAR(20)`
+- `message`: `TEXT`
+- `status`: `VARCHAR(20)` ('New', 'Contacted', 'Resolved')
+- `created_at`: `TIMESTAMP`
+
+### 12. `feedback`
+Student testimonials.
+- `id`: `UUID` (PK)
+- `student_id`: `UUID` (FK to `users.id`)
+- `rating`: `INTEGER` (1-5)
+- `comment`: `TEXT`
+- `is_approved`: `BOOLEAN` (Default: false)
+- `created_at`: `TIMESTAMP`
+
+## Proposed Changes
+
+### [Backend] [NEW]
+- **Environment**: Node.js with Express.js.
+- **ORM**: Prisma for PostgreSQL.
+- **Location**: All backend code will reside in a new `/server` directory.
+- **Authentication**: JWT-based authentication for students, branch managers, and admins.
+- **Endpoints**:
+  - `/api/auth`: Login and session management.
+  - `/api/student`: Dashboard data, video progress, test results.
+  - `/api/branch`: Student management, notice board, branch profile.
+  - `/api/admin`: Branch management, inbox/leads, analytics.
+- **Demo Data**: A dedicated `seed.ts` script to populate all tables with 200+ demo records.
+
+### [Frontend]
+- Replace `src/lib/storage.ts` logic with API calls (using `axios` or Supabase client).
+- Update components to fetch data from the production database.
+
+## Verification Plan
+
+### Automated Tests
+- Verify CRUD operations for all tables via Postman/Thunder Client.
+- Test authentication flows for all 3 roles.
+
+### Manual Verification
+- Login as Student, Branch Manager, and Admin to ensure data isolation.
+- Post a notice as Branch Manager and verify it appears on the Student Dashboard.
+- Submit an admission inquiry and verify it appears in the Admin Inbox.

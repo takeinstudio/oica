@@ -66,6 +66,8 @@ const AdminDashboard = () => {
   // Selection/Modal State
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [isDeleting, setIsDeleting] = useState<any>(null);
+  const [isAddingStudent, setIsAddingStudent] = useState(false);
+  const [newStudentData, setNewStudentData] = useState({ name: "", course: "DCA", rollNo: "", email: "", phone: "", branchId: "" });
 
   useEffect(() => {
     const session = localStorage.getItem(STORAGE_KEYS.SESSION);
@@ -170,6 +172,40 @@ const AdminDashboard = () => {
     setStorageData(STORAGE_KEYS.FEEDBACK, updated);
     setFeedback(updated);
     toast.success("Feedback status updated");
+  };
+
+  const handleExport = () => {
+    toast.info("Compiling global student database for export...");
+    setTimeout(() => {
+      console.log("Exporting All Students:", students);
+      toast.success("Global student record exported!");
+    }, 1500);
+  };
+
+  const handleEnrollStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newStudentData.name || !newStudentData.rollNo || !newStudentData.branchId) {
+      toast.error("Please fill all required fields including branch");
+      return;
+    }
+
+    const newStudent = {
+      id: Date.now(),
+      ...newStudentData,
+      role: 'student',
+      photo: `https://i.pravatar.cc/150?u=${Date.now()}`,
+      completedVideos: [],
+      age: 20
+    };
+
+    const allUsers = getStorageData(STORAGE_KEYS.USERS);
+    const updatedUsers = [newStudent, ...allUsers];
+    setStorageData(STORAGE_KEYS.USERS, updatedUsers);
+    setStudents(updatedUsers.filter((u: any) => u.role === 'student'));
+    
+    setIsAddingStudent(false);
+    setNewStudentData({ name: "", course: "DCA", rollNo: "", email: "", phone: "", branchId: "" });
+    toast.success(`Student ${newStudentData.name} enrolled to system!`);
   };
 
   const analyticsData = [
@@ -383,13 +419,20 @@ const AdminDashboard = () => {
                        <Input placeholder="Search student directory..." className="pl-11 h-11 rounded-xl bg-white border-slate-100 shadow-sm focus:ring-4 focus:ring-primary/5 font-bold text-xs" />
                     </div>
                     <div className="flex items-center gap-3">
-                       <Button variant="outline" className="h-11 rounded-xl border-slate-200 font-bold text-[9px] tracking-widest uppercase px-6">
-                          <Download size={16} className="mr-2" /> EXPORT
-                       </Button>
-                       <Button className="h-11 rounded-xl bg-primary text-white font-bold text-[9px] tracking-widest uppercase px-8 shadow-xl shadow-primary/20">
-                          <Plus size={16} className="mr-2" /> ENROLL NEW
-                       </Button>
-                    </div>
+                        <Button 
+                          onClick={handleExport}
+                          variant="outline" 
+                          className="h-11 rounded-xl border-slate-200 font-bold text-[9px] tracking-widest uppercase px-6"
+                        >
+                           <Download size={16} className="mr-2" /> EXPORT
+                        </Button>
+                        <Button 
+                          onClick={() => setIsAddingStudent(true)}
+                          className="h-11 rounded-xl bg-primary text-white font-bold text-[9px] tracking-widest uppercase px-8 shadow-xl shadow-primary/20"
+                        >
+                           <Plus size={16} className="mr-2" /> ENROLL NEW
+                        </Button>
+                     </div>
                  </div>
 
                  <div className="bg-white rounded-xl border border-slate-200/60 shadow-sm overflow-hidden">
@@ -978,6 +1021,132 @@ const AdminDashboard = () => {
             
            </AnimatePresence>
         </div>
+        {/* Add Student Modal */}
+        <AnimatePresence>
+          {isAddingStudent && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsAddingStudent(false)}
+                className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden"
+              >
+                <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Manual System Enrollment</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Directly Add Student to Central Database</p>
+                  </div>
+                  <button onClick={() => setIsAddingStudent(false)} className="w-10 h-10 rounded-full bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleEnrollStudent} className="p-10 space-y-8">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Student Name</label>
+                      <Input 
+                        required
+                        placeholder="Full Name" 
+                        value={newStudentData.name}
+                        onChange={(e) => setNewStudentData({...newStudentData, name: e.target.value})}
+                        className="h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Roll Number</label>
+                      <Input 
+                        required
+                        placeholder="OICA/2026/..." 
+                        value={newStudentData.rollNo}
+                        onChange={(e) => setNewStudentData({...newStudentData, rollNo: e.target.value})}
+                        className="h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Assign to Branch</label>
+                      <select 
+                        required
+                        className="w-full h-14 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white px-4 transition-all font-bold text-xs outline-none"
+                        value={newStudentData.branchId}
+                        onChange={(e) => setNewStudentData({...newStudentData, branchId: e.target.value})}
+                      >
+                        <option value="">Select Branch</option>
+                        {branches.map(b => (
+                          <option key={b.id} value={b.id}>{b.name} ({b.location})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Course Program</label>
+                      <select 
+                        className="w-full h-14 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white px-4 transition-all font-bold text-xs outline-none"
+                        value={newStudentData.course}
+                        onChange={(e) => setNewStudentData({...newStudentData, course: e.target.value})}
+                      >
+                        <option>DCA</option>
+                        <option>PGDCA</option>
+                        <option>Tally ERP.9</option>
+                        <option>Graphic Design</option>
+                        <option>Web Development</option>
+                        <option>Digital Marketing</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                      <Input 
+                        type="email"
+                        placeholder="student@example.com" 
+                        value={newStudentData.email}
+                        onChange={(e) => setNewStudentData({...newStudentData, email: e.target.value})}
+                        className="h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                      <Input 
+                        placeholder="+91" 
+                        value={newStudentData.phone}
+                        onChange={(e) => setNewStudentData({...newStudentData, phone: e.target.value})}
+                        className="h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-bold text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-6 flex gap-6">
+                    <Button 
+                      type="button"
+                      onClick={() => setIsAddingStudent(false)}
+                      variant="outline" 
+                      className="flex-1 h-16 rounded-2xl border-slate-200 font-black text-[11px] tracking-widest uppercase"
+                    >
+                      Cancel Enrollment
+                    </Button>
+                    <Button 
+                      type="submit"
+                      className="flex-[1.5] h-16 rounded-2xl bg-primary text-white font-black text-[11px] tracking-widest uppercase shadow-2xl shadow-primary/20"
+                    >
+                      Finalize & Add Student
+                    </Button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

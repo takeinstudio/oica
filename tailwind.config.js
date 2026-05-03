@@ -15,6 +15,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
         heading: ['Poppins', 'system-ui', 'sans-serif'],
         body: ['Poppins', 'system-ui', 'sans-serif'],
         poppins: ['Poppins', 'system-ui', 'sans-serif'],

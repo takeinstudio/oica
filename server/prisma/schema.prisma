@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  admin
+  branch
+  student
+}
+
+enum InquiryType {
+  contact
+  franchise
+  admission
+}
+
+enum ApplicationStatus {
+  Pending
+  Reviewed
+  Shortlisted
+}
+
+model Branch {
+  id           String         @id @default(uuid())
+  branchCode   String         @unique
+  name         String
+  location     String
+  managerName  String
+  phone        String
+  email        String
+  address      String
+  aboutText    String         @db.Text
+  createdAt    DateTime       @default(now())
+  users        User[]
+  notices      Notice[]
+  gallery      GalleryImage[]
+  attendance   Attendance[]
+}
+
+model User {
+  id                String         @id @default(uuid())
+  branchId          String?
+  branch            Branch?        @relation(fields: [branchId], references: [id])
+  name              String
+  email             String         @unique
+  username          String         @unique
+  passwordHash      String
+  role              Role
+  rollNo            String?        @unique
+  course            String?
+  photoUrl          String?
+  phone             String?
+  age               Int?
+  completedVideoIds Json?          @default("[]")
+  createdAt         DateTime       @default(now())
+  testResults       TestResult[]
+  applications      JobApplication[]
+  attendance        Attendance[]
+  feedback          Feedback[]
+}
+
+model Notice {
+  id         String   @id @default(uuid())
+  branchId   String
+  branch     Branch   @relation(fields: [branchId], references: [id])
+  title      String
+  linkUrl    String?
+  postedDate DateTime @default(now())
+  createdAt  DateTime @default(now())
+}
+
+model Course {
+  id          String    @id @default(uuid())
+  name        String
+  category    String
+  sortOrder   Int
+  description String    @db.Text
+  uiColor     String
+  createdAt   DateTime  @default(now())
+  lectures    Lecture[]
+  mockTests   MockTest[]
+}
+
+model Lecture {
+  id           String   @id @default(uuid())
+  courseId     String
+  course       Course   @relation(fields: [courseId], references: [id])
+  title        String
+  description  String   @db.Text
+  videoUrl     String
+  thumbnailUrl String?
+  duration     String
+  sortOrder    Int
+  createdAt    DateTime @default(now())
+}
+
+model MockTest {
+  id            String       @id @default(uuid())
+  courseId      String?
+  course        Course?      @relation(fields: [courseId], references: [id])
+  isFinal       Boolean      @default(false)
+  timeLimitMins Int
+  createdAt     DateTime     @default(now())
+  questions     Question[]
+  results       TestResult[]
+}
+
+model Question {
+  id           String   @id @default(uuid())
+  testId       String
+  test         MockTest @relation(fields: [testId], references: [id])
+  questionText String   @db.Text
+  options      Json
+  correctIndex Int
+  createdAt    DateTime @default(now())
+}
+
+model TestResult {
+  id             String   @id @default(uuid())
+  studentId      String
+  student        User     @relation(fields: [studentId], references: [id])
+  testId         String
+  test           MockTest @relation(fields: [testId], references: [id])
+  score          Int
+  totalQuestions Int
+  takenAt        DateTime @default(now())
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  studentId String
+  student   User     @relation(fields: [studentId], references: [id])
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+  logDate   DateTime @db.Date
+  logTime   String
+  markedBy  String
+  method    String
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Job {
+  id           String           @id @default(uuid())
+  title        String
+  company      String
+  location     String
+  type         String
+  salary       String
+  experience   String
+  requirements String           @db.Text
+  postedAt     DateTime         @default(now())
+  createdAt    DateTime         @default(now())
+  applications JobApplication[]
+}
+
+model JobApplication {
+  id        String            @id @default(uuid())
+  jobId     String
+  job       Job               @relation(fields: [jobId], references: [id])
+  studentId String
+  student   User              @relation(fields: [studentId], references: [id])
+  status    ApplicationStatus @default(Pending)
+  appliedAt DateTime          @default(now())
+}
+
+model Inquiry {
+  id        String      @id @default(uuid())
+  type      InquiryType
+  name      String
+  email     String
+  phone     String
+  message   String      @db.Text
+  status    String      @default("New")
+  createdAt DateTime    @default(now())
+}
+
+model Feedback {
+  id         String   @id @default(uuid())
+  studentId  String
+  student    User     @relation(fields: [studentId], references: [id])
+  rating     Int
+  comment    String   @db.Text
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(uuid())
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+  url       String
+  createdAt DateTime @default(now())
+}
