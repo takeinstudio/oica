@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 import { toast } from "sonner";
-import Layout from "@/components/Layout";
 
 const Career = () => {
   const [activeTab, setActiveTab] = useState<"seekers" | "employers">("seekers");
@@ -48,7 +47,7 @@ const Career = () => {
   );
 
   return (
-    <Layout>
+    <>
       <div className="flex-grow bg-slate-50/50 pb-20 font-poppins antialiased pt-32">
         {/* Compact Dashboard Header */}
         <div className="bg-white border-b border-slate-200 sticky top-[104px] z-40 px-6 py-4 shadow-sm">
@@ -366,7 +365,7 @@ const Career = () => {
           </AnimatePresence>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

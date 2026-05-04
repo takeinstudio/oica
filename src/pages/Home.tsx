@@ -6,7 +6,7 @@ import {
   Users, 
   ArrowRight, Star, Shield, Camera, Maximize2,
   GraduationCap, Mail, Quote, Bell, MapPin,
-  Calendar, Paperclip
+  Calendar, Paperclip, BookOpen, Zap, MessageSquare, Award
 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
@@ -82,6 +82,49 @@ const homeGallery = [
   "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471",
   "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1470",
   "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1470",
+];
+
+const methodology = [
+  { 
+    id: "01", 
+    title: "Theory", 
+    desc: "Foundational knowledge sessions", 
+    icon: BookOpen,
+    color: "from-blue-600 to-cyan-500",
+    shadow: "shadow-blue-500/20"
+  },
+  { 
+    id: "02", 
+    title: "Practical", 
+    desc: "Hands-on lab exercises", 
+    icon: Zap,
+    color: "from-emerald-600 to-teal-500",
+    shadow: "shadow-emerald-500/20"
+  },
+  { 
+    id: "03", 
+    title: "Doubt", 
+    desc: "1-to-1 query resolution", 
+    icon: MessageSquare,
+    color: "from-amber-500 to-orange-600",
+    shadow: "shadow-amber-500/20"
+  },
+  { 
+    id: "04", 
+    title: "Assign", 
+    desc: "Real-world project tasks", 
+    icon: Paperclip,
+    color: "from-rose-600 to-pink-500",
+    shadow: "shadow-rose-500/20"
+  },
+  { 
+    id: "05", 
+    title: "Exam", 
+    desc: "Performance assessment", 
+    icon: Award,
+    color: "from-violet-600 to-purple-500",
+    shadow: "shadow-violet-500/20"
+  },
 ];
 
 
@@ -463,46 +506,109 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Training Methodology Section — Process Path Design */}
-      <section className="section-padding bg-white relative overflow-hidden">
-        <div className="section-container">
-          <AnimatedSection className="text-center mb-16">
-            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Success Mantra</span>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 tracking-tight">Training Methodology</h2>
-          </AnimatedSection>
+      {/* Training Methodology — Success Mantra Section */}
+      <section className="relative py-32 bg-white overflow-hidden">
+        <div className="section-container relative z-10">
+          <div className="text-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ amount: 0.3 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 rounded-full mb-6"
+            >
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Our Success Mantra</span>
+            </motion.div>
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter mb-4 uppercase">
+              Training <span className="text-primary italic">Methodology</span>
+            </h2>
+            <p className="text-slate-500 font-medium max-w-xl mx-auto">
+              A systematic 5-stage transition from foundational theory to professional excellence.
+            </p>
+          </div>
 
           <div className="relative">
-             {/* Desktop Connecting Line */}
-             <div className="absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-slate-100 -translate-y-1/2 hidden md:block" />
-             
-             <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10">
-                {[
-                  { id: "01", title: "Theory", color: "from-blue-500 to-blue-600", desc: "Foundational knowledge sessions" },
-                  { id: "02", title: "Practical", color: "from-emerald-500 to-teal-600", desc: "Hands-on lab exercises" },
-                  { id: "03", title: "Doubt", color: "from-violet-500 to-purple-600", desc: "1-to-1 query resolution" },
-                  { id: "04", title: "Assign", color: "from-orange-500 to-amber-600", desc: "Real-world project tasks" },
-                  { id: "05", title: "Exam", color: "from-rose-500 to-pink-600", desc: "Performance assessment" },
-                ].map((m, i) => (
-                  <AnimatedSection key={m.title} delay={i * 0.15}>
-                    <div className="group relative text-center">
-                       {/* Floating Number Card */}
-                       <div className={`w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br ${m.color} text-white flex items-center justify-center font-black text-2xl mb-6 shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500 relative z-20`}>
-                          {m.id}
-                       </div>
-                       <h3 className="font-heading font-black text-lg text-slate-900 mb-2">{m.title}</h3>
-                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{m.desc}</p>
-                       
-                       {/* Mobile Connector */}
-                       {i < 4 && <div className="h-8 w-0.5 border-l-2 border-dashed border-slate-100 mx-auto mt-4 md:hidden" />}
+            {/* Desktop Path Line */}
+            <div className="absolute top-[4.5rem] left-0 w-full h-[2px] bg-slate-100 hidden lg:block overflow-hidden">
+              <motion.div 
+                initial={{ width: "0%" }}
+                whileInView={{ width: "100%" }}
+                viewport={{ amount: 0.3 }}
+                transition={{ duration: 6, ease: "linear" }}
+                className="h-full bg-gradient-to-r from-blue-500 via-primary to-purple-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-20 lg:gap-8 relative z-10">
+              {methodology.map((step, idx) => (
+                <div key={step.id} className="relative group">
+                  {/* Item Content */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ margin: "-100px" }}
+                    transition={{ 
+                      duration: 0.8, 
+                      delay: idx * 1.2, 
+                      ease: [0.16, 1, 0.3, 1] 
+                    }}
+                    className="relative z-20"
+                  >
+                    {/* Number Badge with Fade-in Effect */}
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ amount: 0.5 }}
+                      transition={{ delay: idx * 1.2 + 0.3, duration: 0.5 }}
+                      className="w-20 h-20 mx-auto rounded-[2rem] bg-white shadow-2xl border border-slate-100 flex items-center justify-center mb-8 group-hover:rotate-6 transition-transform duration-500"
+                    >
+                      <span className={`text-2xl font-black bg-gradient-to-br ${step.color} bg-clip-text text-transparent`}>
+                        {step.id}
+                      </span>
+                    </motion.div>
+
+                    <motion.div 
+                      whileInView={{ 
+                        scale: [0.9, 1.05, 1],
+                        opacity: [0, 1]
+                      }}
+                      viewport={{ amount: 0.5 }}
+                      transition={{ delay: idx * 1.2, duration: 0.8 }}
+                      className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 text-center hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2"
+                    >
+                      <div className={`w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br ${step.color} text-white flex items-center justify-center mb-6 shadow-lg ${step.shadow}`}>
+                        <step.icon size={20} />
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">{step.title}</h3>
+                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
+                        {step.desc}
+                      </p>
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Traveling Arrow Logic */}
+                  {idx < methodology.length - 1 && (
+                    <div className="absolute top-[4.2rem] left-[calc(50%+40px)] w-[calc(100%-80px)] hidden lg:block z-30">
+                       <motion.div
+                         initial={{ scaleX: 0, opacity: 0 }}
+                         whileInView={{ scaleX: 1, opacity: 1 }}
+                         viewport={{ amount: 0.5 }}
+                         transition={{ delay: idx * 1.2 + 0.6, duration: 0.6, ease: "easeInOut" }}
+                         className="origin-left flex items-center"
+                       >
+                         <div className="h-[2px] flex-grow bg-primary" />
+                         <ArrowRight className="text-primary w-4 h-4 -ml-2" />
+                       </motion.div>
                     </div>
-                  </AnimatedSection>
-                ))}
-             </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose OICA — Bento Grid Layout */}
+      {/* Interactive Quick Features Grid Grid */}
       <section className="section-padding relative overflow-hidden">
         <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-12 gap-6">

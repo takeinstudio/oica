@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileText, CheckCircle, ArrowLeft, Upload, ShieldCheck, Zap, Sparkles, ChevronRight, Plus, X, Link as LinkIcon, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Layout from "@/components/Layout";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
 import { toast } from "sonner";
 
@@ -69,8 +68,7 @@ const JobSeekerForm = () => {
 
   if (isSubmitted) {
     return (
-      <Layout>
-        <div className="min-h-[80vh] flex items-center justify-center p-6 bg-slate-50/50">
+      <div className="min-h-[80vh] flex items-center justify-center p-6 bg-slate-50/50">
           <motion.div 
             initial={{ scale: 0.98, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -88,12 +86,11 @@ const JobSeekerForm = () => {
             </Button>
           </motion.div>
         </div>
-      </Layout>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="flex-grow bg-slate-50/50 pt-32 pb-20 px-6 font-poppins antialiased">
         <div className="max-w-5xl mx-auto">
           {/* Professional Compact Header */}
@@ -478,7 +475,7 @@ const JobSeekerForm = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

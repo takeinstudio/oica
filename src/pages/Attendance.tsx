@@ -25,11 +25,24 @@ const Attendance = () => {
   const [markMode, setMarkMode] = useState<"manual" | "qr">("qr");
   const [lastScanned, setLastScanned] = useState<any>(null);
   const [today] = useState(new Date().toISOString().split("T")[0]);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+  const [scanStatus, setScanStatus] = useState<"scanning" | "success" | "duplicate" | "error">("scanning");
+  const [isPaused, setIsPaused] = useState(false);
   const [authForm, setAuthForm] = useState({ email: "", password: "" });
+
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const recordsRef = useRef<any[]>([]);
+  const isPausedRef = useRef(false);
+
+  // Keep refs in sync with state to avoid stale closures in scanner callbacks
+  useEffect(() => {
+    recordsRef.current = records;
+  }, [records]);
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   useEffect(() => {
     const s = localStorage.getItem(STORAGE_KEYS.SESSION);
@@ -88,7 +101,14 @@ const Attendance = () => {
         const element = document.getElementById("reader");
         if (element) element.innerHTML = ""; // Clear any leftover video tags
         
-        scannerInstance = new Html5Qrcode("reader");
+        scannerInstance = new Html5Qrcode("reader", {
+          verbose: false,
+          formatsToSupport: [ 
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39
+          ]
+        });
         scannerRef.current = scannerInstance;
 
         // Try starting with facingMode (best for mobile and modern browsers)
@@ -103,12 +123,7 @@ const Attendance = () => {
               },
               videoConstraints: {
                 facingMode: "environment"
-              },
-              formatsToSupport: [ 
-                Html5QrcodeSupportedFormats.QR_CODE,
-                Html5QrcodeSupportedFormats.CODE_128,
-                Html5QrcodeSupportedFormats.CODE_39
-              ]
+              }
             },
             (decodedText) => handleScannedData(decodedText),
             () => {} 
@@ -126,12 +141,7 @@ const Attendance = () => {
                 qrbox: (viewWidth, viewHeight) => {
                   const size = Math.min(viewWidth, viewHeight) * 0.8;
                   return { width: size, height: size };
-                },
-                formatsToSupport: [ 
-                  Html5QrcodeSupportedFormats.QR_CODE,
-                  Html5QrcodeSupportedFormats.CODE_128,
-                  Html5QrcodeSupportedFormats.CODE_39 
-                ]
+                }
               },
               (decodedText) => handleScannedData(decodedText),
               () => {} 
@@ -175,6 +185,7 @@ const Attendance = () => {
   }, [markMode, isAuthenticated]);
 
   const handleScannedData = (data: string) => {
+    if (isPausedRef.current) return;
     try {
       if (data.startsWith("{")) {
         const parsed = JSON.parse(data);
@@ -229,18 +240,48 @@ const Attendance = () => {
   };
 
   const markAttendance = (rollNo: string, method: "manual" | "qr", branchFromQR?: string) => {
-    if (!rollNo) return;
+    if (!rollNo || isPausedRef.current) return;
+    
     const student = users.find((u: any) => u.rollNo === rollNo);
+    
     if (!student) { 
+      if (method === "qr") {
+        setScanStatus("error");
+        setLastScanned(null);
+        setIsPaused(true);
+        setTimeout(() => {
+          setScanStatus("scanning");
+          setIsPaused(false);
+        }, 2000);
+      }
       if (method === "manual") toast.error("Student not found."); 
       return; 
     }
-    const exists = records.find(r => r.studentId === student.id && r.date === today);
+
+    const exists = recordsRef.current.find(r => r.studentId === student.id && r.date === today);
+    
     if (exists) { 
+      if (method === "qr") {
+        setScanStatus("duplicate");
+        setIsPaused(true);
+        setLastScanned({ ...student, time: exists.time, alreadyMarked: true });
+        
+        // Warning Audio
+        try {
+          const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3");
+          audio.volume = 0.4;
+          audio.play();
+        } catch (e) {}
+
+        setTimeout(() => {
+          setScanStatus("scanning");
+          setIsPaused(false);
+        }, 2000);
+      }
       if (method === "manual") toast.warning(`${student.name} already marked present.`);
-      setLastScanned({ ...student, time: exists.time, alreadyMarked: true });
       return; 
     }
+
     const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const newRec = {
       id: `att_${student.id}_${Date.now()}`,
@@ -250,24 +291,34 @@ const Attendance = () => {
       time,
       markedBy: session?.name || "Global Access", method, status: "present"
     };
-    const updated = [newRec, ...records];
+    const updated = [newRec, ...recordsRef.current];
     setRecords(updated);
     setStorageData(STORAGE_KEYS.ATTENDANCE, updated);
     
-    // Audio Feedback
-    try {
-      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-      audio.volume = 0.5;
-      audio.play();
-    } catch (e) { /* ignore audio errors */ }
+    if (method === "qr") {
+      setScanStatus("success");
+      setIsPaused(true);
+      setShowSuccessOverlay(true);
+      
+      // Audio Feedback
+      try {
+        const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+        audio.volume = 0.5;
+        audio.play();
+      } catch (e) {}
 
-    // Visual Feedback
-    setShowSuccessOverlay(true);
-    setTimeout(() => setShowSuccessOverlay(false), 2000);
+      setTimeout(() => {
+        setScanStatus("scanning");
+        setIsPaused(false);
+        setShowSuccessOverlay(false);
+      }, 2000);
+    } else {
+      toast.success(`${student.name} marked present!`);
+    }
 
-    toast.success(`${student.name} marked present!`);
     setLastScanned({ ...student, time });
-    setManualRoll(""); setQrInput("");
+    setManualRoll(""); 
+    setQrInput("");
   };
 
   const todayPresent = records.filter(r => r.date === today).length;
@@ -478,13 +529,52 @@ const Attendance = () => {
                     
                     {/* Scanning Overlay Effect */}
                     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-                      <div className={`absolute inset-0 border-[8px] transition-all duration-300 ${isScannerReady ? "border-primary/10" : "border-slate-900"}`} />
-                      {isScannerReady && (
+                      <div className={`absolute inset-0 border-[8px] transition-all duration-300 ${
+                        !isScannerReady ? "border-slate-900" :
+                        scanStatus === "success" ? "border-emerald-500" :
+                        scanStatus === "duplicate" ? "border-amber-500" :
+                        scanStatus === "error" ? "border-rose-500" :
+                        "border-primary/20"
+                      }`} />
+                      
+                      {isScannerReady && scanStatus === "scanning" && (
                         <div className="w-full h-[2px] bg-primary/40 absolute top-0 animate-[scan_3s_linear_infinite]" />
                       )}
-                      {showSuccessOverlay && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-emerald-500/20 border-[12px] border-emerald-500 z-30" />
-                      )}
+
+                      {/* Professional Status Flash */}
+                      <AnimatePresence>
+                        {isPaused && (
+                          <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            exit={{ opacity: 0 }}
+                            className={`absolute inset-0 z-20 flex flex-col items-center justify-center backdrop-blur-[2px] ${
+                              scanStatus === "success" ? "bg-emerald-500/10" :
+                              scanStatus === "duplicate" ? "bg-amber-500/10" :
+                              "bg-rose-500/10"
+                            }`}
+                          >
+                            <motion.div
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20"
+                            >
+                              {scanStatus === "success" && <CheckCircle className="text-emerald-500" size={20} />}
+                              {scanStatus === "duplicate" && <AlertCircle className="text-amber-500" size={20} />}
+                              {scanStatus === "error" && <XCircle className="text-rose-500" size={20} />}
+                              <span className={`text-[11px] font-black uppercase tracking-widest ${
+                                scanStatus === "success" ? "text-emerald-600" :
+                                scanStatus === "duplicate" ? "text-amber-600" :
+                                "text-rose-600"
+                              }`}>
+                                {scanStatus === "success" ? "Authenticated" : 
+                                 scanStatus === "duplicate" ? "Already Marked" : 
+                                 "Invalid Identity"}
+                              </span>
+                            </motion.div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     {/* Initializing State */}
@@ -664,22 +754,63 @@ const Attendance = () => {
         </div>
       </div>
 
-      {/* Global Success Overlay */}
+      {/* Global Status Overlay */}
       <AnimatePresence>
-        {showSuccessOverlay && (
+        {(showSuccessOverlay || (isPaused && scanStatus !== "scanning")) && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-6"
           >
-            <div className="bg-white/90 backdrop-blur-xl p-10 rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.15)] border border-emerald-100 flex flex-col items-center gap-6">
-              <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-emerald-500/40">
-                <CheckCircle size={56} strokeWidth={3} />
-              </div>
-              <div className="text-center">
-                <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Attendance Recorded</h2>
-                <p className="text-emerald-600 font-bold text-sm mt-1">{lastScanned?.name}</p>
+            <div className={`bg-white/95 backdrop-blur-2xl p-8 md:p-12 rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.12)] border flex flex-col items-center gap-8 max-w-sm w-full transition-colors duration-500 ${
+              scanStatus === "success" ? "border-emerald-100" : 
+              scanStatus === "duplicate" ? "border-amber-100" : 
+              "border-rose-100"
+            }`}>
+              <motion.div 
+                initial={{ rotate: -10, scale: 0.5 }}
+                animate={{ rotate: 0, scale: 1 }}
+                className={`w-24 h-24 rounded-full flex items-center justify-center text-white shadow-2xl transition-colors duration-500 ${
+                  scanStatus === "success" ? "bg-emerald-500 shadow-emerald-500/40" : 
+                  scanStatus === "duplicate" ? "bg-amber-500 shadow-amber-500/40" : 
+                  "bg-rose-500 shadow-rose-500/40"
+                }`}
+              >
+                {scanStatus === "success" && <CheckCircle size={56} strokeWidth={3} />}
+                {scanStatus === "duplicate" && <AlertCircle size={56} strokeWidth={3} />}
+                {scanStatus === "error" && <XCircle size={56} strokeWidth={3} />}
+              </motion.div>
+              
+              <div className="text-center space-y-2">
+                <h2 className={`text-2xl font-black uppercase tracking-tight ${
+                  scanStatus === "success" ? "text-emerald-600" : 
+                  scanStatus === "duplicate" ? "text-amber-600" : 
+                  "text-rose-600"
+                }`}>
+                  {scanStatus === "success" ? "Attendance Recorded" : 
+                   scanStatus === "duplicate" ? "Already Present" : 
+                   "Identity Error"}
+                </h2>
+                
+                {lastScanned && (
+                  <div className="pt-2">
+                    <p className="text-slate-900 font-black text-lg uppercase leading-tight">{lastScanned.name}</p>
+                    <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">{lastScanned.rollNo}</p>
+                  </div>
+                )}
+                
+                <div className="pt-6 border-t border-slate-100 flex items-center justify-center gap-6">
+                  <div className="text-center">
+                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Time</p>
+                    <p className="text-sm font-black text-slate-900">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                  <div className="w-px h-8 bg-slate-100" />
+                  <div className="text-center">
+                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Date</p>
+                    <p className="text-sm font-black text-slate-900">{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

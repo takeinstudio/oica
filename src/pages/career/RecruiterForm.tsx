@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Building2, Mail, Phone, Briefcase, ChevronRight, Zap, ShieldAlert, CheckCircle, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Layout from "@/components/Layout";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
 import { toast } from "sonner";
 
@@ -41,7 +40,7 @@ const RecruiterForm = () => {
 
   if (isSubmitted) {
     return (
-      <Layout>
+      <>
         <div className="min-h-[80vh] flex items-center justify-center p-6 bg-slate-50/50">
           <motion.div 
             initial={{ scale: 0.98, opacity: 0 }}
@@ -60,12 +59,12 @@ const RecruiterForm = () => {
             </Button>
           </motion.div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="flex-grow bg-slate-50/50 pt-32 pb-20 px-6 font-poppins antialiased">
         <div className="max-w-5xl mx-auto">
           {/* Professional Compact Header */}
@@ -243,7 +242,7 @@ const RecruiterForm = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 
