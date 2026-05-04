@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeCanvas } from "qrcode.react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import {
-  Search, CheckCircle, XCircle, Calendar, Users, TrendingUp,
-  QrCode, UserCheck, ChevronDown, Filter, Download, X, Clock,
-  BarChart2, BookOpen, GraduationCap, AlertCircle, RefreshCw,
-  Camera, ShieldCheck, ArrowLeft, Lock
+  Search, CheckCircle, XCircle, Users, TrendingUp,
+  QrCode, UserCheck, X,
+  AlertCircle, RefreshCw,
+  ShieldCheck, ArrowLeft, Lock
 } from "lucide-react";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
 import { toast } from "sonner";
@@ -21,7 +21,6 @@ const Attendance = () => {
   const [filterBranch, setFilterBranch] = useState("All");
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [manualRoll, setManualRoll] = useState("");
-  const [qrInput, setQrInput] = useState("");
   const [markMode, setMarkMode] = useState<"manual" | "qr">("qr");
   const [lastScanned, setLastScanned] = useState<any>(null);
   const [today] = useState(new Date().toISOString().split("T")[0]);
@@ -318,7 +317,6 @@ const Attendance = () => {
 
     setLastScanned({ ...student, time });
     setManualRoll(""); 
-    setQrInput("");
   };
 
   const todayPresent = records.filter(r => r.date === today).length;

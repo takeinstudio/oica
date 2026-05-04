@@ -22,7 +22,6 @@ import {
   Clock,
   X,
   Download,
-  Users,
   ShieldCheck,
   QrCode
 } from "lucide-react";
@@ -77,7 +76,7 @@ const StudentDashboard = () => {
   const [lectures, setLectures] = useState<any[]>([]);
   const [mockTests, setMockTests] = useState<any[]>([]);
   const [testResults, setTestResults] = useState<any[]>([]);
-  const [pdfs, setPdfs] = useState<any[]>([
+  const [pdfs] = useState<any[]>([
     { id: 1, title: "OICA PGDCA Syllabus 2026", size: "1.2 MB", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
     { id: 2, title: "Advanced Office Automation Guide", size: "4.5 MB", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
   ]);
@@ -366,7 +365,7 @@ const StudentDashboard = () => {
                     <Activity size={24} className="text-primary" /> Learning Progress
                   </h3>
                   <div className="space-y-6">
-                    {topics.slice(0, 3).map((topic, i) => {
+                    {topics.slice(0, 3).map((topic) => {
                       const topicLectures = lectures.filter(l => l.topicId === topic.id);
                       const completedInTopic = topicLectures.filter(l => user?.completedVideos?.includes(l.id)).length;
                       const progress = topicLectures.length ? (completedInTopic / topicLectures.length) * 100 : 0;

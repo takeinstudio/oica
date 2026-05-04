@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Mail, Phone, Briefcase, ChevronRight, Zap, ShieldAlert, CheckCircle, Target } from "lucide-react";
+import { Building2, Phone, Briefcase, Zap, ShieldAlert, CheckCircle, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";

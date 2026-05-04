@@ -5,17 +5,13 @@ import {
   Users, 
   Search, 
   MapPin, 
-  Clock, 
   Building2, 
-  ArrowRight,
   ShieldCheck,
   Target,
   Sparkles,
-  Award,
   Filter,
   Zap,
   TrendingUp,
-  ChevronRight,
   ExternalLink,
   MessageSquare,
   FileText
@@ -30,7 +26,7 @@ const Career = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isRecruiterVerified, setIsRecruiterVerified] = useState(false);
+  const [isRecruiterVerified] = useState(false);
 
   useEffect(() => {
     const allJobs = getStorageData(STORAGE_KEYS.JOBS);

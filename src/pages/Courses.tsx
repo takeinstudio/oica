@@ -6,7 +6,6 @@ import {
   MessageCircle, 
   BookOpen, 
   Clock, 
-  GraduationCap, 
   IndianRupee,
   Plus,
   X,

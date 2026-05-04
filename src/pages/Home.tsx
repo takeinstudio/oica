@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/shared/AnimatedSection";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import {
   Users, 
   ArrowRight, Star, Shield, Camera, Maximize2,
-  GraduationCap, Mail, Quote, Bell, MapPin,
+  GraduationCap, Mail, Quote,
   Calendar, Paperclip, BookOpen, Zap, MessageSquare, Award
 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
@@ -18,41 +18,7 @@ const stats = [
   { value: "ISO", label: "CERTIFIED" },
 ];
 
-const features = [
-  {
-    icon: Users,
-    title: "High Trade Interface",
-    desc: "Maintaining high trade and industry interface to keep students updated with market trends."
-  },
-  {
-    icon: Shield,
-    title: "Self-Confidence",
-    desc: "Strong focus on developing self-confidence, self-reliance, and reasoning abilities."
-  },
-  {
-    icon: Camera,
-    title: "AV Presentations",
-    desc: "Modern teaching methodology using Audio, Video, and Slide presentations for better learning."
-  },
-  {
-    icon: GraduationCap,
-    title: "1-to-1 Sessions",
-    desc: "Dedicated practical sessions with one-to-one computer access for every student."
-  },
-  {
-    icon: Star,
-    title: "Workshops",
-    desc: "Regular workshops and seminars to bridge the gap between academia and industry."
-  },
-];
 
-const popularCourses = [
-  { title: "Advanced Office", icon: "AO", color: "from-blue-600 to-cyan-500", desc: "Master MS Office suite with advanced features including Excel, Word and Powerpoint." },
-  { title: "Tally ERP.9", icon: "T9", color: "from-emerald-600 to-teal-500", desc: "Complete accounting with Tally ERP software including GST and inventory management." },
-  { title: "PGDCA", icon: "P", color: "from-violet-600 to-purple-500", desc: "Post Graduate Diploma in Computer Application - Advanced level software development." },
-  { title: "DFA", icon: "DFA", color: "from-rose-600 to-pink-500", desc: "Diploma in Financial Accounting - Foundation of modern accounting systems." },
-  { title: "Photoshop", icon: "Ps", color: "from-orange-600 to-amber-500", desc: "Professional graphic design and image editing with Adobe Photoshop." },
-];
 
 const achievers = [
   { 
@@ -185,12 +151,10 @@ const Home = () => {
 
 
   const galleryRef = useRef(null);
-  const { scrollYProgress: galleryScroll } = useScroll({
+  const { scrollYProgress: _galleryScroll } = useScroll({
     target: galleryRef,
     offset: ["start end", "end start"]
   });
-  const yGallery1 = useTransform(galleryScroll, [0, 1], ["10%", "-10%"]);
-  const yGallery2 = useTransform(galleryScroll, [0, 1], ["-10%", "10%"]);
 
   return (
     <div className="min-h-screen font-poppins antialiased" ref={containerRef}>

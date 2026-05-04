@@ -12,9 +12,6 @@ import {
   BarChart3,
   ShieldCheck,
   Video,
-  Activity,
-  ArrowUpRight,
-  Filter,
   Download,
   Upload,
   Briefcase,
@@ -22,25 +19,20 @@ import {
   MessageSquare,
   Star as StarIcon,
   PenTool,
-  Save,
   X,
   ChevronRight,
   Clock,
-  Play,
   Bell,
   MessageCircle,
-  AlertCircle,
-  Send
+  Phone,
+  MapPin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, PieChart, Pie, Cell 
-} from 'recharts';
+
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";
 
 const AdminDashboard = () => {
@@ -65,7 +57,6 @@ const AdminDashboard = () => {
   
   // Selection/Modal State
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
-  const [isDeleting, setIsDeleting] = useState<any>(null);
   const [isAddingStudent, setIsAddingStudent] = useState(false);
   const [newStudentData, setNewStudentData] = useState({ name: "", course: "DCA", rollNo: "", email: "", phone: "", branchId: "" });
 
@@ -208,16 +199,7 @@ const AdminDashboard = () => {
     toast.success(`Student ${newStudentData.name} enrolled to system!`);
   };
 
-  const analyticsData = [
-    { name: 'Jan', students: 400, revenue: 2400 },
-    { name: 'Feb', students: 300, revenue: 1398 },
-    { name: 'Mar', students: 200, revenue: 9800 },
-    { name: 'Apr', students: 278, revenue: 3908 },
-    { name: 'May', students: 189, revenue: 4800 },
-    { name: 'Jun', students: 239, revenue: 3800 },
-  ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   return (
     <div className="h-screen bg-[#F8FAFC] flex overflow-hidden font-poppins antialiased text-slate-800">

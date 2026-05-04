@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileText, CheckCircle, ArrowLeft, Upload, ShieldCheck, Zap, Sparkles, ChevronRight, Plus, X, Link as LinkIcon, Trophy } from "lucide-react";
+import { User, Phone, GraduationCap, Briefcase, FileText, CheckCircle, ArrowLeft, Upload, ShieldCheck, Zap, ChevronRight, Plus, X, Link as LinkIcon, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { STORAGE_KEYS, getStorageData, setStorageData } from "@/lib/storage";

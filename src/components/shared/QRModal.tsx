@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { X, Download, Shield, QrCode } from "lucide-react";
+import { X, Download, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface QRModalProps {

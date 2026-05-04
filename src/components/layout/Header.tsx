@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Menu, X, Phone, GraduationCap, 
-  ShieldCheck, Layout as LayoutIcon, MessageCircle, Mail
+  ShieldCheck, MessageCircle, Mail
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 

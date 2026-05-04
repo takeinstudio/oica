@@ -8,7 +8,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   Building2,
-  Star,
   ExternalLink,
   BookOpen,
   Bell,

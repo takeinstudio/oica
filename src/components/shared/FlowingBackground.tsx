@@ -1,5 +1,4 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import React from "react";
 
 const FlowingBackground = () => {
   const { scrollY } = useScroll();
