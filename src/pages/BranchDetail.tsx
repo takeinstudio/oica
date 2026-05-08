@@ -207,36 +207,6 @@ const BranchDetail = () => {
                  </div>
               </AnimatedSection>
 
-              {/* Dynamic Campus Gallery */}
-              <AnimatedSection>
-                 <div className="space-y-6">
-                    <div className="flex items-end justify-between">
-                       <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100">
-                             <ImageIcon size={20} />
-                          </div>
-                          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Gallery</h2>
-                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                       {dynamicGallery.slice(0, 6).map((src, i) => (
-                          <motion.div 
-                            key={i} 
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="rounded-xl overflow-hidden border border-white shadow-lg aspect-square relative group"
-                          >
-                             <img src={src} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="" />
-                             <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <ExternalLink size={18} className="text-white" />
-                             </div>
-                          </motion.div>
-                       ))}
-                    </div>
-                 </div>
-              </AnimatedSection>
 
               {/* Google Maps Location */}
               <AnimatedSection>
@@ -303,6 +273,44 @@ const BranchDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Dynamic Campus Gallery - Expanded Full Width */}
+      <section className="py-20 bg-slate-50/30">
+        <div className="container-max px-6 md:px-10">
+          <AnimatedSection>
+            <div className="space-y-12">
+              <div className="flex flex-col items-center justify-center gap-4 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 shadow-sm">
+                  <ImageIcon size={28} />
+                </div>
+                <h2 className="text-4xl font-bold text-slate-900 tracking-tight uppercase">Campus Gallery</h2>
+                <div className="w-20 h-1.5 bg-primary rounded-full" />
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {dynamicGallery.slice(0, 10).map((src, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl aspect-[4/5] relative group"
+                  >
+                    <img src={src} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-6">
+                      <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                        <ExternalLink size={18} />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

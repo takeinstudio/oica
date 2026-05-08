@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/shared/AnimatedSection";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Users, 
+  Users,
   ArrowRight, Star, Shield, Camera, Maximize2,
   GraduationCap, Mail, Quote,
   Calendar, Paperclip, BookOpen, Zap, MessageSquare, Award
@@ -14,27 +14,27 @@ import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 const stats = [
   { value: "13+", label: "YEARS EXP." },
   { value: "25000+", label: "STUDENTS" },
-  { value: "31+", label: "BRANCHES" },
+  { value: "29+", label: "BRANCHES" },
 ];
 
 
 
 const achievers = [
-  { 
-    name: "Rahul Mohanty", 
-    role: "Software Engineer", 
+  {
+    name: "Rahul Mohanty",
+    role: "Software Engineer",
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
     review: "The practical training at OICA helped me secure my dream job. The curriculum is perfectly aligned with industry needs."
   },
-  { 
-    name: "Priya Das", 
-    role: "Data Analyst", 
+  {
+    name: "Priya Das",
+    role: "Data Analyst",
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374",
     review: "OICA's advanced courses provided me with the analytical skills I needed to transition into data science smoothly."
   },
-  { 
-    name: "Sanjay Kumar", 
-    role: "UI Designer", 
+  {
+    name: "Sanjay Kumar",
+    role: "UI Designer",
     img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470",
     review: "The design tools and workshops offered here gave me the creative foundation and technical edge to excel."
   },
@@ -50,50 +50,50 @@ const homeGallery = [
 ];
 
 const methodology = [
-  { 
-    id: "01", 
-    title: "Theory", 
-    desc: "Foundational knowledge sessions", 
+  {
+    id: "01",
+    title: "Theory",
+    desc: "Foundational knowledge sessions",
     icon: BookOpen,
     color: "from-blue-600 to-cyan-500",
     shadow: "shadow-blue-500/20"
   },
-  { 
-    id: "02", 
-    title: "Practical", 
-    desc: "Hands-on lab exercises", 
+  {
+    id: "02",
+    title: "Practical",
+    desc: "Hands-on lab exercises",
     icon: Zap,
     color: "from-emerald-600 to-teal-500",
     shadow: "shadow-emerald-500/20"
   },
-  { 
-    id: "03", 
-    title: "Doubt", 
-    desc: "1-to-1 query resolution", 
+  {
+    id: "03",
+    title: "Doubt",
+    desc: "1-to-1 query resolution",
     icon: MessageSquare,
     color: "from-amber-500 to-orange-600",
     shadow: "shadow-amber-500/20"
   },
-  { 
-    id: "04", 
-    title: "Assign", 
-    desc: "Real-world project tasks", 
+  {
+    id: "04",
+    title: "Assign",
+    desc: "Real-world project tasks",
     icon: Paperclip,
     color: "from-rose-600 to-pink-500",
     shadow: "shadow-rose-500/20"
   },
-  { 
-    id: "05", 
-    title: "Mock test", 
-    desc: "Preparation for finals", 
+  {
+    id: "05",
+    title: "Mock test",
+    desc: "Preparation for finals",
     icon: Award,
     color: "from-violet-600 to-purple-500",
     shadow: "shadow-violet-500/20"
   },
-  { 
-    id: "06", 
-    title: "Final test", 
-    desc: "Certification exam", 
+  {
+    id: "06",
+    title: "Final test",
+    desc: "Certification exam",
     icon: Shield,
     color: "from-slate-700 to-slate-900",
     shadow: "shadow-slate-500/20"
@@ -109,14 +109,14 @@ const Home = () => {
   });
 
   // Dynamic notices from all branches
-  const [allNotices, setAllNotices] = useState<{title: string; date: string; branch: string; location: string}[]>([]);
+  const [allNotices, setAllNotices] = useState<{ title: string; date: string; branch: string; location: string }[]>([]);
   // Dynamic testimonials
   const [dynamicTestimonials, setDynamicTestimonials] = useState<any[]>([]);
   const [isNoticeHovered, setIsNoticeHovered] = useState(false);
 
   useEffect(() => {
     const branches = getStorageData(STORAGE_KEYS.BRANCHES);
-    const collected: {title: string; date: string; branch: string; location: string}[] = [];
+    const collected: { title: string; date: string; branch: string; location: string }[] = [];
     branches.forEach((b: any) => {
       if (b.notices && b.notices.length > 0) {
         b.notices.forEach((n: any) => {
@@ -124,7 +124,7 @@ const Home = () => {
         });
       }
     });
-    
+
     // Add fallback notices if none exist
     if (collected.length === 0) {
       collected.push(
@@ -147,8 +147,8 @@ const Home = () => {
 
   useEffect(() => {
     // Start playing both videos immediately; control visibility via opacity
-    video0Ref.current?.play().catch(() => {});
-    video1Ref.current?.play().catch(() => {});
+    video0Ref.current?.play().catch(() => { });
+    video1Ref.current?.play().catch(() => { });
 
     const interval = setInterval(() => {
       setActiveVideo(prev => {
@@ -157,7 +157,7 @@ const Home = () => {
         const nextRef = next === 0 ? video0Ref.current : video1Ref.current;
         if (nextRef) {
           nextRef.currentTime = 0;
-          nextRef.play().catch(() => {});
+          nextRef.play().catch(() => { });
         }
         return next;
       });
@@ -195,10 +195,10 @@ const Home = () => {
 
       if (scrollContainer && !isNoticeHovered) {
         scrollContainer.scrollTop += speed * delta;
-        
+
         // Loop back to start if reached half (assuming duplicated items)
         if (scrollContainer.scrollTop >= (scrollContainer.scrollHeight / 2)) {
-          scrollContainer.scrollTop = 0; 
+          scrollContainer.scrollTop = 0;
         }
       }
 
@@ -361,10 +361,10 @@ const Home = () => {
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-400/10 blur-[120px] rounded-full -mr-48 -mt-48" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-400/10 blur-[120px] rounded-full -ml-48 -mb-48" />
-        
+
         <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-12 gap-16 items-center">
-            
+
             {/* Left Column: About Us Content */}
             <div className="lg:col-span-7 space-y-8">
               <AnimatedSection>
@@ -424,7 +424,7 @@ const Home = () => {
                   </div>
 
                   {/* Scrolling Notice Container */}
-                  <div 
+                  <div
                     ref={noticeRef}
                     onMouseEnter={() => setIsNoticeHovered(true)}
                     onMouseLeave={() => setIsNoticeHovered(false)}
@@ -432,9 +432,9 @@ const Home = () => {
                   >
                     <div className="flex flex-col gap-3 pb-20">
                       {[...allNotices, ...allNotices].map((notice, i) => (
-                        <Link 
+                        <Link
                           to={`/branch/${notice.location}`}
-                          key={i} 
+                          key={i}
                           className="bg-white/60 backdrop-blur-md rounded-2xl p-5 flex gap-4 shadow-sm hover:shadow-xl hover:bg-white/80 transition-all duration-300 group/card cursor-pointer shrink-0 border border-white/40"
                         >
                           {/* Calendar Icon Square */}
@@ -450,7 +450,7 @@ const Home = () => {
                             <p className="text-slate-500 text-[11px] font-medium leading-relaxed line-clamp-2 mb-2">
                               {notice.title} from <span className="text-blue-600 font-bold">{notice.branch}</span> center.
                             </p>
-                            
+
                             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 text-[8px] font-black uppercase tracking-widest backdrop-blur-sm">
                               <Paperclip size={10} />
                               View Notice
@@ -462,7 +462,7 @@ const Home = () => {
 
                     {/* Scrollbar Decoration */}
                     <div className="absolute right-0 top-0 bottom-0 w-1 bg-white/10 rounded-full" />
-                    
+
                     {/* Gradient Fades — Updated for transparency */}
                     <div className="absolute top-0 inset-x-0 h-12 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none" />
                     <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-cyan-50/50 to-transparent pointer-events-none" />
@@ -482,7 +482,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl shadow-xl border border-slate-100 grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 overflow-hidden"
+            className="bg-white rounded-2xl shadow-xl border border-slate-100 grid grid-cols-2 md:grid-cols-3 divide-x divide-slate-100 overflow-hidden"
           >
             {stats.map((stat) => (
               <div key={stat.label} className="text-center py-6 px-4 hover:bg-slate-50 transition-colors group">
@@ -509,7 +509,7 @@ const Home = () => {
 
           <div className="space-y-12">
             {/* Row 1: Left to Right Train */}
-            <motion.div 
+            <motion.div
               style={{ x: trainXLeft }}
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
             >
@@ -534,7 +534,7 @@ const Home = () => {
             </motion.div>
 
             {/* Row 2: Right to Left Train */}
-            <motion.div 
+            <motion.div
               style={{ x: trainXRight }}
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
             >
@@ -585,7 +585,7 @@ const Home = () => {
           <div className="relative">
             {/* Desktop Path Line */}
             <div className="absolute top-[4.5rem] left-0 w-full h-[2px] bg-slate-100 hidden lg:block overflow-hidden">
-              <motion.div 
+              <motion.div
                 initial={{ width: "0%" }}
                 whileInView={{ width: "100%" }}
                 viewport={{ amount: 0.3 }}
@@ -602,15 +602,15 @@ const Home = () => {
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ margin: "-100px" }}
-                    transition={{ 
-                      duration: 0.8, 
-                      delay: idx * 1.2, 
-                      ease: [0.16, 1, 0.3, 1] 
+                    transition={{
+                      duration: 0.8,
+                      delay: idx * 1.2,
+                      ease: [0.16, 1, 0.3, 1]
                     }}
                     className="relative z-20"
                   >
                     {/* Number Badge with Fade-in Effect */}
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ amount: 0.5 }}
@@ -622,8 +622,8 @@ const Home = () => {
                       </span>
                     </motion.div>
 
-                    <motion.div 
-                      whileInView={{ 
+                    <motion.div
+                      whileInView={{
                         scale: [0.9, 1.05, 1],
                         opacity: [0, 1]
                       }}
@@ -641,18 +641,18 @@ const Home = () => {
                     </motion.div>
                   </motion.div>
 
-                    {idx < methodology.length - 1 && (
-                      <div className="absolute top-[4.2rem] left-[calc(50%+40px)] w-[calc(100%-80px)] hidden xl:block z-30">
-                       <motion.div
-                         initial={{ scaleX: 0, opacity: 0 }}
-                         whileInView={{ scaleX: 1, opacity: 1 }}
-                         viewport={{ amount: 0.5 }}
-                         transition={{ delay: idx * 1.2 + 0.6, duration: 0.6, ease: "easeInOut" }}
-                         className="origin-left flex items-center"
-                       >
-                         <div className="h-[2px] flex-grow bg-primary" />
-                         <ArrowRight className="text-primary w-4 h-4 -ml-2" />
-                       </motion.div>
+                  {idx < methodology.length - 1 && (
+                    <div className="absolute top-[4.2rem] left-[calc(50%+40px)] w-[calc(100%-80px)] hidden xl:block z-30">
+                      <motion.div
+                        initial={{ scaleX: 0, opacity: 0 }}
+                        whileInView={{ scaleX: 1, opacity: 1 }}
+                        viewport={{ amount: 0.5 }}
+                        transition={{ delay: idx * 1.2 + 0.6, duration: 0.6, ease: "easeInOut" }}
+                        className="origin-left flex items-center"
+                      >
+                        <div className="h-[2px] flex-grow bg-primary" />
+                        <ArrowRight className="text-primary w-4 h-4 -ml-2" />
+                      </motion.div>
                     </div>
                   )}
                 </div>
@@ -685,33 +685,33 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { 
-                title: "ADCA", 
-                code: "AO", 
+              {
+                title: "ADCA",
+                code: "AO",
                 full: "Advanced Office",
                 desc: "Master MS Office suite with advanced features including Excel, Word and Powerpoint.",
                 color: "from-blue-600 to-indigo-700",
                 meta: ["12 Months", "10th Pass"]
               },
-              { 
-                title: "Tally Prime", 
-                code: "T9", 
+              {
+                title: "Tally Prime",
+                code: "T9",
                 full: "Tally ERP.9",
                 desc: "Complete accounting with Tally ERP software including GST and inventory management.",
                 color: "from-emerald-500 to-teal-700",
                 meta: ["03 Months", "10th Pass"]
               },
-              { 
-                title: "PGDCA", 
-                code: "P", 
+              {
+                title: "PGDCA",
+                code: "P",
                 full: "PGDCA",
                 desc: "Post Graduate Diploma in Computer Application - Advanced level software development.",
                 color: "from-violet-600 to-purple-800",
                 meta: ["12 Months", "Graduation"]
               },
-              { 
-                title: "DFA", 
-                code: "DFA", 
+              {
+                title: "DFA",
+                code: "DFA",
                 full: "DFA",
                 desc: "Diploma in Financial Accounting - Foundation of modern accounting systems.",
                 color: "from-rose-500 to-orange-600",
@@ -727,7 +727,7 @@ const Home = () => {
                     <h3 className="font-heading font-black text-2xl text-slate-900 leading-tight group-hover:text-primary transition-colors">{course.full}</h3>
                     <p className="text-slate-500 text-xs font-medium leading-relaxed line-clamp-3">{course.desc}</p>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-8">
                     {course.meta.map(m => (
                       <span key={m} className="px-3 py-1 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400">
@@ -762,34 +762,34 @@ const Home = () => {
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 h-auto md:h-[600px]">
-             {/* Large Main Feature */}
-             <div className="md:col-span-2 md:row-span-2 rounded-[3rem] overflow-hidden group relative shadow-2xl">
-                <img src={homeGallery[0]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-10">
-                   <div className="text-white">
-                      <p className="text-[10px] font-black uppercase tracking-widest mb-2 text-primary">Lab Sessions</p>
-                      <h3 className="text-2xl font-black">Modern Computing Lab</h3>
-                   </div>
+            {/* Large Main Feature */}
+            <div className="md:col-span-2 md:row-span-2 rounded-[3rem] overflow-hidden group relative shadow-2xl">
+              <img src={homeGallery[0]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-10">
+                <div className="text-white">
+                  <p className="text-[10px] font-black uppercase tracking-widest mb-2 text-primary">Lab Sessions</p>
+                  <h3 className="text-2xl font-black">Modern Computing Lab</h3>
                 </div>
-             </div>
-             
-             {/* Top Right Box */}
-             <div className="md:col-span-2 rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[250px]">
-                <img src={homeGallery[1]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                      <Maximize2 size={20} />
-                   </div>
-                </div>
-             </div>
+              </div>
+            </div>
 
-             {/* Bottom Two Boxes */}
-             <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
-                <img src={homeGallery[2]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
-             </div>
-             <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
-                <img src={homeGallery[3]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
-             </div>
+            {/* Top Right Box */}
+            <div className="md:col-span-2 rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[250px]">
+              <img src={homeGallery[1]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                  <Maximize2 size={20} />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Two Boxes */}
+            <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
+              <img src={homeGallery[2]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+            </div>
+            <div className="rounded-[2.5rem] overflow-hidden group relative shadow-xl h-[326px]">
+              <img src={homeGallery[3]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Gallery" />
+            </div>
           </div>
 
           <AnimatedSection className="text-center">
@@ -837,7 +837,7 @@ const Home = () => {
                       <Quote size={16} fill="currentColor" />
                     </div>
                   </div>
-                  
+
                   {/* Star Rating */}
                   <div className="flex gap-1 mb-3">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -853,10 +853,10 @@ const Home = () => {
                   {/* Profile Section */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <img 
-                        src={a.img || a.studentPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} 
-                        alt={a.name || a.studentName} 
-                        className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" 
+                      <img
+                        src={a.img || a.studentPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`}
+                        alt={a.name || a.studentName}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                       />
                       <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
                     </div>

@@ -32,7 +32,13 @@ const Branches = () => {
         title="Institutional Network"
         subtitle="Our Presence"
         breadcrumb="Branches"
-        backgroundImage="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2070&auto=format&fit=crop"
+        backgroundImages={[
+          "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop"
+        ]}
         bottomPills={["Statewide Network", "ISO Certified", "Local Mentorship", "Verified Hubs"]}
       />
 

@@ -45,7 +45,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1542744094-3a31f272c49a?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "03 Months",
-      fee: "₹3,000",
       category: "Core",
       desc: "Certificate in Computer Applications - Basic computing fundamentals."
     },
@@ -55,7 +54,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "06 Months",
-      fee: "₹4,250",
       category: "Diploma",
       desc: "Diploma in Computer Application - Essential software skills."
     },
@@ -65,7 +63,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "12 Months",
-      fee: "₹8,000",
       category: "Diploma",
       desc: "Advance Diploma in Computer Application - Comprehensive IT training."
     },
@@ -75,7 +72,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000",
       eligibility: "Graduation",
       duration: "12 Months",
-      fee: "₹12,500",
       category: "Diploma",
       desc: "Post Graduate Diploma in Computer Application."
     },
@@ -85,7 +81,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "03 Months",
-      fee: "₹4,500",
       category: "Accounting",
       desc: "Advanced Accounting with Tally Prime & GST."
     },
@@ -95,7 +90,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "06 Months",
-      fee: "₹6,500",
       category: "IT",
       desc: "Responsive web development with HTML, CSS, and JS."
     },
@@ -105,7 +99,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "04 Months",
-      fee: "₹5,500",
       category: "Design",
       desc: "Visual communication with Photoshop & Illustrator."
     },
@@ -115,7 +108,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000",
       eligibility: "+2 Pass",
       duration: "08 Months",
-      fee: "₹15,000",
       category: "Programming",
       desc: "End-to-end enterprise application development."
     },
@@ -125,7 +117,6 @@ const Courses = () => {
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "03 Months",
-      fee: "₹6,000",
       category: "Programming",
       desc: "Python programming and data science basics."
     }
@@ -237,10 +228,6 @@ const Courses = () => {
                       <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Duration</span>
                       <span className="text-xs font-black text-slate-700">{course.duration}</span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-slate-200/50 pt-3">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Course Fee</span>
-                      <span className="text-sm font-black text-primary">{course.fee}</span>
-                    </div>
                   </div>
  
                   <p className="text-slate-500 text-xs font-medium leading-relaxed mb-6 line-clamp-2">
@@ -330,9 +317,6 @@ const Courses = () => {
                   <div className="space-y-3 mb-8">
                      <div className="flex items-center gap-3 text-sm text-slate-300 font-medium">
                         <Clock size={16} className="text-primary" /> {selectedCourseForEnroll.duration}
-                     </div>
-                     <div className="flex items-center gap-3 text-sm text-slate-300 font-medium">
-                        <IndianRupee size={16} className="text-primary" /> {selectedCourseForEnroll.fee}
                      </div>
                   </div>
                   <p className="text-sm text-slate-400 font-medium leading-relaxed hidden md:block">

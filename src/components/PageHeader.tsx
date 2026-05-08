@@ -9,6 +9,7 @@ interface PageHeaderProps {
   breadcrumb: string;
   bottomPills?: string[];
   backgroundImage?: string;
+  backgroundImages?: string[];
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -16,18 +17,31 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   subtitle,
   breadcrumb,
   bottomPills = ["Verified", "Government Recognized", "ISO Certified"],
-  backgroundImage = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop"
+  backgroundImage = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop",
+  backgroundImages = []
 }) => {
+  const [currentImgIndex, setCurrentImgIndex] = React.useState(0);
+  const displayImages = backgroundImages.length > 0 ? backgroundImages : [backgroundImage];
+
+  React.useEffect(() => {
+    if (displayImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImgIndex((prev) => (prev + 1) % displayImages.length);
+    }, 4000); // 4s display time
+    return () => clearInterval(interval);
+  }, [displayImages]);
+
   return (
     <div className="relative w-full h-[360px] md:h-[420px] pt-[80px] lg:pt-[120px] flex items-center justify-center overflow-hidden">
-      {/* Background with subtle zoom effect */}
+      {/* Background with slideshow effect */}
       <div className="absolute inset-0 z-0">
         <motion.div 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          key={currentImgIndex}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+          style={{ backgroundImage: `url(${displayImages[currentImgIndex]})` }}
         />
         {/* Solid overlay for sharp look */}
         <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[1px]" />

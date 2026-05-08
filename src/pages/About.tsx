@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const stats = [
-  { label: "Years of Excellence", value: "12+", icon: Star, color: "text-amber-500" },
-  { label: "Successful Students", value: "5000+", icon: GraduationCap, color: "text-blue-500" },
+  { label: "Years of Excellence", value: "13+", icon: Star, color: "text-amber-500" },
+  { label: "Successful Students", value: "25000+", icon: GraduationCap, color: "text-blue-500" },
   { label: "Active Branches", value: "31+", icon: Users, color: "text-emerald-500" },
   { label: "Certified Courses", value: "15+", icon: ShieldCheck, color: "text-purple-500" },
 ];
 
 const About = () => {
   return (
-    <div className="pb-24 bg-[#FDFBF7]">
+    <div className="pb-12 bg-[#FDFBF7]">
       <PageHeader 
         title="Institutional Legacy"
         subtitle="About OICA"
@@ -24,7 +24,7 @@ const About = () => {
       />
 
       {/* Origin Story Section Origin */}
-      <section className="section-padding overflow-hidden">
+      <section className="py-12 overflow-hidden">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection direction="left">
@@ -80,7 +80,7 @@ const About = () => {
       </section>
 
       {/* Impact Stats Stats Stats */}
-      <section className="py-24 bg-slate-900 relative overflow-hidden">
+      <section className="py-12 bg-slate-900 relative overflow-hidden">
          <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,#4c1d95_0%,transparent_50%)]" />
          </div>
@@ -106,7 +106,7 @@ const About = () => {
       </section>
 
       {/* Vision & Mission Mission Sections */}
-      <section className="section-padding">
+      <section className="py-12">
          <div className="section-container">
             <div className="grid lg:grid-cols-3 gap-8">
                <AnimatedSection delay={0.1} className="lg:col-span-2">
@@ -133,22 +133,23 @@ const About = () => {
                </AnimatedSection>
                
                <AnimatedSection delay={0.2}>
-                  <div className="h-full p-12 bg-primary text-white rounded-[3rem] shadow-2xl shadow-primary/20 relative overflow-hidden">
+                  <div className="h-full p-10 bg-primary text-white rounded-[3rem] shadow-2xl shadow-primary/20 relative overflow-hidden">
                      <div className="absolute bottom-0 right-0 p-12 opacity-10">
-                        <Heart size={100} fill="white" />
+                        <TrendingUp size={100} fill="white" />
                      </div>
-                     <h3 className="text-2xl font-heading font-black mb-6">Our Values</h3>
-                     <ul className="space-y-6">
+                     <h3 className="text-2xl font-heading font-black mb-6">Our Future Vision</h3>
+                     <p className="text-white/80 font-medium leading-relaxed mb-8">
+                        To become the most trusted digital skill provider in India, bridging the gap between academic education and industry requirements through innovation and absolute quality.
+                     </p>
+                     <ul className="space-y-4">
                         {[
-                          { title: "Integrity", desc: "Honesty in every student interaction." },
-                          { title: "Inclusion", desc: "Dedicated programs for weaker sections." },
-                          { title: "Innovation", desc: "Latest curriculum with modern labs." }
+                          "Empowering 100k+ Students",
+                          "Industry-First Partnerships",
+                          "Global Tech Standards"
                         ].map(val => (
-                          <li key={val.title} className="group cursor-default">
-                             <h4 className="font-black text-sm uppercase tracking-widest mb-1 text-white/90 group-hover:text-white transition-colors">
-                                {val.title}
-                             </h4>
-                             <p className="text-xs font-medium text-white/60">{val.desc}</p>
+                          <li key={val} className="flex items-center gap-3">
+                             <CheckCircle2 size={16} className="text-white/40" />
+                             <span className="text-xs font-black uppercase tracking-widest">{val}</span>
                           </li>
                         ))}
                      </ul>
@@ -159,7 +160,7 @@ const About = () => {
       </section>
 
       {/* Call to action CTA CTA */}
-      <section className="section-padding pt-0">
+      <section className="pb-12">
          <div className="section-container">
             <AnimatedSection>
                <div className="bg-slate-50 border border-slate-100 p-12 md:p-20 rounded-[4rem] text-center relative overflow-hidden">
@@ -168,7 +169,7 @@ const About = () => {
                     Ready to Build Your <span className="text-primary italic">Digital Future?</span>
                   </h2>
                   <p className="text-slate-500 font-medium mb-12 max-w-2xl mx-auto relative z-10">
-                     Join OICA's community of 5000+ graduates and start your journey towards a professional career in computer applications today.
+                     Join OICA's community of 25000+ graduates and start your journey towards a professional career in computer applications today.
                   </p>
                   <div className="flex flex-wrap justify-center gap-4 relative z-10">
                     <Link to="/courses">
