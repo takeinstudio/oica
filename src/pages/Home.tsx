@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/shared/AnimatedSection";
-import { motion, useScroll } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Users, 
   ArrowRight, Star, Shield, Camera, Maximize2,
@@ -12,10 +12,9 @@ import { useRef, useEffect, useState } from "react";
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
 
 const stats = [
-  { value: "12+", label: "YEARS EXP." },
-  { value: "5000+", label: "STUDENTS" },
-  { value: "20+", label: "BRANCHES" },
-  { value: "ISO", label: "CERTIFIED" },
+  { value: "13+", label: "YEARS EXP." },
+  { value: "25000+", label: "STUDENTS" },
+  { value: "31+", label: "BRANCHES" },
 ];
 
 
@@ -85,11 +84,19 @@ const methodology = [
   },
   { 
     id: "05", 
-    title: "Exam", 
-    desc: "Performance assessment", 
+    title: "Mock test", 
+    desc: "Preparation for finals", 
     icon: Award,
     color: "from-violet-600 to-purple-500",
     shadow: "shadow-violet-500/20"
+  },
+  { 
+    id: "06", 
+    title: "Final test", 
+    desc: "Certification exam", 
+    icon: Shield,
+    color: "from-slate-700 to-slate-900",
+    shadow: "shadow-slate-500/20"
   },
 ];
 
@@ -105,6 +112,7 @@ const Home = () => {
   const [allNotices, setAllNotices] = useState<{title: string; date: string; branch: string; location: string}[]>([]);
   // Dynamic testimonials
   const [dynamicTestimonials, setDynamicTestimonials] = useState<any[]>([]);
+  const [isNoticeHovered, setIsNoticeHovered] = useState(false);
 
   useEffect(() => {
     const branches = getStorageData(STORAGE_KEYS.BRANCHES);
@@ -116,6 +124,15 @@ const Home = () => {
         });
       }
     });
+    
+    // Add fallback notices if none exist
+    if (collected.length === 0) {
+      collected.push(
+        { title: "Welcome to OICA - New Batch Starting Soon", date: "May 10, 2026", branch: "Main Office", location: "bhubaneswar" },
+        { title: "ISO Certification Renewed for 2026", date: "May 05, 2026", branch: "All Branches", location: "cutack" },
+        { title: "Scholarship Test for ADCA Students", date: "May 15, 2026", branch: "Digital Lab", location: "rourkela" }
+      );
+    }
     setAllNotices(collected);
 
     // Fetch approved feedback
@@ -149,6 +166,49 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const premiumRef = useRef(null);
+  const { scrollYProgress: premiumScroll } = useScroll({
+    target: premiumRef,
+    offset: ["start end", "end start"]
+  });
+
+  const trainXLeft = useTransform(premiumScroll, [0, 1], [-150, 150]);
+  const trainXRight = useTransform(premiumScroll, [0, 1], [150, -150]);
+
+  const noticeRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const scrollContainer = noticeRef.current;
+    if (!scrollContainer || allNotices.length === 0) return;
+
+    let animationFrameId: number;
+    let lastTime: number = 0;
+    const speed = 35; // pixels per second
+
+    const animate = (time: number) => {
+      if (!lastTime) {
+        lastTime = time;
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      const delta = (time - lastTime) / 1000;
+      lastTime = time;
+
+      if (scrollContainer && !isNoticeHovered) {
+        scrollContainer.scrollTop += speed * delta;
+        
+        // Loop back to start if reached half (assuming duplicated items)
+        if (scrollContainer.scrollTop >= (scrollContainer.scrollHeight / 2)) {
+          scrollContainer.scrollTop = 0; 
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [allNotices, isNoticeHovered]);
+
 
   const galleryRef = useRef(null);
   const { scrollYProgress: _galleryScroll } = useScroll({
@@ -159,7 +219,7 @@ const Home = () => {
   return (
     <div className="min-h-screen font-poppins antialiased" ref={containerRef}>
       {/* Cinematic Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-[130px] lg:pt-[110px] overflow-hidden">
+      <section className="relative min-h-screen flex items-center pt-[110px] lg:pt-[90px] overflow-hidden">
         {/* Dual Video Background with Crossfade */}
         <div className="absolute inset-0 z-0 bg-slate-950">
           {/* Video 0 — hero1.mp4 */}
@@ -195,7 +255,7 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full px-6 lg:px-20 py-16">
+        <div className="relative z-10 w-full px-6 lg:px-20 pt-16 pb-12">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
 
             {/* Left Content Column */}
@@ -247,7 +307,7 @@ const Home = () => {
                 initial={{ opacity: 0, scale: 0.8, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: 0.4, type: "spring" }}
-                className="absolute top-0 right-10 w-60 p-5 bg-secondary rounded-3xl shadow-2xl shadow-secondary/20 z-20 group"
+                className="absolute top-0 right-10 w-60 p-5 bg-secondary/80 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl shadow-secondary/10 z-20 group"
               >
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-slate-900 mb-3 group-hover:scale-110 transition-transform">
                   <GraduationCap size={20} />
@@ -279,7 +339,7 @@ const Home = () => {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                className="absolute bottom-0 right-0 left-20 p-6 bg-rose-600 rounded-3xl shadow-2xl shadow-rose-900/40 z-10 overflow-hidden group"
+                className="absolute bottom-0 right-0 left-20 p-6 bg-rose-600/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-rose-900/40 z-10 overflow-hidden group"
               >
                 <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-125 transition-transform">
                   <Star size={80} />
@@ -297,7 +357,11 @@ const Home = () => {
       </section>
 
       {/* ABOUT & NOTICE COMBINED SECTION — High Density SaaS Layout */}
-      <section className="section-padding relative overflow-hidden">
+      <section className="py-8 relative overflow-hidden bg-slate-50/50">
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-400/10 blur-[120px] rounded-full -mr-48 -mt-48" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-400/10 blur-[120px] rounded-full -ml-48 -mb-48" />
+        
         <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-12 gap-16 items-center">
             
@@ -310,8 +374,8 @@ const Home = () => {
                 <h2 className="text-4xl md:text-5xl font-heading font-black text-slate-900 leading-tight tracking-tight">
                   ABOUT <span className="text-primary italic">OICA</span>
                 </h2>
-                <div className="space-y-6 text-slate-600 font-medium leading-relaxed max-w-2xl">
-                  <p className="text-lg text-slate-700 font-bold">
+                <div className="space-y-6 text-slate-700 font-medium leading-relaxed max-w-2xl bg-white/40 backdrop-blur-md p-8 rounded-[2rem] border border-white/60 shadow-xl shadow-slate-200/20">
+                  <p className="text-lg text-slate-800 font-extrabold">
                     Odisha Institute of Computer Application is a premier educational institution registered under Govt. of Odisha and ISO 9001:2008 certified.
                   </p>
                   <p>
@@ -339,14 +403,16 @@ const Home = () => {
             {/* Right Column: Compact Notice Board */}
             <div className="lg:col-span-5">
               <AnimatedSection direction="right">
-                <div className="relative rounded-[2rem] overflow-hidden bg-gradient-to-br from-blue-700 to-cyan-500 shadow-2xl p-6 md:p-8">
+                <div className="relative rounded-[2rem] overflow-hidden bg-blue-600/15 backdrop-blur-2xl border border-white/40 shadow-2xl p-6 md:p-8">
+                  {/* Glass Background Overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 pointer-events-none" />
                   {/* Header Section */}
                   <div className="relative z-10 flex items-center justify-between gap-4 mb-6">
                     <div className="space-y-1">
-                      <h3 className="text-xl font-heading font-black text-white tracking-tight">
+                      <h3 className="text-xl font-heading font-black text-slate-900 tracking-tight">
                         Latest Announcements
                       </h3>
-                      <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/15 border border-white/20 text-white text-[8px] font-black uppercase tracking-widest backdrop-blur-md">
+                      <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/20 border border-white/20 text-blue-700 text-[8px] font-black uppercase tracking-widest backdrop-blur-md">
                         Updates
                       </div>
                     </div>
@@ -358,16 +424,21 @@ const Home = () => {
                   </div>
 
                   {/* Scrolling Notice Container */}
-                  <div className="relative z-10 h-[380px] overflow-hidden group">
-                    <div className="flex flex-col gap-3 animate-vertical-marquee group-hover:pause">
+                  <div 
+                    ref={noticeRef}
+                    onMouseEnter={() => setIsNoticeHovered(true)}
+                    onMouseLeave={() => setIsNoticeHovered(false)}
+                    className="relative z-10 h-[380px] overflow-y-auto transition-all group/scroll"
+                  >
+                    <div className="flex flex-col gap-3 pb-20">
                       {[...allNotices, ...allNotices].map((notice, i) => (
                         <Link 
                           to={`/branch/${notice.location}`}
                           key={i} 
-                          className="bg-white rounded-2xl p-5 flex gap-4 shadow-md shadow-blue-900/10 hover:shadow-xl transition-all duration-300 group/card cursor-pointer shrink-0 border border-white/50"
+                          className="bg-white/60 backdrop-blur-md rounded-2xl p-5 flex gap-4 shadow-sm hover:shadow-xl hover:bg-white/80 transition-all duration-300 group/card cursor-pointer shrink-0 border border-white/40"
                         >
                           {/* Calendar Icon Square */}
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-lg shrink-0 group-hover/card:scale-110 transition-transform">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/80 to-violet-600/80 backdrop-blur-md flex items-center justify-center text-white shadow-lg shrink-0 group-hover/card:scale-110 transition-transform">
                             <Calendar size={18} />
                           </div>
 
@@ -380,7 +451,7 @@ const Home = () => {
                               {notice.title} from <span className="text-blue-600 font-bold">{notice.branch}</span> center.
                             </p>
                             
-                            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-widest">
+                            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 text-[8px] font-black uppercase tracking-widest backdrop-blur-sm">
                               <Paperclip size={10} />
                               View Notice
                             </div>
@@ -392,9 +463,9 @@ const Home = () => {
                     {/* Scrollbar Decoration */}
                     <div className="absolute right-0 top-0 bottom-0 w-1 bg-white/10 rounded-full" />
                     
-                    {/* Gradient Fades */}
-                    <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-blue-700/20 to-transparent pointer-events-none" />
-                    <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-cyan-500/20 to-transparent pointer-events-none" />
+                    {/* Gradient Fades — Updated for transparency */}
+                    <div className="absolute top-0 inset-x-0 h-12 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-cyan-50/50 to-transparent pointer-events-none" />
                   </div>
                 </div>
               </AnimatedSection>
@@ -405,7 +476,7 @@ const Home = () => {
       </section>
 
       {/* Stats Bar — Moved below About Us */}
-      <section className="relative z-40 -mt-10 mb-12">
+      <section className="relative z-40 -mt-8 mb-8">
         <div className="section-container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -423,57 +494,77 @@ const Home = () => {
         </div>
       </section>
 
-      <style>{`
-        @keyframes vertical-marquee {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
-        }
-        .animate-vertical-marquee {
-          animation: vertical-marquee ${Math.max(allNotices.length * 3, 20)}s linear infinite;
-        }
-        .pause {
-          animation-play-state: paused !important;
-        }
-      `}</style>
-
-      {/* Director's Message Section */}
-      <section className="section-padding bg-slate-50 relative overflow-hidden">
+      {/* Premium Features Section — Parallax 'Train' Animations */}
+      <section ref={premiumRef} className="py-12 bg-slate-50 relative overflow-hidden">
         <div className="section-container relative z-10">
-          <div className="max-w-2xl mx-auto">
-            <AnimatedSection className="text-center mb-10">
-              <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Leadership</span>
-              <h2 className="text-3xl font-heading font-black mb-4">Director's Message</h2>
-              <div className="w-12 h-1 bg-primary mx-auto rounded-full" />
-            </AnimatedSection>
+          <AnimatedSection className="text-center mb-10">
+            <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Premium Features</span>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 leading-tight mb-4">
+              Why Choose <span className="text-primary italic">OICA?</span>
+            </h2>
+            <p className="text-slate-500 font-medium max-w-xl mx-auto">
+              We don't just teach software; we build professional careers with a focus on industry standards and individual growth.
+            </p>
+          </AnimatedSection>
 
-            <AnimatedSection delay={0.2} className="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100 relative">
-              <div className="absolute top-6 left-6 text-primary shadow-sm h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center -rotate-12">
-                <GraduationCap size={20} />
-              </div>
-              <div className="space-y-4 text-slate-600 leading-relaxed italic font-medium text-sm">
-                <p>
-                  "It is my pleasure and pride to welcome you to the Odisha Institute of Computers Application (OICA). Our prime aim is to make technology easy to learn."
-                </p>
-                <p>
-                  "The major objective of establishing OICA is to completely develop professionals with a positive attitude. We guide students at every step."
-                </p>
-                <div className="pt-4 mt-4 border-t border-slate-50 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-100" />
-                  <div>
-                    <p className="not-italic font-black text-slate-900 text-xs uppercase tracking-widest">Director OICA</p>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase">Success Awaits</p>
+          <div className="space-y-12">
+            {/* Row 1: Left to Right Train */}
+            <motion.div 
+              style={{ x: trainXLeft }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            >
+              {[
+                { title: "Advanced Curriculum", desc: "Our syllabus is curated by industry veterans, covering everything from fundamental logic to advanced enterprise frameworks.", icon: Zap },
+                { title: "Industry Experts", desc: "Learn from professionals who bring real-world challenges into the classroom, ensuring you are day-one ready.", icon: Users },
+                { title: "Global Certification", desc: "Gain certifications recognized worldwide, opening doors to international career opportunities in top-tier tech firms.", icon: Award },
+              ].map((box, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white/70 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/60 shadow-xl shadow-slate-200/20 hover:shadow-2xl transition-all group min-h-[220px]"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <box.icon className="w-6 h-6 text-primary" />
                   </div>
+                  <h3 className="text-xl font-black text-slate-900 mb-3">{box.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                    {box.desc}
+                  </p>
                 </div>
-              </div>
-            </AnimatedSection>
+              ))}
+            </motion.div>
+
+            {/* Row 2: Right to Left Train */}
+            <motion.div 
+              style={{ x: trainXRight }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            >
+              {[
+                { title: "Placement Support", desc: "Dedicated career cell providing resume building, interview prep, and direct connections to our 500+ hiring partners.", icon: Star },
+                { title: "Modern Infrastructure", desc: "State-of-the-art labs equipped with high-performance systems and the latest software suites for hands-on learning.", icon: Shield },
+                { title: "Flexible Batches", desc: "Whether you're a student or a working professional, our flexible timing ensures your learning never takes a backseat.", icon: GraduationCap },
+              ].map((box, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white/70 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/60 shadow-xl shadow-slate-200/20 hover:shadow-2xl transition-all group min-h-[220px]"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <box.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900 mb-3">{box.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                    {box.desc}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Training Methodology — Success Mantra Section */}
-      <section className="relative py-32 bg-white overflow-hidden">
+      <section className="relative py-8 bg-white overflow-hidden">
         <div className="section-container relative z-10">
-          <div className="text-center mb-24">
+          <div className="text-center mb-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -503,7 +594,7 @@ const Home = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-20 lg:gap-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-y-20 lg:gap-8 relative z-10">
               {methodology.map((step, idx) => (
                 <div key={step.id} className="relative group">
                   {/* Item Content */}
@@ -550,9 +641,8 @@ const Home = () => {
                     </motion.div>
                   </motion.div>
 
-                  {/* Traveling Arrow Logic */}
-                  {idx < methodology.length - 1 && (
-                    <div className="absolute top-[4.2rem] left-[calc(50%+40px)] w-[calc(100%-80px)] hidden lg:block z-30">
+                    {idx < methodology.length - 1 && (
+                      <div className="absolute top-[4.2rem] left-[calc(50%+40px)] w-[calc(100%-80px)] hidden xl:block z-30">
                        <motion.div
                          initial={{ scaleX: 0, opacity: 0 }}
                          whileInView={{ scaleX: 1, opacity: 1 }}
@@ -572,73 +662,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Interactive Quick Features Grid Grid */}
-      <section className="section-padding relative overflow-hidden">
-        <div className="section-container relative z-10">
-          <div className="grid lg:grid-cols-12 gap-6">
-             {/* Left Text Box */}
-             <div className="lg:col-span-4 self-center space-y-6">
-                <AnimatedSection>
-                  <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Premium Features</span>
-                  <h2 className="text-4xl font-heading font-black text-slate-900 leading-tight">
-                    Why Choose <br /> <span className="text-primary italic text-5xl">OICA?</span>
-                  </h2>
-                  <p className="text-slate-500 font-medium leading-relaxed">
-                    We don't just teach software; we build professional careers with a focus on industry standards and individual growth.
-                  </p>
-                </AnimatedSection>
-             </div>
 
-             {/* Bento Grid Features */}
-             <div className="lg:col-span-8 grid md:grid-cols-2 gap-6">
-                {[
-                  { 
-                    icon: Shield, 
-                    title: "High Trade Interface", 
-                    desc: "Maintaining high trade and industry interface to keep students updated with market trends.",
-                    size: "md:col-span-1"
-                  },
-                  { 
-                    icon: Star, 
-                    title: "Self-Confidence", 
-                    desc: "Strong focus on developing self-confidence, self-reliance, and reasoning abilities.",
-                    size: "md:col-span-1"
-                  },
-                  { 
-                    icon: Camera, 
-                    title: "AV Presentations", 
-                    desc: "Modern teaching methodology using Audio, Video, and Slide presentations for better learning.",
-                    size: "md:col-span-1"
-                  },
-                  { 
-                    icon: Users, 
-                    title: "1-to-1 Sessions", 
-                    desc: "Dedicated practical sessions with one-to-one computer access for every student.",
-                    size: "md:col-span-1"
-                  }
-                ].map((f, i) => (
-                  <AnimatedSection key={f.title} delay={i * 0.1} className={f.size}>
-                    <div className="h-full bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
-                       <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12 group-hover:rotate-0 transition-transform">
-                          <f.icon size={80} />
-                       </div>
-                       <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
-                          <f.icon className="w-6 h-6 text-primary group-hover:text-white transition-colors" />
-                       </div>
-                       <h3 className="font-heading font-black text-xl mb-4 text-slate-900 leading-tight">{f.title}</h3>
-                       <p className="text-slate-500 text-sm leading-relaxed font-medium">{f.desc}</p>
-                    </div>
-                  </AnimatedSection>
-                ))}
-             </div>
-          </div>
-        </div>
-      </section>
 
       {/* Our Programs — Premium Interactive Cards */}
-      <section className="section-padding bg-white">
+      <section className="py-8 bg-white">
         <div className="section-container">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
             <AnimatedSection>
               <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Our Programs</span>
               <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 tracking-tight">
@@ -721,9 +750,9 @@ const Home = () => {
       </section>
 
       {/* Campus Life — Premium Bento Gallery */}
-      <section ref={galleryRef} className="section-padding relative overflow-hidden">
+      <section ref={galleryRef} className="pt-12 pb-6 relative overflow-hidden">
         <div className="section-container relative z-10">
-          <AnimatedSection className="text-center mb-16">
+          <AnimatedSection className="text-center mb-10">
             <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 flex items-center justify-center gap-2">
               <Camera className="w-4 h-4" /> Visual Journey
             </span>
@@ -776,9 +805,9 @@ const Home = () => {
 
 
       {/* Success Stories — Refined Design from Reference */}
-      <section id="testimonials" className="py-32 relative overflow-hidden">
+      <section id="testimonials" className="pt-6 pb-12 relative overflow-hidden">
         <div className="section-container relative z-10">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12">
             <div className="inline-flex items-center px-6 py-2 rounded-full bg-purple-100/80 backdrop-blur-md border border-purple-200 text-purple-700 text-[10px] font-black uppercase tracking-widest mb-6 shadow-sm">
               Voices of Excellence
             </div>

@@ -25,7 +25,7 @@ const AnimatedSection = ({ children, className = "", delay = 0, direction = "up"
     <motion.div
       initial={{ opacity: 0, y: getInitialY(), x: getInitialX() }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: false, margin: "-60px" }}
       transition={{ duration: 0.6, delay, ease: "easeOut" }}
       className={className}
     >
