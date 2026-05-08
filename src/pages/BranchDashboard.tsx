@@ -285,14 +285,31 @@ const BranchDashboard = () => {
                      <div className="flex-1 space-y-3">
                         <h2 className="text-xl font-bold text-slate-900">Branch Biography</h2>
                         <p className="text-slate-500 font-medium text-xs leading-relaxed max-w-xl">
-                           Update your branch autobiography for the public portal.
+                           Update your branch autobiography and virtual tour video for the public portal.
                         </p>
-                        <textarea 
-                          disabled={!isEditing}
-                          className={`w-full min-h-[140px] rounded-lg border border-slate-200 p-4 text-slate-700 font-medium text-xs leading-relaxed transition-all focus:ring-0 outline-none ${isEditing ? 'bg-white border-primary shadow-2xl shadow-primary/5' : 'bg-slate-50/50 opacity-80 cursor-not-allowed'}`}
-                          value={branch.about}
-                          onChange={(e) => setBranch({...branch, about: e.target.value})}
-                        />
+                        <div className="space-y-4">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">About Branch</label>
+                              <textarea 
+                                disabled={!isEditing}
+                                className={`w-full min-h-[140px] rounded-lg border border-slate-200 p-4 text-slate-700 font-medium text-xs leading-relaxed transition-all focus:ring-0 outline-none ${isEditing ? 'bg-white border-primary shadow-2xl shadow-primary/5' : 'bg-slate-50/50 opacity-80 cursor-not-allowed'}`}
+                                value={branch.about}
+                                onChange={(e) => setBranch({...branch, about: e.target.value})}
+                              />
+                           </div>
+                           
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Location Video URL (Virtual Tour)</label>
+                              <Input 
+                                disabled={!isEditing}
+                                placeholder="https://example.com/location-video.mp4"
+                                value={branch.locationVideo || ""}
+                                onChange={(e) => setBranch({...branch, locationVideo: e.target.value})}
+                                className={`h-11 rounded-lg border border-slate-200 text-xs font-medium transition-all ${isEditing ? 'bg-white border-primary' : 'bg-slate-50/50 cursor-not-allowed'}`}
+                              />
+                              <p className="text-[8px] text-slate-400 font-medium italic">* Provide a direct video link (mp4) to show a "moving car" or campus tour video next to the map.</p>
+                           </div>
+                        </div>
                         <div className="flex gap-3">
                            {isEditing ? (
                               <Button onClick={handleSaveBranchInfo} className="h-10 rounded-lg bg-emerald-600 text-white font-bold text-[9px] tracking-widest uppercase px-6 shadow-xl">

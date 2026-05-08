@@ -13,7 +13,10 @@ import {
   Bell,
   Crown,
   Globe,
-  Award
+  Award,
+  Facebook,
+  Instagram,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage";
@@ -74,7 +77,7 @@ const BranchDetail = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] font-poppins">
       {/* Hero Hero Hero Section */}
-      <section className="relative h-[50vh] flex items-end overflow-hidden">
+      <section className="relative h-[35vh] md:h-[40vh] flex items-end overflow-hidden">
         <motion.div 
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -86,9 +89,29 @@ const BranchDetail = () => {
         </motion.div>
         
         <div className="container-max px-6 md:px-10 pb-12 relative z-10 text-white w-full">
-           <Link to="/branches" className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-6 group transition-all text-[9px] font-bold uppercase tracking-widest">
-              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> BACK TO NETWORK
-           </Link>
+           <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-8 text-center">
+              <Link to="/branches" className="inline-flex items-center gap-2 text-white/50 hover:text-white group transition-all text-[10px] font-bold uppercase tracking-widest order-2 md:order-1">
+                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> BACK TO NETWORK
+              </Link>
+              
+              <div className="flex items-center gap-5 order-1 md:order-2">
+                 <Link to="/contact">
+                    <button className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-white text-[11px] font-black uppercase tracking-[0.15em] border border-white/20 transition-all shadow-xl group">
+                       <MessageSquare size={18} className="text-primary group-hover:scale-110 transition-transform" /> Contact Office
+                    </button>
+                 </Link>
+                 <a href="#" target="_blank" rel="noopener noreferrer">
+                    <button className="w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-[#1877F2] backdrop-blur-md rounded-2xl text-white border border-white/20 transition-all group shadow-xl">
+                       <Facebook size={20} className="group-hover:scale-110 transition-transform" />
+                    </button>
+                 </a>
+                 <a href="#" target="_blank" rel="noopener noreferrer">
+                    <button className="w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] backdrop-blur-md rounded-2xl text-white border border-white/20 transition-all group shadow-xl">
+                       <Instagram size={20} className="group-hover:scale-110 transition-transform" />
+                    </button>
+                 </a>
+              </div>
+           </div>
            <div className="max-w-4xl">
               <div className="flex flex-wrap items-center gap-2.5 mb-5">
                  <span className="px-4 py-1.5 bg-primary/20 backdrop-blur-md text-white text-[9px] font-bold rounded-lg uppercase tracking-widest border border-white/10">
@@ -151,12 +174,12 @@ const BranchDetail = () => {
       )}
 
       {/* Main Main Content Section Section */}
-      <section className="py-24">
+      <section className="pt-12 md:pt-16 pb-0">
         <div className="container-max px-6 md:px-10">
-          <div className="grid lg:grid-cols-12 gap-16">
+          <div className="grid lg:grid-cols-12 gap-8 md:gap-12">
             
             {/* Left Content Column */}
-            <div className="lg:col-span-8 space-y-24">
+            <div className="lg:col-span-8 space-y-12 md:space-y-16">
               {/* About Branch */}
               <AnimatedSection>
                  <div className="space-y-6">
@@ -208,29 +231,32 @@ const BranchDetail = () => {
               </AnimatedSection>
 
 
-              {/* Google Maps Location */}
+              {/* Google Maps Location & Video */}
               <AnimatedSection>
                  <div className="space-y-6">
                     <div className="flex items-center gap-3">
                        <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 border border-emerald-100">
                           <MapPin size={20} />
                        </div>
-                       <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Location</h2>
+                       <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Location & Directions</h2>
                     </div>
-                    <div className="w-full h-[300px] rounded-xl overflow-hidden shadow-lg border border-slate-200/60">
-                       <iframe 
-                          src={`https://maps.google.com/maps?q=${encodeURIComponent(branchData.name + " " + branchData.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                          width="100%" 
-                          height="100%" 
-                          style={{ border: 0 }} 
-                       />
-                    </div>
+                     <div className="w-full h-[350px] rounded-xl overflow-hidden shadow-lg border border-slate-200/60 relative group">
+                        <iframe 
+                           src={`https://maps.google.com/maps?q=${encodeURIComponent(branchData.name + " " + branchData.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                           width="100%" 
+                           height="100%" 
+                           style={{ border: 0 }} 
+                        />
+                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm border border-slate-200">
+                           Center Map
+                        </div>
+                     </div>
                  </div>
               </AnimatedSection>
             </div>
 
             {/* Right Action Column */}
-            <div className="lg:col-span-4 space-y-10">
+            <div className="lg:col-span-4 space-y-6 md:space-y-8">
                {/* Notice Board */}
                 <AnimatedSection direction="right">
                    <div className="bg-white p-8 rounded-xl border border-slate-200/60 shadow-sm space-y-6 relative overflow-hidden">
@@ -268,6 +294,42 @@ const BranchDetail = () => {
                      </div>
                   </div>
                </AnimatedSection>
+
+               {/* Virtual Tour Tour Tour Sidebar Sidebar */}
+               <AnimatedSection direction="right" delay={0.3}>
+                  <div className="w-full h-[280px] rounded-xl overflow-hidden shadow-2xl border border-slate-200/60 relative group bg-slate-100">
+                     {branchData.locationVideo ? (
+                        <video 
+                           src={branchData.locationVideo} 
+                           className="w-full h-full object-cover"
+                           autoPlay 
+                           loop 
+                           muted 
+                           playsInline
+                        />
+                     ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-slate-800 to-slate-900 text-white">
+                           <motion.div
+                              animate={{ x: [0, 20, 0] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                              className="mb-4"
+                           >
+                              <Building2 size={40} className="text-primary/40" />
+                           </motion.div>
+                           <h4 className="text-xs font-bold mb-2 uppercase tracking-widest">Virtual Location Tour</h4>
+                           <p className="text-[9px] text-white/50 font-medium leading-relaxed max-w-[160px]">
+                              See the campus surroundings and landmarks.
+                           </p>
+                           <div className="absolute bottom-4 right-4 bg-primary/20 backdrop-blur-md px-3 py-1.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border border-primary/20">
+                              LIVE FEED
+                           </div>
+                        </div>
+                     )}
+                     <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest text-white shadow-sm">
+                        Campus Surroundings
+                     </div>
+                  </div>
+               </AnimatedSection>
             </div>
 
           </div>
@@ -275,10 +337,10 @@ const BranchDetail = () => {
       </section>
 
       {/* Dynamic Campus Gallery - Expanded Full Width */}
-      <section className="py-20 bg-slate-50/30">
+      <section className="pt-2 pb-6 md:pb-8 bg-slate-50/30">
         <div className="container-max px-6 md:px-10">
           <AnimatedSection>
-            <div className="space-y-12">
+            <div className="space-y-8 md:space-y-10">
               <div className="flex flex-col items-center justify-center gap-4 text-center">
                 <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 shadow-sm">
                   <ImageIcon size={28} />

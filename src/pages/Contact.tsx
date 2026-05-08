@@ -103,19 +103,34 @@ const Contact = () => {
                   <form className="space-y-8" onSubmit={(e: any) => {
                     e.preventDefault();
                     const formData = new FormData(e.target);
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const subject = formData.get('subject');
+                    const message = formData.get('message');
+
                     const newMessage = {
                       id: Date.now(),
-                      name: formData.get('name'),
-                      email: formData.get('email'),
-                      subject: formData.get('subject'),
-                      message: formData.get('message'),
+                      name,
+                      email,
+                      subject,
+                      message,
                       status: 'new',
                       date: new Date().toISOString()
                     };
+                    
+                    // 1. Save to Admin Inbox (Local Storage)
                     const existing = getStorageData(STORAGE_KEYS.CONTACT_MESSAGES);
                     setStorageData(STORAGE_KEYS.CONTACT_MESSAGES, [newMessage, ...existing]);
-                    toast.success("Message sent successfully!");
-                    e.target.reset();
+                    
+                    toast.success("Message recorded. Opening Gmail...");
+
+                    // 2. Open Gmail with Pre-filled Details
+                    const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=oicainstitute@gmail.com&su=${encodeURIComponent(String(subject))}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+                    
+                    setTimeout(() => {
+                       window.open(mailtoLink, '_blank');
+                       e.target.reset();
+                    }, 1000);
                   }}>
                     <div className="grid md:grid-cols-2 gap-8">
                        <div className="space-y-2">

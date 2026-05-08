@@ -382,7 +382,7 @@ const Home = () => {
                     Our journey is defined by a unique training methodology that balances rigorous theoretical knowledge with extensive 1-to-1 practical sessions. We believe that discipline and quality education are the backbones of any successful career.
                   </p>
                   <p>
-                    With over 31+ branches across Odisha, we are committed to making technology easy to learn and accessible to every student, ensuring they are industry-ready from day one.
+                    With over 29+ branches across Odisha, we are committed to making technology easy to learn and accessible to every student, ensuring they are industry-ready from day one.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 pt-4">
