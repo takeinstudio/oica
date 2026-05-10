@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Header from './layout/Header';
 import Footer from './Footer';
 import { motion } from 'framer-motion';
@@ -10,11 +11,15 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const isCareerContent = (pathname === '/career' && searchParams.has('type')) || pathname.startsWith('/career/');
+
   return (
     <div className="min-h-screen flex flex-col font-sans overflow-x-hidden relative">
       <FlowingBackground />
       <FloatingActions />
-      <Header />
+      {!isCareerContent && <Header />}
       <motion.main
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -23,7 +28,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         {children}
       </motion.main>
-      <Footer />
+      {!isCareerContent && <Footer />}
     </div>
   );
 };

@@ -11,12 +11,12 @@ const Preloader = () => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(() => setLoading(false), 400); // Wait a bit after reaching 100%
+          setTimeout(() => setLoading(false), 200); // Wait a bit after reaching 100%
           return 100;
         }
-        return prev + 2;
+        return prev + 5;
       });
-    }, 30);
+    }, 20);
 
     return () => clearInterval(timer);
   }, []);

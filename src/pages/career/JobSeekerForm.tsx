@@ -91,7 +91,7 @@ const JobSeekerForm = () => {
 
   return (
     <>
-      <div className="flex-grow bg-slate-50/50 pt-32 pb-20 px-6 font-poppins antialiased">
+      <div className="flex-grow bg-slate-50/50 pt-10 pb-20 px-6 font-poppins antialiased">
         <div className="max-w-5xl mx-auto">
           {/* Professional Compact Header */}
           <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-6">
