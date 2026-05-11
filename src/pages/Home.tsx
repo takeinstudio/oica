@@ -21,23 +21,35 @@ const stats = [
 
 const achievers = [
   {
-    name: "Rahul Mohanty",
-    role: "Software Engineer",
+    name: "Government Job Achiever",
+    role: "Student Review",
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374",
-    review: "The practical training at OICA helped me secure my dream job. The curriculum is perfectly aligned with industry needs."
+    review: "After successfully completing my computer course at OICA I got a government job. The practical training, guidance, and support helped me achieve my goal."
   },
   {
-    name: "Priya Das",
-    role: "Data Analyst",
+    name: "Private Sector Professional",
+    role: "Student Review",
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1374",
-    review: "OICA's advanced courses provided me with the analytical skills I needed to transition into data science smoothly."
+    review: "OICA provided excellent computer education and career support, which helped me secure a private sector job after completing my course."
   },
   {
-    name: "Sanjay Kumar",
-    role: "UI Designer",
+    name: "Career Success Story",
+    role: "Student Review",
     img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470",
-    review: "The design tools and workshops offered here gave me the creative foundation and technical edge to excel."
+    review: "I am grateful to OICA for helping me achieve success in my career. After completing the course, I received opportunities in both government and private sectors."
   },
+  {
+    name: "Skill & Confidence",
+    role: "Student Review",
+    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1374",
+    review: "OICA helped me improve my technical skills and confidence. The training methods are easy to understand and very effective."
+  },
+  {
+    name: "Modern Computing Lab",
+    role: "Student Review",
+    img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1374",
+    review: "I gained excellent computer knowledge and practical experience from OICA. The teachers are very supportive and friendly."
+  }
 ];
 
 const homeGallery = [
@@ -376,13 +388,13 @@ const Home = () => {
                 </h2>
                 <div className="space-y-6 text-slate-700 font-medium leading-relaxed max-w-2xl bg-white/40 backdrop-blur-md p-8 rounded-[2rem] border border-white/60 shadow-xl shadow-slate-200/20">
                   <p className="text-lg text-slate-800 font-extrabold">
-                    Odisha Institute of Computer Application is a premier educational institution registered under Govt. of Odisha and ISO 9001:2008 certified.
+                    We are a leading computer institute (Odisha Institute of Computer Application) dedicated to providing quality education and practical training in the field of information technology.
                   </p>
                   <p>
-                    Our journey is defined by a unique training methodology that balances rigorous theoretical knowledge with extensive 1-to-1 practical sessions. We believe that discipline and quality education are the backbones of any successful career.
+                    Our mission is to empower students with the latest computer skills and knowledge required for today’s competitive world. With experienced faculty, modern infrastructure, and industry-oriented courses, we ensure effective and hands-on learning.
                   </p>
                   <p>
-                    With over 29+ branches across Odisha, we are committed to making technology easy to learn and accessible to every student, ensuring they are industry-ready from day one.
+                    We focus on building confidence, enhancing skills, and preparing students for successful careers in IT and related fields across our 29+ branches in Odisha.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 pt-4">
@@ -514,9 +526,9 @@ const Home = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
             >
               {[
-                { title: "Advanced Curriculum", desc: "Our syllabus is curated by industry veterans, covering everything from fundamental logic to advanced enterprise frameworks.", icon: Zap },
-                { title: "Industry Experts", desc: "Learn from professionals who bring real-world challenges into the classroom, ensuring you are day-one ready.", icon: Users },
-                { title: "Global Certification", desc: "Gain certifications recognized worldwide, opening doors to international career opportunities in top-tier tech firms.", icon: Award },
+                { title: "Practical Learning", desc: "We focus on practical learning with real-world applications. Our experienced instructors provide step-by-step guidance.", icon: Zap },
+                { title: "Updated Courses", desc: "We offer updated courses like Advanced Excel, Tally Prime with GST, and Spoken English to match current industry needs.", icon: BookOpen },
+                { title: "Affordable Fees", desc: "Our flexible timings and affordable fees make learning accessible for everyone, ensuring quality education for all.", icon: Award },
               ].map((box, idx) => (
                 <div
                   key={idx}
@@ -539,9 +551,9 @@ const Home = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
             >
               {[
-                { title: "Placement Support", desc: "Dedicated career cell providing resume building, interview prep, and direct connections to our 500+ hiring partners.", icon: Star },
-                { title: "Modern Infrastructure", desc: "State-of-the-art labs equipped with high-performance systems and the latest software suites for hands-on learning.", icon: Shield },
-                { title: "Flexible Batches", desc: "Whether you're a student or a working professional, our flexible timing ensures your learning never takes a backseat.", icon: GraduationCap },
+                { title: "Job-Ready Skills", desc: "With regular practice sessions and career-oriented training, we help you build confidence and job-ready skills.", icon: Star },
+                { title: "Expert Guidance", desc: "Our experienced faculty ensures every student understands clearly through personalized attention and mentorship.", icon: Users },
+                { title: "Modern Infrastructure", desc: "State-of-the-art computer labs with the latest technology to provide a superior learning environment.", icon: Shield },
               ].map((box, idx) => (
                 <div
                   key={idx}

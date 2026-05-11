@@ -5,8 +5,7 @@ import {
   Download, 
   MessageCircle, 
   BookOpen, 
-  Clock, 
-  IndianRupee,
+  Clock,
   Plus,
   X,
   CheckCircle2

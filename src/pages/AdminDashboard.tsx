@@ -23,7 +23,6 @@ import {
    ChevronRight,
    Clock,
    Bell,
-   MessageCircle,
    Phone,
    MapPin
 } from "lucide-react";

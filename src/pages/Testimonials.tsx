@@ -5,46 +5,60 @@ import { Quote, Star } from 'lucide-react';
 const Testimonials = () => {
   const reviews = [
     {
-      name: "Rajesh Kumar",
-      role: "DCA Student",
-      text: "The practical training at OICA is exceptional. I gained confidence in computer basics within just 2 months. The faculty is very supportive.",
+      name: "Government Job Achiever",
+      role: "Student Review",
+      text: "After successfully completing my computer course at Odisha Institute of Computer Application (OICA) I got a government job. The practical training, guidance, and support from the faculty helped me achieve my goal. I am very thankful to the institute for building my confidence and skills.",
       rating: 5,
       avatar: "https://api.uifaces.co/our-content/donated/x4_8_M4B.jpg"
     },
     {
-      name: "Sneha Mohanty",
-      role: "PGDCA Graduate",
-      text: "Joining OICA was the best decision for my career. The certification helped me land a great job in an IT firm right after graduation.",
+      name: "Private Sector Professional",
+      role: "Student Review",
+      text: "Odisha Institute of Computer Application (OICA) provided excellent computer education and career support, which helped me secure a private sector job after completing my course. The teachers were very supportive and always motivated us to improve our skills.",
       rating: 5,
       avatar: "https://api.uifaces.co/our-content/donated/vIAwZsq0.jpg"
     },
     {
-      name: "Amit Behera",
-      role: "Tally ERP Student",
-      text: "As an accounting student, the Tally ERP course was a game changer. The real-world project work made learning very effective.",
-      rating: 4,
-      avatar: "https://api.uifaces.co/our-content/donated/n_Fp5l-f.jpg"
-    },
-    {
-      name: "Priyanka Jena",
-      role: "Web Design Student",
-      text: "I loved the creative environment at OICA. The project-based learning model helped me build a strong portfolio and find freelancing gigs.",
-      rating: 5,
-      avatar: "https://api.uifaces.co/our-content/donated/rSAnwaS8.jpg"
-    },
-    {
-      name: "Sanjay Biswal",
-      role: "DTP Specialist",
-      text: "The DTP course at OICA covered everything from basics to advanced design principles. Highly recommend it for aspiring graphic designers.",
+      name: "Career Success Story",
+      role: "Student Review",
+      text: "I am grateful to the Odisha Institute of Computer Application (OICA) for helping me achieve success in my career. After completing the computer course, I received opportunities in both government and private sectors. The training and placement support were truly valuable.",
       rating: 5,
       avatar: "https://api.uifaces.co/our-content/donated/n_Fp5l-f.jpg"
     },
     {
-      name: "Anjali Sahu",
-      role: "Data Entry Student",
-      text: "OICA's focus on accuracy and speed training in the Data Entry course was exactly what I needed. Very professional environment.",
-      rating: 4,
+      name: "Practical Experience",
+      role: "Student Review",
+      text: "I gained excellent computer knowledge and practical experience from Odisha Institute of Computer Application. The teachers are very supportive and friendly.",
+      rating: 5,
       avatar: "https://api.uifaces.co/our-content/donated/rSAnwaS8.jpg"
+    },
+    {
+      name: "Skill Enhancement",
+      role: "Student Review",
+      text: "Odisha Institute of computer Application helped me improve my technical skills and confidence. The training methods are easy to understand and very effective.",
+      rating: 4,
+      avatar: "https://api.uifaces.co/our-content/donated/n_Fp5l-f.jpg"
+    },
+    {
+      name: "Job Preparation",
+      role: "Student Review",
+      text: "I am thankful to the institute (OICA) for providing quality education and career guidance. It really helped me prepare for job opportunities.",
+      rating: 5,
+      avatar: "https://api.uifaces.co/our-content/donated/rSAnwaS8.jpg"
+    },
+    {
+      name: "Positive Environment",
+      role: "Student Review",
+      text: "The faculty members are experienced and always ready to help students. I enjoyed learning in such a positive environment from Odisha Institute of computer Application.",
+      rating: 5,
+      avatar: "https://api.uifaces.co/our-content/donated/x4_8_M4B.jpg"
+    },
+    {
+      name: "Modern Courses",
+      role: "Student Review",
+      text: "One of the best computer institutes (OICA) for learning modern computer courses. The practical classes and placement support are very helpful.",
+      rating: 5,
+      avatar: "https://api.uifaces.co/our-content/donated/vIAwZsq0.jpg"
     }
   ];
 
