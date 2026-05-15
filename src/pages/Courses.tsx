@@ -331,17 +331,17 @@ const Courses = () => {
 
       <div className="container-max pt-24">
         {/* Controls Bar */}
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 mb-16 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-           {/* Categories */}
-           <div className="flex flex-wrap justify-center gap-2">
+        <div className="flex flex-row items-center gap-6 mb-16 bg-white p-4 pl-8 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-5xl mx-auto">
+           {/* Categories - Horizontal Scroll */}
+           <div className="flex-1 flex overflow-x-auto scrollbar-none gap-2 py-1 pr-6 border-r border-slate-100 group/scroll">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className={`px-5 py-2.5 rounded-2xl text-[10px] uppercase tracking-widest font-black transition-all ${
+                className={`px-6 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-black transition-all whitespace-nowrap ${
                   filter === cat 
-                    ? 'bg-primary text-white shadow-xl shadow-primary/30 scale-105' 
-                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105' 
+                    : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
                 }`}
               >
                 {cat}
@@ -349,16 +349,16 @@ const Courses = () => {
             ))}
           </div>
 
-          {/* Search */}
-          <div className="relative w-full max-w-md">
+          {/* Search - Compact Premium */}
+          <div className="relative w-64 mr-2">
             <input 
               type="text" 
               placeholder="Search course title..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 pl-14 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold placeholder:text-slate-400"
+              className="w-full bg-slate-50/80 border border-transparent rounded-full py-3 px-5 pl-12 text-xs focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all font-bold placeholder:text-slate-400"
             />
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
           </div>
         </div>
 
