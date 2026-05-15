@@ -100,12 +100,36 @@ const ApplyNow = () => {
                     <label className="text-[10px] font-black ml-1 uppercase tracking-widest text-slate-400">Select Course</label>
                     <div className="relative">
                       <select name="course" className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer font-bold text-xs">
-                        <option>PGDCA</option>
-                        <option>Tally ERP</option>
-                        <option>Web Design</option>
+                        <option>Smart Computer Course for Kids</option>
+                        <option>Coding for Kids</option>
+                        <option>Scratch Programming for Kids</option>
+                        <option>MS Office with AI</option>
+                        <option>Adv. Office with AI</option>
+                        <option>Office Automation</option>
+                        <option>DTP</option>
+                        <option>C, C++</option>
+                        <option>Core/Adv. Java</option>
+                        <option>PYTHON</option>
+                        <option>Animation</option>
+                        <option>Multimedia</option>
+                        <option>Auto-Cad</option>
+                        <option>Video Editing</option>
+                        <option>Adobe Photoshop</option>
+                        <option>Canva Designing</option>
+                        <option>Adobe Illustrator</option>
+                        <option>Cyber Security</option>
+                        <option>DATA SCIENCE</option>
+                        <option>'O' LEVEL</option>
+                        <option>AI & Machine Learning</option>
+                        <option>UI/UX Design</option>
+                        <option>Tally Prime with GST</option>
                         <option>Digital Marketing</option>
-                        <option>Advanced Office</option>
-                        <option>DCA</option>
+                        <option>Full Stack Development with Gen AI</option>
+                        <option>UI/UX FRONTEND</option>
+                        <option>MERN STACK</option>
+                        <option>LIVE PROJECT</option>
+                        <option>Internship Program</option>
+                        <option>Industrial Training</option>
                       </select>
                       <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                     </div>

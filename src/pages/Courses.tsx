@@ -39,89 +39,279 @@ const Courses = () => {
 
   const courseList = [
     { 
-      title: "CCA", 
+      title: "Smart Computer Course for Kids", 
       courseNo: 1,
-      image: "https://images.unsplash.com/photo-1542744094-3a31f272c49a?q=80&w=1000",
-      eligibility: "10th Pass",
+      image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1000",
+      eligibility: "Class 5th - 10th",
       duration: "03 Months",
-      category: "Core",
-      desc: "Certificate in Computer Applications - Basic computing fundamentals."
+      category: "Kids",
+      desc: "Fundamental computer skills tailored for young minds."
     },
     { 
-      title: "DCA", 
+      title: "Coding for Kids", 
       courseNo: 2,
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000",
-      eligibility: "10th Pass",
-      duration: "06 Months",
-      category: "Diploma",
-      desc: "Diploma in Computer Application - Essential software skills."
+      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000",
+      eligibility: "Class 5th - 10th",
+      duration: "03 Months",
+      category: "Kids",
+      desc: "Introduction to logical thinking and basic programming."
     },
     { 
-      title: "ADCA", 
+      title: "Scratch Programming for Kids", 
       courseNo: 3,
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000",
-      eligibility: "10th Pass",
-      duration: "12 Months",
-      category: "Diploma",
-      desc: "Advance Diploma in Computer Application - Comprehensive IT training."
+      image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?q=80&w=1000",
+      eligibility: "Class 5th - 10th",
+      duration: "03 Months",
+      category: "Kids",
+      desc: "Visual block-based programming to create stories and games."
     },
     { 
-      title: "PGDCA", 
+      title: "MS Office with AI", 
       courseNo: 4,
-      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000",
-      eligibility: "Graduation",
-      duration: "12 Months",
-      category: "Diploma",
-      desc: "Post Graduate Diploma in Computer Application."
-    },
-    { 
-      title: "Tally Prime", 
-      courseNo: 5,
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000",
+      image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "03 Months",
-      category: "Accounting",
-      desc: "Advanced Accounting with Tally Prime & GST."
+      category: "Office",
+      desc: "Master MS Office suite enhanced with AI productivity tools."
     },
     { 
-      title: "Web Design", 
-      courseNo: 6,
-      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000",
+      title: "Adv. Office with AI", 
+      courseNo: 5,
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "06 Months",
-      category: "IT",
-      desc: "Responsive web development with HTML, CSS, and JS."
+      category: "Office",
+      desc: "Advanced office automation with AI integration for professionals."
     },
     { 
-      title: "Graphic Design", 
+      title: "Office Automation", 
+      courseNo: 6,
+      image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "03 Months",
+      category: "Office",
+      desc: "Streamlining office tasks with modern software and tools."
+    },
+    { 
+      title: "DTP", 
       courseNo: 7,
-      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000",
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "04 Months",
       category: "Design",
-      desc: "Visual communication with Photoshop & Illustrator."
+      desc: "Desk Top Publishing - Master page layout and design."
     },
     { 
-      title: "Java Fullstack", 
+      title: "C, C++", 
       courseNo: 8,
-      image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000",
-      eligibility: "+2 Pass",
-      duration: "08 Months",
+      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "04 Months",
       category: "Programming",
-      desc: "End-to-end enterprise application development."
+      desc: "Foundational programming languages for systems and apps."
     },
     { 
-      title: "Python Pro", 
+      title: "Core/Adv. Java", 
       courseNo: 9,
+      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000",
+      eligibility: "+2 Pass",
+      duration: "06 Months",
+      category: "Programming",
+      desc: "Comprehensive Java training from basics to advanced frameworks."
+    },
+    { 
+      title: "PYTHON", 
+      courseNo: 10,
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000",
       eligibility: "10th Pass",
       duration: "03 Months",
       category: "Programming",
-      desc: "Python programming and data science basics."
+      desc: "Versatile programming for web, data, and automation."
+    },
+    { 
+      title: "Animation", 
+      courseNo: 11,
+      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "12 Months",
+      category: "Multimedia",
+      desc: "2D/3D Animation techniques and character design."
+    },
+    { 
+      title: "Multimedia", 
+      courseNo: 12,
+      image: "https://images.unsplash.com/photo-1536240478700-b86d24627a7b?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "12 Months",
+      category: "Multimedia",
+      desc: "A combination of text, audio, images, and video creation."
+    },
+    { 
+      title: "Auto-Cad", 
+      courseNo: 13,
+      image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1000",
+      eligibility: "ITI/Diploma",
+      duration: "03 Months",
+      category: "Design",
+      desc: "Computer-aided design for engineering and architecture."
+    },
+    { 
+      title: "Video Editing", 
+      courseNo: 14,
+      image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "03 Months",
+      category: "Multimedia",
+      desc: "Professional video post-production and storytelling."
+    },
+    { 
+      title: "Adobe Photoshop", 
+      courseNo: 15,
+      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "02 Months",
+      category: "Design",
+      desc: "Industry standard for image editing and digital art."
+    },
+    { 
+      title: "Canva Designing", 
+      courseNo: 16,
+      image: "https://images.unsplash.com/photo-1626785774625-ddc7c8241520?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "01 Month",
+      category: "Design",
+      desc: "Quick and creative graphic design for social media."
+    },
+    { 
+      title: "Adobe Illustrator", 
+      courseNo: 17,
+      image: "https://images.unsplash.com/photo-1626785774813-207010f3c582?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "02 Months",
+      category: "Design",
+      desc: "Vector graphics for logos, icons, and illustrations."
+    },
+    { 
+      title: "Cyber Security", 
+      courseNo: 18,
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000",
+      eligibility: "+2 Pass",
+      duration: "06 Months",
+      category: "IT",
+      desc: "Protecting systems and networks from digital attacks."
+    },
+    { 
+      title: "DATA SCIENCE", 
+      courseNo: 19,
+      image: "https://images.unsplash.com/photo-1551288049-bbda48658a7d?q=80&w=1000",
+      eligibility: "Graduation",
+      duration: "06 Months",
+      category: "IT",
+      desc: "Analyzing complex data to find insights and trends."
+    },
+    { 
+      title: "'O' LEVEL", 
+      courseNo: 20,
+      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "12 Months",
+      category: "Diploma",
+      desc: "Standard certification for foundational IT knowledge."
+    },
+    { 
+      title: "AI & Machine Learning", 
+      courseNo: 21,
+      image: "https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=1000",
+      eligibility: "Graduation",
+      duration: "06 Months",
+      category: "IT",
+      desc: "Building intelligent systems with predictive models."
+    },
+    { 
+      title: "UI/UX Design", 
+      courseNo: 22,
+      image: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "04 Months",
+      category: "Design",
+      desc: "Designing user-friendly interfaces and experiences."
+    },
+    { 
+      title: "Tally Prime with GST", 
+      courseNo: 23,
+      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "03 Months",
+      category: "Accounting",
+      desc: "Computerized accounting with Tally Prime and GST."
+    },
+    { 
+      title: "Digital Marketing", 
+      courseNo: 24,
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "04 Months",
+      category: "Marketing",
+      desc: "Strategic online promotion and brand building."
+    },
+    { 
+      title: "Full Stack Development with Gen AI", 
+      courseNo: 25,
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000",
+      eligibility: "+2 Pass",
+      duration: "12 Months",
+      category: "Programming",
+      desc: "End-to-end development with Generative AI tools."
+    },
+    { 
+      title: "UI/UX FRONTEND", 
+      courseNo: 26,
+      image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000",
+      eligibility: "10th Pass",
+      duration: "06 Months",
+      category: "Programming",
+      desc: "Building responsive and interactive web interfaces."
+    },
+    { 
+      title: "MERN STACK", 
+      courseNo: 27,
+      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000",
+      eligibility: "+2 Pass",
+      duration: "08 Months",
+      category: "Programming",
+      desc: "Full stack development with MongoDB, Express, React, Node."
+    },
+    { 
+      title: "LIVE PROJECT", 
+      courseNo: 28,
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000",
+      eligibility: "Final Year Students",
+      duration: "02 Months",
+      category: "Experience",
+      desc: "Hands-on experience with real-world project development."
+    },
+    { 
+      title: "Internship Program", 
+      courseNo: 29,
+      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1000",
+      eligibility: "Graduates",
+      duration: "03-06 Months",
+      category: "Experience",
+      desc: "Professional work environment training and mentorship."
+    },
+    { 
+      title: "Industrial Training", 
+      courseNo: 30,
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000",
+      eligibility: "Engineering/Diploma",
+      duration: "01-03 Months",
+      category: "Experience",
+      desc: "Industry-specific training for technical students."
     }
   ];
 
-  const categories = ['All', 'Diploma', 'Core', 'Accounting', 'Design', 'IT', 'Programming'];
+  const categories = ['All', 'Kids', 'Diploma', 'Accounting', 'Design', 'IT', 'Programming', 'Multimedia', 'Marketing', 'Experience', 'Office'];
+
 
   const filteredCourses = courseList.filter(c => {
     const matchesFilter = filter === 'All' || c.category === filter;

@@ -698,36 +698,36 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                title: "ADCA",
-                code: "AO",
-                full: "Advanced Office",
-                desc: "Master MS Office suite with advanced features including Excel, Word and Powerpoint.",
+                title: "Kids Special",
+                code: "K",
+                full: "Smart Computer Course for Kids",
+                desc: "Fundamental computer skills tailored for young minds (Class 5th - 10th).",
+                color: "from-amber-400 to-orange-500",
+                meta: ["03 Months", "5th-10th"]
+              },
+              {
+                title: "AI & ML",
+                code: "AI",
+                full: "AI & Machine Learning",
+                desc: "Building intelligent systems with predictive models and modern AI tools.",
                 color: "from-blue-600 to-indigo-700",
-                meta: ["12 Months", "10th Pass"]
+                meta: ["06 Months", "Graduation"]
               },
               {
-                title: "Tally Prime",
-                code: "T9",
-                full: "Tally ERP.9",
-                desc: "Complete accounting with Tally ERP software including GST and inventory management.",
+                title: "Full Stack",
+                code: "MERN",
+                full: "MERN STACK",
+                desc: "Complete web development with MongoDB, Express, React, and Node.js.",
                 color: "from-emerald-500 to-teal-700",
-                meta: ["03 Months", "10th Pass"]
+                meta: ["08 Months", "+2 Pass"]
               },
               {
-                title: "PGDCA",
-                code: "P",
-                full: "PGDCA",
-                desc: "Post Graduate Diploma in Computer Application - Advanced level software development.",
-                color: "from-violet-600 to-purple-800",
-                meta: ["12 Months", "Graduation"]
-              },
-              {
-                title: "DFA",
-                code: "DFA",
-                full: "DFA",
-                desc: "Diploma in Financial Accounting - Foundation of modern accounting systems.",
+                title: "Accounting",
+                code: "T+",
+                full: "Tally Prime with GST",
+                desc: "Advanced computerized accounting with real-world business scenarios.",
                 color: "from-rose-500 to-orange-600",
-                meta: ["06 Months", "10th Pass"]
+                meta: ["03 Months", "10th Pass"]
               }
             ].map((course, i) => (
               <AnimatedSection key={course.title} delay={i * 0.1}>
