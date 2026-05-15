@@ -51,8 +51,11 @@ export const initStorage = () => {
   const existingUsers = getStorageData(STORAGE_KEYS.USERS);
   let existingBranches = getStorageData(STORAGE_KEYS.BRANCHES);
 
-  // Migration: if any branch lacks the notices field, force re-init
-  const needsMigration = existingBranches.length > 0 && existingBranches.some((b: any) => !b.notices);
+  // Migration: if any branch lacks the notices field or if we need to force re-init for new videos
+  const needsMigration = existingBranches.length > 0 && (
+    existingBranches.some((b: any) => !b.notices) || 
+    (existingBranches.some((b: any) => b.location === "Angul" && !b.locationVideo))
+  );
   if (needsMigration) {
     localStorage.removeItem(STORAGE_KEYS.BRANCHES);
     existingBranches = [];
@@ -82,10 +85,21 @@ export const initStorage = () => {
     };
     defaultUsers.push(branchUser);
     
+    const getVideoForDistrict = (dist: string) => {
+      if (dist === "Angul") return "/mapvideos/angul.mp4";
+      if (dist === "Ganjam") return "/mapvideos/KHALIKOTE.mp4";
+      if (dist === "Sundargarh") return "/mapvideos/sundargarh.mp4";
+      if (dist === "Bhubaneswar HQ") return "/mapvideos/bhubaneswar oica map (Stitched Clip).mp4";
+      if (dist === "Khordha") return "/mapvideos/Gothapatna.mp4";
+      if (dist === "Jajpur") return "/mapvideos/haripur.mp4";
+      return undefined;
+    };
+
     defaultBranches.push({
       id: branchId,
       name: dist === "Bhubaneswar HQ" ? "OICA Main Branch / Head Quarter" : `OICA ${dist} Branch`,
       location: dist,
+      locationVideo: getVideoForDistrict(dist),
       manager: `${dist} District Head`,
       phone: `+91 ${9000000000 + idx}`,
       email: `${dist.toLowerCase().replace(/\s/g, '')}@oica.edu.in`,

@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Media & Archives
+*.rar
+*.zip
+*.7z
+
