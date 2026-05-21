@@ -309,6 +309,12 @@ const Home = () => {
                     <Mail className="ml-3 w-4 h-4" />
                   </Button>
                 </Link>
+                <a href="https://exam.oica.co.in/" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" className="rounded-xl px-8 py-6 font-black text-xs tracking-widest uppercase h-auto backdrop-blur-md bg-white border border-white text-primary hover:bg-white/90 transition-all hover:scale-105 active:scale-95 shadow-xl">
+                    Take Exam
+                    <ArrowRight className="ml-3 w-4 h-4" />
+                  </Button>
+                </a>
               </div>
             </motion.div>
 
