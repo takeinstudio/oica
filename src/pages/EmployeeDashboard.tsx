@@ -3,7 +3,7 @@ import {
   Briefcase, CheckCircle2, Clock, CalendarDays, 
   LayoutDashboard, LogOut, ChevronRight, FileText, X
 } from "lucide-react";
-import { Button } from "@/components/ui/input"; // wait, Button from components/ui/button
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
