@@ -14,6 +14,7 @@ import Login from './pages/Login';
 import StudentDashboard from './pages/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import BranchDashboard from './pages/BranchDashboard';
+import EmployeeDashboard from './pages/EmployeeDashboard';
 import BranchDetail from './pages/BranchDetail';
 import Preloader from './components/Preloader';
 import Gallery from './pages/Gallery';
@@ -54,6 +55,7 @@ const App = () => {
         <Route path="/dashboard/student" element={<StudentDashboard />} />
         <Route path="/dashboard/admin" element={<AdminDashboard />} />
         <Route path="/dashboard/branch" element={<BranchDashboard />} />
+        <Route path="/dashboard/employee" element={<EmployeeDashboard />} />
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/branch/:id" element={<BranchDetail />} />
         <Route path="/certificate-view/:id" element={<CertificateView />} />

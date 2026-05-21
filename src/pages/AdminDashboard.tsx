@@ -52,6 +52,9 @@ const AdminDashboard = () => {
    const [contactMessages, setContactMessages] = useState<any[]>([]);
    const [franchiseEnquiries, setFranchiseEnquiries] = useState<any[]>([]);
    const [enrollments, setEnrollments] = useState<any[]>([]);
+   const [employees, setEmployees] = useState<any[]>([]);
+   const [employeeTasks, setEmployeeTasks] = useState<any[]>([]);
+
    // UI State
    const [showNotifications, setShowNotifications] = useState(false);
 
@@ -59,6 +62,10 @@ const AdminDashboard = () => {
    const [selectedStudent, setSelectedStudent] = useState<any>(null);
    const [isAddingStudent, setIsAddingStudent] = useState(false);
    const [newStudentData, setNewStudentData] = useState({ name: "", course: "DCA", rollNo: "", email: "", phone: "", branchId: "" });
+
+   // Task Modal State
+   const [isAssigningTask, setIsAssigningTask] = useState(false);
+   const [newTaskData, setNewTaskData] = useState({ title: "", description: "", employeeIds: [] as number[], dueDate: "" });
 
    useEffect(() => {
       const session = localStorage.getItem(STORAGE_KEYS.SESSION);
@@ -68,7 +75,10 @@ const AdminDashboard = () => {
       }
 
       // Load Data
-      setStudents(getStorageData(STORAGE_KEYS.USERS).filter((u: any) => u.role === 'student'));
+      const allUsers = getStorageData(STORAGE_KEYS.USERS);
+      setStudents(allUsers.filter((u: any) => u.role === 'student'));
+      setEmployees(allUsers.filter((u: any) => u.role === 'employee'));
+      
       setBranches(getStorageData(STORAGE_KEYS.BRANCHES));
       setGallery(getStorageData(STORAGE_KEYS.GALLERY));
       setCareerJobs(getStorageData(STORAGE_KEYS.JOBS));
@@ -81,6 +91,7 @@ const AdminDashboard = () => {
       setContactMessages(getStorageData(STORAGE_KEYS.CONTACT_MESSAGES));
       setFranchiseEnquiries(getStorageData(STORAGE_KEYS.FRANCHISE_ENQUIRIES));
       setEnrollments(getStorageData(STORAGE_KEYS.ENROLLMENTS));
+      setEmployeeTasks(getStorageData(STORAGE_KEYS.TASKS));
    }, [navigate]);
 
    const notifications = [
@@ -230,7 +241,29 @@ const AdminDashboard = () => {
       toast.success(`Student ${status === 'active' ? 'activated' : 'deactivated'} successfully`);
    };
 
+   const handleAssignTask = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!newTaskData.title || !newTaskData.description || newTaskData.employeeIds.length === 0 || !newTaskData.dueDate) {
+         toast.error("Please fill all required fields and select at least one employee.");
+         return;
+      }
 
+      const newTask = {
+         id: `task_${Date.now()}`,
+         ...newTaskData,
+         status: "pending",
+         assignedAt: new Date().toISOString()
+      };
+
+      const allTasks = getStorageData(STORAGE_KEYS.TASKS);
+      const updatedTasks = [newTask, ...allTasks];
+      setStorageData(STORAGE_KEYS.TASKS, updatedTasks);
+      setEmployeeTasks(updatedTasks);
+      
+      setIsAssigningTask(false);
+      setNewTaskData({ title: "", description: "", employeeIds: [], dueDate: "" });
+      toast.success(`Task assigned to ${newTaskData.employeeIds.length} employee(s)`);
+   };
 
    return (
       <div className="h-screen bg-[#F8FAFC] flex overflow-hidden font-poppins antialiased text-slate-800">
@@ -250,6 +283,7 @@ const AdminDashboard = () => {
             <nav className="flex-1 px-4 space-y-1.5 mt-8 overflow-y-auto">
                {[
                   { id: "overview", label: "Dashboard", Icon: LayoutDashboard },
+                  { id: "employees", label: "Employee Works", Icon: Briefcase },
                   { id: "students", label: "All Students", Icon: Users },
                   { id: "topics", label: "Lecture Management", Icon: Video },
                   { id: "tests", label: "Mock Test", Icon: PenTool },
@@ -417,6 +451,96 @@ const AdminDashboard = () => {
                                  <p className="text-2xl font-bold text-slate-900 tracking-tight">{stat.value}</p>
                               </div>
                            ))}
+                        </div>
+                     </motion.div>
+                  )}
+
+                  {activeTab === "employees" && (
+                     <motion.div key="employees" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                        <div className="flex items-center justify-between mb-6">
+                           <div>
+                              <h2 className="text-xl font-bold text-slate-900 mb-1">Employee Work Management</h2>
+                              <p className="text-slate-400 text-xs font-medium">Assign tasks and track daily reports.</p>
+                           </div>
+                           <Button onClick={() => setIsAssigningTask(true)} className="h-11 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-[9px] tracking-widest uppercase px-8 shadow-xl shadow-amber-500/20">
+                              <Plus size={16} className="mr-2" /> ASSIGN TASK
+                           </Button>
+                        </div>
+
+                        <div className="space-y-8">
+                           {/* Employees Overview */}
+                           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                              {employees.map(emp => {
+                                 const empTasks = employeeTasks.filter(t => t.employeeIds.includes(emp.id));
+                                 const pendingCount = empTasks.filter(t => t.status === "pending").length;
+                                 const completedCount = empTasks.filter(t => t.status === "completed").length;
+                                 return (
+                                    <div key={emp.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-start gap-4">
+                                       <img src={emp.photo} alt={emp.name} className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+                                       <div className="flex-1">
+                                          <h4 className="font-bold text-slate-900 text-sm">{emp.name}</h4>
+                                          <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-3">{emp.branchId}</p>
+                                          <div className="flex items-center gap-4 text-xs font-medium text-slate-500">
+                                             <span className="flex items-center gap-1.5"><Clock size={12} className="text-rose-500" /> {pendingCount} Pending</span>
+                                             <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-emerald-500" /> {completedCount} Done</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 );
+                              })}
+                           </div>
+
+                           {/* Task List (Review Work) */}
+                           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                              <div className="p-6 border-b border-slate-50 bg-slate-50/50">
+                                 <h3 className="font-bold text-slate-900 text-sm uppercase tracking-widest">All Assigned Works</h3>
+                              </div>
+                              <div className="divide-y divide-slate-50">
+                                 {employeeTasks.length > 0 ? employeeTasks.map(task => (
+                                    <div key={task.id} className="p-6 hover:bg-slate-50/50 transition-colors">
+                                       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                          <div className="flex-1">
+                                             <div className="flex items-center gap-3 mb-2">
+                                                <h4 className="text-base font-bold text-slate-900">{task.title}</h4>
+                                                {task.status === "completed" ? (
+                                                   <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-bold uppercase tracking-widest border border-emerald-100">Completed</span>
+                                                ) : (
+                                                   <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-[9px] font-bold uppercase tracking-widest border border-amber-100">Pending</span>
+                                                )}
+                                             </div>
+                                             <p className="text-sm text-slate-500 mb-4">{task.description}</p>
+                                             
+                                             {task.status === "completed" && task.employeeReport && (
+                                                <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl mt-4">
+                                                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Submitted Report</p>
+                                                   <p className="text-sm text-slate-700 font-medium">"{task.employeeReport}"</p>
+                                                </div>
+                                             )}
+                                          </div>
+                                          <div className="text-left md:text-right w-48 shrink-0">
+                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Assigned To</p>
+                                             <div className="flex flex-wrap gap-1 md:justify-end mb-4">
+                                                {task.employeeIds.map((eid: number) => {
+                                                   const emp = employees.find(e => e.id === eid);
+                                                   return emp ? (
+                                                      <span key={eid} className="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">
+                                                         {emp.name}
+                                                      </span>
+                                                   ) : null;
+                                                })}
+                                             </div>
+                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Due Date</p>
+                                             <p className="text-xs font-bold text-slate-900">{new Date(task.dueDate).toLocaleDateString()}</p>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 )) : (
+                                    <div className="p-16 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                                       No tasks assigned yet
+                                    </div>
+                                 )}
+                              </div>
+                           </div>
                         </div>
                      </motion.div>
                   )}
@@ -1251,8 +1375,96 @@ const AdminDashboard = () => {
                      </motion.div>
                   </div>
                )}
-            </AnimatePresence>
-         </main>
+             </AnimatePresence>
+
+             {/* Task Assignment Modal */}
+             <AnimatePresence>
+               {isAssigningTask && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+                     <motion.div 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        onClick={() => setIsAssigningTask(false)}
+                        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" 
+                     />
+                     <motion.div 
+                        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                        className="relative w-full max-w-xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100"
+                     >
+                        <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                           <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                              <Briefcase size={18} className="text-amber-500" /> Assign New Task
+                           </h3>
+                           <button onClick={() => setIsAssigningTask(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-400 transition-colors">
+                              <X size={16} />
+                           </button>
+                        </div>
+                        <form onSubmit={handleAssignTask} className="p-6 space-y-5">
+                           <div>
+                              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Task Title</label>
+                              <Input 
+                                 value={newTaskData.title}
+                                 onChange={e => setNewTaskData({...newTaskData, title: e.target.value})}
+                                 placeholder="E.g. Monthly Report Generation"
+                                 className="h-11 rounded-xl bg-slate-50 border-slate-200"
+                                 required
+                              />
+                           </div>
+                           <div>
+                              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Description / Instructions</label>
+                              <textarea 
+                                 value={newTaskData.description}
+                                 onChange={e => setNewTaskData({...newTaskData, description: e.target.value})}
+                                 placeholder="Detailed instructions..."
+                                 className="w-full h-24 p-3 bg-slate-50 border border-slate-200 rounded-xl resize-none text-sm"
+                                 required
+                              ></textarea>
+                           </div>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Select Employees</label>
+                                 <select 
+                                    multiple
+                                    value={newTaskData.employeeIds.map(String)}
+                                    onChange={e => {
+                                       const options = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                                       setNewTaskData({...newTaskData, employeeIds: options});
+                                    }}
+                                    className="w-full h-24 p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20"
+                                    required
+                                 >
+                                    {employees.map(emp => (
+                                       <option key={emp.id} value={emp.id}>{emp.name} ({emp.branchId})</option>
+                                    ))}
+                                 </select>
+                                 <p className="text-[9px] text-slate-400 mt-1 font-medium">Hold Ctrl/Cmd to select multiple</p>
+                              </div>
+                              <div>
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Due Date</label>
+                                 <Input 
+                                    type="date"
+                                    value={newTaskData.dueDate}
+                                    onChange={e => setNewTaskData({...newTaskData, dueDate: e.target.value})}
+                                    className="h-11 rounded-xl bg-slate-50 border-slate-200"
+                                    required
+                                 />
+                              </div>
+                           </div>
+                           <div className="pt-4 flex gap-3">
+                              <button type="button" onClick={() => setIsAssigningTask(false)} className="flex-1 h-12 rounded-xl bg-slate-100 text-slate-600 font-bold text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-colors">
+                                 Cancel
+                              </button>
+                              <button type="submit" className="flex-[2] h-12 rounded-xl bg-amber-500 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-amber-600 transition-colors shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+                                 <CheckCircle2 size={16} /> Assign Task
+                              </button>
+                           </div>
+                        </form>
+                     </motion.div>
+                  </div>
+               )}
+             </AnimatePresence>
+          </main>
       </div>
    );
 };

@@ -16,7 +16,8 @@ export const STORAGE_KEYS = {
   CONTACT_MESSAGES: "oica_contact_messages",
   FRANCHISE_ENQUIRIES: "oica_franchise_enquiries",
   ENROLLMENTS: "oica_enrollments",
-  ATTENDANCE: "oica_attendance"
+  ATTENDANCE: "oica_attendance",
+  TASKS: "oica_tasks"
 };
 
 export const getStorageData = (key: string) => {
@@ -265,6 +266,69 @@ export const initStorage = () => {
       }
     });
     setStorageData(STORAGE_KEYS.ATTENDANCE, records);
+  }
+
+  // 8. Initialize Mock Employees & Tasks
+  const allUsersNow = getStorageData(STORAGE_KEYS.USERS);
+  const existingEmployees = allUsersNow.filter((u: any) => u.role === 'employee');
+  
+  if (existingEmployees.length === 0) {
+    const mockEmployees = [
+      {
+        id: 9001,
+        name: "Ravi Sharma",
+        username: "emp_ravi",
+        password: "password123",
+        role: "employee",
+        branchId: "BBSR-01",
+        photo: "https://i.pravatar.cc/150?u=9001",
+        registeredAt: new Date().toISOString()
+      },
+      {
+        id: 9002,
+        name: "Anita Desai",
+        username: "emp_anita",
+        password: "password123",
+        role: "employee",
+        branchId: "CTC-01",
+        photo: "https://i.pravatar.cc/150?u=9002",
+        registeredAt: new Date().toISOString()
+      }
+    ];
+    setStorageData(STORAGE_KEYS.USERS, [...allUsersNow, ...mockEmployees]);
+  }
+
+  const existingTasks = getStorageData(STORAGE_KEYS.TASKS);
+  if (existingTasks.length === 0) {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const mockTasks = [
+      {
+        id: "task_1",
+        employeeIds: [9001, 9002],
+        title: "Update Student Records",
+        description: "Please verify and update the contact details of the new batch students.",
+        status: "pending",
+        dueDate: tomorrow.toISOString(),
+        assignedAt: today.toISOString()
+      },
+      {
+        id: "task_2",
+        employeeIds: [9001],
+        title: "Prepare Monthly Report",
+        description: "Compile the attendance and test scores for the current month.",
+        status: "completed",
+        dueDate: today.toISOString(),
+        assignedAt: yesterday.toISOString(),
+        completedAt: today.toISOString(),
+        employeeReport: "I have compiled the attendance and uploaded the excel sheet to the shared drive."
+      }
+    ];
+    setStorageData(STORAGE_KEYS.TASKS, mockTasks);
   }
 };
 

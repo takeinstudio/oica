@@ -218,7 +218,7 @@ const About = () => {
                   </h2>
                </AnimatedSection>
 
-               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+               <div className="grid md:grid-cols-2 gap-6">
                   {[
                      {
                         text: "Working at Odisha Institute of Computer Application (OICA) for the past 7 years has been a wonderful and rewarding experience. I have seen many students grow into skilled professionals through quality education and dedicated guidance. The institute provides a positive learning environment, supportive management, and excellent opportunities for both students and faculty members. I am proud to be a part of an organization that is committed to shaping bright futures.",
@@ -258,12 +258,12 @@ const About = () => {
                      }
                   ].map((review, i) => (
                      <AnimatedSection key={i} delay={i * 0.1}>
-                        <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-xl transition-all h-full flex flex-col relative group">
+                        <div className="p-8 bg-white rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all h-full flex flex-col relative group">
                            <Quote className="absolute top-6 right-6 w-10 h-10 text-slate-50 group-hover:text-primary/10 transition-colors" />
                            
                            {/* Profile Area - Top Left */}
                            <div className="flex items-center gap-4 mb-6 relative z-10">
-                              <div className="w-12 h-12 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                              <div className="w-12 h-12 rounded-xl bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
                                  {/* This is the profile photo area. We use initials as a placeholder. */}
                                  <span className="text-sm font-black text-slate-400">{review.initials}</span>
                               </div>

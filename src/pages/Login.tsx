@@ -4,7 +4,7 @@ import {
   Lock, User, ArrowLeft, ShieldCheck, Star, GraduationCap, 
   Code2, Cpu, Database, LayoutDashboard, Users, Award, 
   BookOpen, Mail, Phone, UserPlus, Building2, CreditCard,
-  CheckCircle2, Loader2, X
+  CheckCircle2, Loader2, X, Briefcase
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 const portalMeta: Record<string, { name: string; color: string; accent: string; icon: typeof ShieldCheck; tagline: string; fullName: string }> = {
   student: { name: "Student", color: "from-blue-600 to-indigo-500", accent: "#2563eb", icon: GraduationCap, tagline: "Continue your learning journey", fullName: "Odisha Institute of Computer Application" },
   branch:  { name: "Branch",  color: "from-emerald-600 to-green-500", accent: "#059669", icon: LayoutDashboard, tagline: "Manage your branch activities", fullName: "Odisha Institute of Computer Application" },
+  employee:{ name: "Employee",color: "from-amber-600 to-orange-500", accent: "#f59e0b", icon: Briefcase,     tagline: "Manage your daily works",     fullName: "Odisha Institute of Computer Application" },
   admin:   { name: "Admin",   color: "from-violet-600 to-purple-500", accent: "#7c3aed", icon: ShieldCheck,   tagline: "Manage the institution", fullName: "Odisha Institute of Computer Application" },
 };
 
@@ -95,17 +96,23 @@ const Login = () => {
         password,
         email,
         phone,
-        role: "student",
-        branchId: "BBSR-01",
-        rollNo: `OICA/2026/${Math.floor(Math.random() * 900) + 100}`,
+        role: role === "employee" ? "employee" : "student",
+        branchId: "BBSR-01", // Default branch
+        rollNo: role === "employee" ? undefined : `OICA/2026/${Math.floor(Math.random() * 900) + 100}`,
         photo: `https://i.pravatar.cc/150?u=${username}`,
         age: "",
-        course: "OICA PGDCA 2026",
+        course: role === "employee" ? undefined : "OICA PGDCA 2026",
         registeredAt: new Date().toISOString()
       };
 
-      setPendingUser(preparedUser);
-      setShowPayment(true);
+      if (role === "employee") {
+        setStorageData(STORAGE_KEYS.USERS, [...users, preparedUser]);
+        toast.success("Employee Registration Successful! You can now login.");
+        setMode("login");
+      } else {
+        setPendingUser(preparedUser);
+        setShowPayment(true);
+      }
     }
   };
 
