@@ -45,7 +45,8 @@ export const initStorage = () => {
     "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", 
     "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khordha", 
     "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", 
-    "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh", "Bhubaneswar HQ"
+    "Puri", "Rayagada", "Sambalpur", "Sonepur", "Sundargarh", "Bhubaneswar HQ",
+    "Talcher", "GothaPatna (Khordha)"
   ];
 
   const existingUsers = getStorageData(STORAGE_KEYS.USERS);
@@ -53,6 +54,7 @@ export const initStorage = () => {
 
   // Migration: if any branch lacks the notices field or if we need to force re-init for new videos
   const needsMigration = existingBranches.length > 0 && (
+    existingBranches.length !== districts.length ||
     existingBranches.some((b: any) => !b.notices) || 
     (existingBranches.some((b: any) => b.location === "Angul" && !b.locationVideo))
   );

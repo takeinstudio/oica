@@ -25,6 +25,16 @@ import { useState, useEffect, useMemo } from "react";
 import AnimatedSection from "@/components/shared/AnimatedSection";
 import Footer from "@/components/Footer";
 
+const welcomeMessages: { [key: string]: string } = {
+	"Talcher": "Welcome to Odisha Institute of Computer Application (OICA), Talcher. We are delighted to have you join our learning community. Get ready to explore new technologies, develop practical skills, and build a successful career in the digital world.",
+	"Sonepur": "Welcome to Odisha Institute of Computer Application (OICA), Sonepur. Thank you for choosing us for your computer education journey. Our expert trainers and modern learning environment will help you achieve your goals with confidence.",
+	"Ganjam": "Welcome to Odisha Institute of Computer Application (OICA), Ganjam. We warmly welcome all students to a place of knowledge, creativity, and innovation. Together, we will make learning computers simple, exciting, and career-oriented.",
+	"Kendrapara": "Welcome to Odisha Institute of Computer Application (OICA), Kendrapara. Your future in technology starts here. We are committed to providing quality education, hands-on training, and continuous support for your success.",
+	"Keonjhar": "Welcome to Odisha Institute of Computer Application (OICA), Keonjhar. It is a pleasure to have you with us. Learn, grow, and prepare yourself for endless opportunities in the IT and computer field.",
+	"GothaPatna (Khordha)": "Welcome to Odisha Institute of Computer Application (OICA), GothaPatna (Khordha). We believe every student has the potential to succeed. Our institute is dedicated to guiding you with professional training and practical experience.",
+	"Sundargarh": "Welcome to Odisha Institute of Computer Application (OICA), Sundargarh. Thank you for being part of our institute family. Let's work together to turn your dreams into achievements through knowledge and technology."
+};
+
 // Curated high-quality academy/tech images images for randomization
 const ACADEMY_IMAGES = [
   "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1470&auto=format&fit=crop", // Lab
@@ -55,11 +65,26 @@ const BranchDetail = () => {
 
   useEffect(() => {
     const branches = getStorageData(STORAGE_KEYS.BRANCHES);
+    const normalizedId = (id || '').toLowerCase().replace(/\s/g, '');
+    
+    // Handle aliases: khurda -> gothapatna(khordha) (correct district name is Khordha)
+    const aliases: Record<string, string> = {
+      'khurda': 'gothapatna(khordha)',
+      'khordha': 'gothapatna(khordha)',
+      'gothapatna': 'gothapatna(khordha)'
+    };
+    
+    const searchId = aliases[normalizedId] || normalizedId;
+
     // Match by location or id — handles "Bhubaneswar HQ" URL param
-    const found = branches.find((b: any) => 
-      b.location === id || b.id === id ||
-      b.location.replace(/\s/g, '') === (id || '').replace(/\s/g, '')
-    );
+    const found = branches.find((b: any) => {
+      const normalizedLocation = b.location.toLowerCase().replace(/\s/g, '');
+      const normalizedBranchId = b.id.toLowerCase().replace(/\s/g, '');
+      
+      return normalizedLocation === searchId || normalizedBranchId === searchId || 
+             b.location === id || b.id === id;
+    });
+    
     if (found) {
       setBranchData(found);
     }
@@ -195,7 +220,7 @@ const BranchDetail = () => {
                        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Center Overview</h2>
                     </div>
                     <p className="text-slate-600 font-medium text-lg leading-relaxed max-w-3xl">
-                       {branchData.about || `The OICA ${branchData.name} center is a leading technology hub in the ${branchData.location} district, providing comprehensive IT training and career development programs.`}
+                       {branchData.about || welcomeMessages[branchData.location] || `The OICA ${branchData.name} center is a leading technology hub in the ${branchData.location} district, providing comprehensive IT training and career development programs.`}
                     </p>
                     <div className="grid sm:grid-cols-2 gap-3 pt-4">
                        {[
@@ -398,7 +423,6 @@ const BranchDetail = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsVideoModalOpen(false)}
               className="absolute inset-0 bg-slate-950/95 backdrop-blur-xl"
             />
             

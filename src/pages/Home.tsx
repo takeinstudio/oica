@@ -519,56 +519,58 @@ const Home = () => {
             </p>
           </AnimatedSection>
 
-          <div className="space-y-12">
-            {/* Row 1: Left to Right Train */}
-            <motion.div
-              style={{ x: trainXLeft }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            >
-              {[
-                { title: "Practical Learning", desc: "We focus on practical learning with real-world applications. Our experienced instructors provide step-by-step guidance.", icon: Zap },
-                { title: "Updated Courses", desc: "We offer updated courses like Advanced Excel, Tally Prime with GST, and Spoken English to match current industry needs.", icon: BookOpen },
-                { title: "Affordable Fees", desc: "Our flexible timings and affordable fees make learning accessible for everyone, ensuring quality education for all.", icon: Award },
-              ].map((box, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white/70 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/60 shadow-xl shadow-slate-200/20 hover:shadow-2xl transition-all group min-h-[220px]"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <box.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-black text-slate-900 mb-3">{box.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
-                    {box.desc}
-                  </p>
-                </div>
-              ))}
-            </motion.div>
+          {/* ── Infinite Auto-Scroll Marquee Rows ── */}
+          <div className="space-y-8">
 
-            {/* Row 2: Right to Left Train */}
-            <motion.div
-              style={{ x: trainXRight }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            >
-              {[
-                { title: "Job-Ready Skills", desc: "With regular practice sessions and career-oriented training, we help you build confidence and job-ready skills.", icon: Star },
-                { title: "Expert Guidance", desc: "Our experienced faculty ensures every student understands clearly through personalized attention and mentorship.", icon: Users },
-                { title: "Modern Infrastructure", desc: "State-of-the-art computer labs with the latest technology to provide a superior learning environment.", icon: Shield },
-              ].map((box, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white/70 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/60 shadow-xl shadow-slate-200/20 hover:shadow-2xl transition-all group min-h-[220px]"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <box.icon className="w-6 h-6 text-primary" />
+            {/* Row 1 — scrolls LEFT continuously */}
+            <div className="overflow-hidden relative">
+              {/* Fade edges */}
+              <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="flex gap-6 w-max animate-marquee-left">
+                {[...Array(2)].flatMap(() => [
+                  { title: "Practical Learning", desc: "We focus on practical learning with real-world applications. Our experienced instructors provide step-by-step guidance.", icon: Zap },
+                  { title: "Updated Courses", desc: "We offer updated courses like Advanced Excel, Tally Prime with GST, and Spoken English to match current industry needs.", icon: BookOpen },
+                  { title: "Affordable Fees", desc: "Our flexible timings and affordable fees make learning accessible for everyone, ensuring quality education for all.", icon: Award },
+                ]).map((box, idx) => (
+                  <div
+                    key={idx}
+                    className="w-80 shrink-0 bg-white/70 backdrop-blur-md p-8 rounded-[2rem] border border-white/60 shadow-xl hover:shadow-2xl transition-all group"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                      <box.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-black text-slate-900 mb-2">{box.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed font-medium">{box.desc}</p>
                   </div>
-                  <h3 className="text-xl font-black text-slate-900 mb-3">{box.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
-                    {box.desc}
-                  </p>
-                </div>
-              ))}
-            </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Row 2 — scrolls RIGHT continuously */}
+            <div className="overflow-hidden relative">
+              <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="flex gap-6 w-max animate-marquee-right">
+                {[...Array(2)].flatMap(() => [
+                  { title: "Job-Ready Skills", desc: "With regular practice sessions and career-oriented training, we help you build confidence and job-ready skills.", icon: Star },
+                  { title: "Expert Guidance", desc: "Our experienced faculty ensures every student understands clearly through personalized attention and mentorship.", icon: Users },
+                  { title: "Modern Infrastructure", desc: "State-of-the-art computer labs with the latest technology to provide a superior learning environment.", icon: Shield },
+                ]).map((box, idx) => (
+                  <div
+                    key={idx}
+                    className="w-80 shrink-0 bg-white/70 backdrop-blur-md p-8 rounded-[2rem] border border-white/60 shadow-xl hover:shadow-2xl transition-all group"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                      <box.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-black text-slate-900 mb-2">{box.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed font-medium">{box.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -675,6 +677,128 @@ const Home = () => {
       </section>
 
 
+
+      {/* Social Support — Free Job Assistance & Meritorious Students */}
+      <section className="relative py-16 overflow-hidden">
+        {/* Rich warm gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        {/* Decorative glowing orbs */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
+
+        <div className="section-container relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            {/* Left — Text Content */}
+            <AnimatedSection>
+              <div className="space-y-6">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-md">
+                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-[10px] font-black text-amber-300 uppercase tracking-[0.2em]">Student Welfare Program</span>
+                </div>
+
+                <h2 className="text-3xl md:text-5xl font-heading font-black text-white leading-tight tracking-tight">
+                  Empowering <span className="text-amber-400 italic">Every Student,</span><br />
+                  Regardless of Background
+                </h2>
+
+                <div className="space-y-4 text-slate-300 font-medium leading-relaxed">
+                  <p className="text-base">
+                    We believe that financial difficulties should never stop talented students from achieving their dreams. Our institute proudly provides <span className="text-amber-300 font-bold">free job assistance</span> and special support programs for poor and meritorious students to help them build a successful future.
+                  </p>
+                  <p className="text-sm text-slate-400">
+                    Through skill development training, career guidance, and placement support, we help deserving students find suitable job opportunities in the computer and IT sector. Our mission is to empower hardworking students with education, confidence, and career opportunities for a brighter tomorrow.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link to="/apply">
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="px-8 h-12 bg-amber-400 text-slate-900 font-black text-[10px] uppercase tracking-widest rounded-xl shadow-2xl shadow-amber-500/20 hover:bg-amber-300 transition-colors"
+                    >
+                      Apply for Support
+                    </motion.button>
+                  </Link>
+                  <Link to="/contact">
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="px-8 h-12 bg-white/10 border border-white/20 text-white font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-white/20 transition-colors backdrop-blur-md"
+                    >
+                      Contact Us
+                    </motion.button>
+                  </Link>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* Right — Three Pillar Cards */}
+            <AnimatedSection direction="right">
+              <div className="grid gap-4">
+                {[
+                  {
+                    icon: GraduationCap,
+                    color: "from-amber-400 to-orange-500",
+                    shadow: "shadow-amber-500/20",
+                    title: "Free Job Assistance",
+                    desc: "Dedicated placement support connecting meritorious students with top employers in the IT and computer sector at no cost."
+                  },
+                  {
+                    icon: Zap,
+                    color: "from-emerald-400 to-teal-500",
+                    shadow: "shadow-emerald-500/20",
+                    title: "Skill Development Training",
+                    desc: "Structured hands-on training programs designed to make every student job-ready with practical, industry-relevant skills."
+                  },
+                  {
+                    icon: Award,
+                    color: "from-primary to-blue-500",
+                    shadow: "shadow-primary/20",
+                    title: "Career Guidance & Placement",
+                    desc: "One-on-one counselling, resume building, and interview preparation to help deserving students land their dream jobs."
+                  }
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 40 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15, duration: 0.5 }}
+                    className="flex items-start gap-5 p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-all group"
+                  >
+                    <div className={`w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-xl ${item.shadow} group-hover:scale-110 transition-transform`}>
+                      <item.icon size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-black text-sm mb-1.5">{item.title}</h3>
+                      <p className="text-slate-400 text-xs font-medium leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Bottom stat strip */}
+                <div className="grid grid-cols-3 gap-3 mt-2">
+                  {[
+                    { value: "100%", label: "Free Support" },
+                    { value: "500+", label: "Jobs Placed" },
+                    { value: "Merit", label: "Based Selection" }
+                  ].map((s, i) => (
+                    <div key={i} className="text-center p-4 bg-white/5 border border-white/10 rounded-xl backdrop-blur-md">
+                      <div className="text-xl font-black text-amber-400 mb-0.5">{s.value}</div>
+                      <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </AnimatedSection>
+
+          </div>
+        </div>
+      </section>
 
       {/* Our Programs — Premium Interactive Cards */}
       <section className="py-8 bg-white">
@@ -901,6 +1025,24 @@ const Home = () => {
         }
         .animate-marquee {
           animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-right {
+          0%   { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee-left {
+          animation: marquee-left 28s linear infinite;
+        }
+        .animate-marquee-right {
+          animation: marquee-right 28s linear infinite;
+        }
+        .animate-marquee-left:hover,
+        .animate-marquee-right:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>

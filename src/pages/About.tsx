@@ -79,41 +79,45 @@ const About = () => {
           {/* Director's Message Section */}
           <section className="py-16 bg-white relative overflow-hidden">
              <div className="section-container relative z-10">
-                <div className="grid lg:grid-cols-12 gap-12 items-center">
-                   <div className="lg:col-span-5">
+                <div className="grid lg:grid-cols-12 gap-10 items-center">
+                   {/* Photo — half height */}
+                   <div className="lg:col-span-4">
                       <AnimatedSection direction="left">
                          <div className="relative">
-                            <div className="absolute -inset-4 bg-primary/5 rounded-[3rem] rotate-3" />
+                            <div className="absolute -inset-3 bg-primary/5 rounded-[2.5rem] rotate-3" />
                             <img 
                                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1374&auto=format&fit=crop" 
                                alt="Director" 
-                               className="relative rounded-[2.5rem] shadow-2xl border-4 border-white aspect-[4/5] object-cover"
+                               className="relative rounded-[2rem] shadow-2xl border-4 border-white w-full object-cover object-top"
+                               style={{ maxHeight: "260px" }}
                             />
-                            <div className="absolute -bottom-6 -right-6 bg-primary p-6 rounded-2xl shadow-xl">
-                               <p className="text-white font-black text-lg">Director's Message</p>
+                            <div className="absolute -bottom-4 -right-4 bg-primary px-5 py-3 rounded-xl shadow-xl">
+                               <p className="text-white font-black text-sm">Director's Message</p>
                             </div>
                          </div>
                       </AnimatedSection>
                    </div>
-                   <div className="lg:col-span-7">
+
+                   {/* Text */}
+                   <div className="lg:col-span-8">
                       <AnimatedSection direction="right">
-                         <Quote className="w-16 h-16 text-primary/10 mb-6" />
-                         <h2 className="text-3xl md:text-4xl font-heading font-black text-slate-900 mb-6 uppercase tracking-tight">
+                         <Quote className="w-12 h-12 text-primary/10 mb-4" />
+                         <h2 className="text-2xl md:text-4xl font-heading font-black text-slate-900 mb-5 uppercase tracking-tight">
                             Building a <span className="text-primary italic">Successful Future</span>
                          </h2>
-                         <div className="space-y-6 text-slate-600 font-medium leading-relaxed text-lg">
+                         <div className="space-y-4 text-slate-600 font-medium leading-relaxed text-base">
                             <p>
-                               "Welcome to our institute. It gives me great pleasure to lead an organization committed to quality computer education and skill development. In today’s fast-changing digital world, our aim is to equip students with practical knowledge, strong fundamentals, and confidence to succeed."
+                               "Welcome to our institute. It gives me great pleasure to lead an organization committed to quality computer education and skill development. In today's fast-changing digital world, our aim is to equip students with practical knowledge, strong fundamentals, and confidence to succeed."
                             </p>
                             <p>
-                               "We focus on industry-oriented training, experienced guidance, and a disciplined learning environment to help every student achieve their goals. I strongly believe that with dedication and the right guidance, success is within everyone’s reach."
+                               "We focus on industry-oriented training, experienced guidance, and a disciplined learning environment to help every student achieve their goals. I strongly believe that with dedication and the right guidance, success is within everyone's reach."
                             </p>
                             <p>
                                "I invite you to be a part of our institute and build a bright and successful future."
                             </p>
                          </div>
-                         <div className="mt-8 pt-8 border-t border-slate-100">
-                            <p className="font-black text-slate-900 text-xl">Managing Director</p>
+                         <div className="mt-6 pt-6 border-t border-slate-100">
+                            <p className="font-black text-slate-900 text-lg">Managing Director</p>
                             <p className="text-primary font-bold uppercase tracking-widest text-xs">OICA Institute</p>
                          </div>
                       </AnimatedSection>
@@ -151,51 +155,51 @@ const About = () => {
          {/* Vision & Mission Sections */}
          <section className="py-12">
             <div className="section-container">
-               <div className="grid lg:grid-cols-3 gap-8">
-                  <AnimatedSection delay={0.1} className="lg:col-span-2">
-                     <div className="h-full p-12 bg-slate-50 rounded-[3rem] border border-slate-100 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-12 opacity-5 -rotate-12 group-hover:rotate-0 transition-transform">
-                           <TrendingUp size={120} />
+               <div className="grid lg:grid-cols-2 gap-8">
+                  {/* Our Core Mission */}
+                  <AnimatedSection delay={0.1}>
+                     <div className="h-full p-10 bg-white rounded-[2.5rem] border border-slate-100 shadow-lg relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-10 opacity-5 -rotate-12 group-hover:rotate-0 transition-transform pointer-events-none">
+                           <TrendingUp size={100} />
                         </div>
-                        <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-8">
-                           <Target size={24} />
+                        <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+                           <Target size={22} />
                         </div>
-                        <h3 className="text-3xl font-heading font-black text-slate-900 mb-6">Our Core Mission</h3>
-                        <p className="text-lg text-slate-600 font-medium leading-relaxed max-w-2xl">
+                        <h3 className="text-2xl font-heading font-black text-slate-900 mb-4">Our Core Mission</h3>
+                        <p className="text-slate-600 font-medium leading-relaxed">
                            To provide quality computer education and practical training that empowers students with modern IT skills, enhances their confidence, and prepares them for successful careers in the digital world. The institute is committed to creating a supportive learning environment with experienced faculty and updated technology.
                         </p>
-                        <div className="mt-10 flex flex-wrap gap-4">
-                           <div className="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-700 shadow-sm">
+                        <div className="mt-8 flex flex-wrap gap-3">
+                           <div className="px-5 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-slate-700">
                               Quality Education
                            </div>
-                           <div className="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-700 shadow-sm">
+                           <div className="px-5 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-slate-700">
                               Practical Training
                            </div>
                         </div>
                      </div>
                   </AnimatedSection>
 
+                  {/* Our Future Vision */}
                   <AnimatedSection delay={0.2}>
-                     <div className="h-full p-10 bg-primary text-white rounded-[3rem] shadow-2xl shadow-primary/20 relative overflow-hidden">
-                        <div className="absolute bottom-0 right-0 p-12 opacity-10">
-                           <TrendingUp size={100} fill="white" />
+                     <div className="h-full p-10 bg-white rounded-[2.5rem] border border-slate-100 shadow-lg relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-10 opacity-5 -rotate-12 group-hover:rotate-0 transition-transform pointer-events-none">
+                           <TrendingUp size={100} />
                         </div>
-                        <h3 className="text-2xl font-heading font-black mb-6">Our Future Vision</h3>
-                        <p className="text-white/80 font-medium leading-relaxed mb-8">
+                        <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+                           <TrendingUp size={22} />
+                        </div>
+                        <h3 className="text-2xl font-heading font-black text-slate-900 mb-4">Our Future Vision</h3>
+                        <p className="text-slate-600 font-medium leading-relaxed">
                            To become a leading computer institute recognized for excellence in technical education, innovation, and skill development, helping students achieve professional success and contribute to the growth of the technology-driven society.
                         </p>
-                        <ul className="space-y-4">
-                           {[
-                              "Technical Excellence",
-                              "Innovative Learning",
-                              "Professional Success"
-                           ].map(val => (
-                              <li key={val} className="flex items-center gap-3">
-                                 <CheckCircle2 size={16} className="text-white/40" />
-                                 <span className="text-xs font-black uppercase tracking-widest">{val}</span>
-                              </li>
+                        <div className="mt-8 flex flex-wrap gap-3">
+                           {["Technical Excellence", "Innovative Learning", "Professional Success"].map(val => (
+                              <div key={val} className="px-5 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-slate-700">
+                                 {val}
+                              </div>
                            ))}
-                        </ul>
+                        </div>
                      </div>
                   </AnimatedSection>
                </div>
@@ -203,65 +207,75 @@ const About = () => {
          </section>
 
 
+
          {/* Faculty Messages Section */}
-         <section className="py-12 bg-slate-50">
+         <section className="py-16 bg-slate-50">
             <div className="section-container">
-               <AnimatedSection className="text-center mb-12">
+               <AnimatedSection className="text-center mb-14">
                   <span className="text-[10px] font-black text-primary tracking-widest uppercase mb-2 block">Voice of Mentors</span>
                   <h2 className="text-3xl md:text-5xl font-heading font-black text-slate-900 leading-tight">
                      MESSAGES FROM <span className="text-primary italic">FACULTIES</span>
                   </h2>
                </AnimatedSection>
 
-               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {/* Lead Faculty Message */}
-                  <AnimatedSection className="lg:col-span-2">
-                     <div className="p-10 bg-white rounded-[3rem] border border-slate-100 shadow-xl relative group h-full">
-                        <Quote className="absolute top-10 right-10 w-20 h-20 text-slate-100 group-hover:text-primary/5 transition-colors" />
-                        <div className="relative z-10">
-                           <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">
-                              “Working at Odisha Institute of Computer Application (OICA) for the past 7 years has been a wonderful and rewarding experience. I have seen many students grow into skilled professionals through quality education and dedicated guidance. The institute provides a positive learning environment, supportive management, and excellent opportunities for both students and faculty members. I am proud to be a part of an organization that is committed to shaping bright futures.”
-                           </p>
-                           <div className="flex items-center gap-4">
-                              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black text-xl">
-                                 GN
+               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                     {
+                        text: "Working at Odisha Institute of Computer Application (OICA) for the past 7 years has been a wonderful and rewarding experience. I have seen many students grow into skilled professionals through quality education and dedicated guidance. The institute provides a positive learning environment, supportive management, and excellent opportunities for both students and faculty members. I am proud to be a part of an organization that is committed to shaping bright futures.",
+                        name: "Gyan Chand Nayak",
+                        title: "Senior Faculty (7+ Years)",
+                        initials: "GN"
+                     },
+                     {
+                        text: "Odisha institute of computer application provides an excellent learning environment where students gain both theoretical knowledge and practical skills in computer education.",
+                        name: "Faculty Member",
+                        title: "IT Instructor",
+                        initials: "FM"
+                     },
+                     {
+                        text: "We are proud to be part of the Odisha Institute of computer application that focuses on quality training, discipline, and student success.",
+                        name: "Faculty Member",
+                        title: "Computer Trainer",
+                        initials: "FM"
+                     },
+                     {
+                        text: "The institute (OICA) continuously supports students with modern technology, experienced guidance, and career opportunities.",
+                        name: "Faculty Member",
+                        title: "Technical Mentor",
+                        initials: "FM"
+                     },
+                     {
+                        text: "It is inspiring to see students grow in confidence and technical skills through the OICA’s dedicated teaching methods.",
+                        name: "Faculty Member",
+                        title: "Course Coordinator",
+                        initials: "FM"
+                     },
+                     {
+                        text: "Odisha Institute of Computer Application is committed to shaping bright futures by providing professional computer education and valuable career support.",
+                        name: "Faculty Member",
+                        title: "Senior Trainer",
+                        initials: "FM"
+                     }
+                  ].map((review, i) => (
+                     <AnimatedSection key={i} delay={i * 0.1}>
+                        <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-xl transition-all h-full flex flex-col relative group">
+                           <Quote className="absolute top-6 right-6 w-10 h-10 text-slate-50 group-hover:text-primary/10 transition-colors" />
+                           
+                           {/* Profile Area - Top Left */}
+                           <div className="flex items-center gap-4 mb-6 relative z-10">
+                              <div className="w-12 h-12 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                                 {/* This is the profile photo area. We use initials as a placeholder. */}
+                                 <span className="text-sm font-black text-slate-400">{review.initials}</span>
                               </div>
                               <div>
-                                 <h4 className="font-black text-slate-900">Gyan Chand Nayak</h4>
-                                 <p className="text-xs font-bold text-primary uppercase tracking-widest">Senior Faculty (7+ Years)</p>
+                                 <h4 className="font-black text-slate-900 text-sm leading-tight">{review.name}</h4>
+                                 <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">{review.title}</p>
                               </div>
                            </div>
-                        </div>
-                     </div>
-                  </AnimatedSection>
 
-                  {/* Secondary Faculty Messages */}
-                  <div className="space-y-8">
-                     {[
-                        "Odisha institute of computer application provides an excellent learning environment where students gain both theoretical knowledge and practical skills in computer education.",
-                        "We are proud to be part of the Odisha Institute of computer application that focuses on quality training, discipline, and student success."
-                     ].map((msg, i) => (
-                        <AnimatedSection key={i} delay={i * 0.1}>
-                           <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-xl transition-all">
-                              <p className="text-sm text-slate-600 font-medium leading-relaxed italic">
-                                 “{msg}”
-                              </p>
-                           </div>
-                        </AnimatedSection>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="grid md:grid-cols-3 gap-8 mt-8">
-                  {[
-                     "The institute (OICA) continuously supports students with modern technology, experienced guidance, and career opportunities.",
-                     "It is inspiring to see students grow in confidence and technical skills through the OICA’s dedicated teaching methods.",
-                     "Odisha Institute of Computer Application is committed to shaping bright futures by providing professional computer education and valuable career support."
-                  ].map((msg, i) => (
-                     <AnimatedSection key={i} delay={i * 0.1}>
-                        <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-lg h-full">
-                           <p className="text-sm text-slate-600 font-medium leading-relaxed italic">
-                              “{msg}”
+                           {/* Review Text */}
+                           <p className="text-sm text-slate-600 font-medium leading-relaxed italic relative z-10 flex-grow">
+                              "{review.text}"
                            </p>
                         </div>
                      </AnimatedSection>
