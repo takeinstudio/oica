@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/shared/AnimatedSection";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import {
   Users,
   ArrowRight, Star, Shield, Camera, Maximize2,
@@ -179,13 +179,6 @@ const Home = () => {
   }, []);
 
   const premiumRef = useRef(null);
-  const { scrollYProgress: premiumScroll } = useScroll({
-    target: premiumRef,
-    offset: ["start end", "end start"]
-  });
-
-  const trainXLeft = useTransform(premiumScroll, [0, 1], [-150, 150]);
-  const trainXRight = useTransform(premiumScroll, [0, 1], [150, -150]);
 
   const noticeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

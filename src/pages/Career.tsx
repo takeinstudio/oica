@@ -14,8 +14,6 @@ import {
   Sparkles,
   Filter,
   Zap,
-  TrendingUp,
-  ExternalLink,
   MessageSquare,
   FileText,
   ChevronRight,
@@ -36,15 +34,11 @@ const Career = () => {
     viewType === "employers" ? "employers" : "seekers"
   );
   const [jobs, setJobs] = useState<any[]>([]);
-  const [applications, setApplications] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isRecruiterVerified] = useState(false);
 
   useEffect(() => {
     const allJobs = getStorageData(STORAGE_KEYS.JOBS);
     setJobs(allJobs.filter((j: any) => j.status === 'approved' || !j.status));
-    const allApps = getStorageData(STORAGE_KEYS.CAREER_APPS);
-    setApplications(allApps.filter((a: any) => a.status === 'approved' || !a.status));
   }, []);
 
   useEffect(() => {
