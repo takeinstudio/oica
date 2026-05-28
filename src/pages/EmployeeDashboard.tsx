@@ -491,11 +491,16 @@ const EmployeeDashboard = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-3xl shadow-2xl z-50 overflow-hidden border border-slate-100"
               >
-                <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                    <FileText size={18} className="text-amber-500" /> Submit Daily Report
-                  </h3>
-                  <button onClick={() => setSelectedTask(null)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-400 transition-colors">
+                <div className="p-5 sm:p-6 border-b border-slate-100 bg-white flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                      <FileText size={20} />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 m-0 leading-none">
+                      Submit Daily Report
+                    </h3>
+                  </div>
+                  <button onClick={() => setSelectedTask(null)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors shrink-0">
                     <X size={16} />
                   </button>
                 </div>
@@ -541,12 +546,16 @@ const EmployeeDashboard = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-3xl shadow-2xl z-50 overflow-hidden border border-slate-100"
               >
-                <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                    <Calendar size={18} className="text-amber-500" /> 
-                    Work Log - {selectedDate.toLocaleDateString()}
-                  </h3>
-                  <button onClick={() => setIsLogModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-400 transition-colors">
+                <div className="p-5 sm:p-6 border-b border-slate-100 bg-white flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                      <Calendar size={20} />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 m-0 leading-none flex items-center gap-2">
+                      Work Log <span className="text-sm text-slate-400 font-medium">| {selectedDate.toLocaleDateString()}</span>
+                    </h3>
+                  </div>
+                  <button onClick={() => setIsLogModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors shrink-0">
                     <X size={16} />
                   </button>
                 </div>
