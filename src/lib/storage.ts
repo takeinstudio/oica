@@ -17,7 +17,8 @@ export const STORAGE_KEYS = {
   FRANCHISE_ENQUIRIES: "oica_franchise_enquiries",
   ENROLLMENTS: "oica_enrollments",
   ATTENDANCE: "oica_attendance",
-  TASKS: "oica_tasks"
+  TASKS: "oica_tasks",
+  DAILY_WORK_LOGS: "oica_daily_work_logs"
 };
 
 export const getStorageData = (key: string) => {
