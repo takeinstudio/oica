@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { 
   Briefcase, CheckCircle2, Clock, CalendarDays, 
   LayoutDashboard, LogOut, ChevronRight, FileText, X,
-  Calendar, Upload, Image, ChevronLeft
+  Calendar, Upload, ChevronLeft
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -485,12 +485,13 @@ const EmployeeDashboard = () => {
           {selectedTask && (
             <>
               <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40" onClick={() => setSelectedTask(null)} />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-3xl shadow-2xl z-50 overflow-hidden border border-slate-100"
-              >
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 pointer-events-auto"
+                >
                 <div className="p-5 sm:p-6 border-b border-slate-100 bg-white flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
@@ -531,6 +532,7 @@ const EmployeeDashboard = () => {
                   </button>
                 </div>
               </motion.div>
+              </div>
             </>
           )}
         </AnimatePresence>
@@ -540,12 +542,13 @@ const EmployeeDashboard = () => {
           {isLogModalOpen && selectedDate && (
             <>
               <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40" onClick={() => setIsLogModalOpen(false)} />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-3xl shadow-2xl z-50 overflow-hidden border border-slate-100"
-              >
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 pointer-events-auto"
+                >
                 <div className="p-5 sm:p-6 border-b border-slate-100 bg-white flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
@@ -622,6 +625,7 @@ const EmployeeDashboard = () => {
                   )}
                 </div>
               </motion.div>
+              </div>
             </>
           )}
         </AnimatePresence>
